@@ -38,13 +38,14 @@ model Session {
 }
 
 model User {
-  id            String    @id @default(cuid())
+  id            String     @id @default(cuid())
   name          String?
-  email         String?   @unique
+  email         String?    @unique
   emailVerified DateTime?
   image         String?
   accounts      Account[]
   sessions      Session[]
+  pastcasts     Pastcast[]
 }
 
 model VerificationToken {
@@ -53,4 +54,26 @@ model VerificationToken {
   expires    DateTime
 
   @@unique([identifier, token])
+}
+
+model Question {
+  id               String     @id @default(cuid())
+  title            String
+  description      String?
+  isDeleted        Boolean    @default(false)
+  vantageDate      DateTime
+  binaryResolution Boolean
+  pastcasts        Pastcast[]
+}
+
+model Pastcast {
+  userId            String
+  questionId        String
+  binaryProbability Float?
+  score             Float
+  createdAt         DateTime @default(now())
+  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
+
+  @@id([questionId, userId])
 }
