@@ -22,11 +22,12 @@ const Home: NextPage = () => {
     { name: "Calendar", href: "#", current: false },
   ];
   const userNavigation = [
+    /*
     { name: "Your Profile", href: "#" },
     { name: "Settings", href: "#" },
+    */
     {
       name: session ? "Sign out" : "Sign in",
-      onClick: session ? signOut : signIn,
     },
   ];
 
@@ -105,29 +106,19 @@ const Home: NextPage = () => {
                         <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none">
                           {userNavigation.map((item) => (
                             <Menu.Item key={item.name}>
-                              {item.onClick
-                                ? ({ active }) => (
-                                    <a
-                                      className={clsx(
-                                        active ? "bg-gray-100" : "",
-                                        "block px-4 py-2 text-sm text-gray-700"
-                                      )}
-                                      onClick={() => item.onClick()}
-                                    >
-                                      {item.name}
-                                    </a>
-                                  )
-                                : ({ active }) => (
-                                    <a
-                                      href={item.href}
-                                      className={clsx(
-                                        active ? "bg-gray-100" : "",
-                                        "block px-4 py-2 text-sm text-gray-700"
-                                      )}
-                                    >
-                                      {item.name}
-                                    </a>
+                              {({ active }) => (
+                                <a
+                                  className={clsx(
+                                    active ? "bg-gray-100" : "",
+                                    "block px-4 py-2 text-sm text-gray-700"
                                   )}
+                                  onClick={() =>
+                                    session ? signOut() : signIn()
+                                  }
+                                >
+                                  {item.name}
+                                </a>
+                              )}
                             </Menu.Item>
                           ))}
                         </Menu.Items>
@@ -200,9 +191,8 @@ const Home: NextPage = () => {
                       <Disclosure.Button
                         key={item.name}
                         as="a"
-                        href={item.href}
                         className="block px-4 py-2 text-base font-medium text-gray-500 hover:text-gray-800 hover:bg-gray-100"
-                        onClick={item.onClick}
+                        onClick={() => (session ? signOut() : signIn())}
                       >
                         {item.name}
                       </Disclosure.Button>
