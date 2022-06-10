@@ -1,4 +1,5 @@
-import NextAuth from "next-auth";
+import NextAuth, { Session, User } from "next-auth";
+import { JWT } from "next-auth/jwt";
 import GoogleProvider from "next-auth/providers/google";
 
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
@@ -15,4 +16,26 @@ export default NextAuth({
     }),
   ],
   secret: process.env.SECRET,
+  session: {
+    strategy: "jwt",
+  },
+  jwt: {
+    secret: process.env.SECRET,
+  },
+  callbacks: {
+    session: async (params: { session: Session; token: JWT }) => {
+      const { session, token } = params;
+      if (token.id) {
+        session.user.id = token.id as string;
+      }
+      return Promise.resolve(session);
+    },
+    jwt: async (params: { token: JWT; user?: User | undefined }) => {
+      const { token, user } = params;
+      if (user) {
+        token.id = user.id;
+      }
+      return Promise.resolve(token);
+    },
+  },
 });
