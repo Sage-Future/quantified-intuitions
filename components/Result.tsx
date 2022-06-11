@@ -6,10 +6,12 @@ export const Result = ({
   pointsEarned: number;
 }) => {
   return (
-    <div className="text-lg max-w-prose mx-auto">
-      <h1 className="text-3xl font-bold text-center">
-        The answer is {answer}! You earned {pointsEarned} points!
-      </h1>
+    <div className="col-span-6 -my-5">
+      <p className="mt-2 text-sm text-gray-500">
+        {`The answer is ${answer}.`}
+        <br />
+        {`You Earned ${pointsEarned} points!`}
+      </p>
     </div>
   );
 };

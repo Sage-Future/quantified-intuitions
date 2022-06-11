@@ -60,9 +60,13 @@ model Question {
   id               String     @id @default(cuid())
   title            String
   description      String?
+  crowdForecast    Float?
   isDeleted        Boolean    @default(false)
   vantageDate      DateTime
   binaryResolution Boolean
+  url              String?
+  platform         String?
+  fetched          DateTime?
   pastcasts        Pastcast[]
 }
 
@@ -71,6 +75,7 @@ model Pastcast {
   questionId        String
   binaryProbability Float?
   score             Float
+  skipped           Boolean  @default(false)
   createdAt         DateTime @default(now())
   user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
   question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)

@@ -3,11 +3,15 @@ import { useFormContext } from "react-hook-form";
 
 import { isValidBinaryForecast } from "../lib/services/validation";
 
-export const BinaryForecast = () => {
+export const BinaryForecast = ({
+  disabled = false,
+}: {
+  disabled?: boolean;
+}) => {
   const { register, watch } = useFormContext();
   const forecast = watch("binaryProbability");
   return (
-    <div className="sm:col-span-1">
+    <div className="sm:col-span-2 xl:col-span-3">
       <label
         className="block text-gray-700 text-sm font-medium"
         htmlFor="forecast"
@@ -18,11 +22,14 @@ export const BinaryForecast = () => {
         <input
           type="text"
           id="forecast"
+          disabled={disabled}
           className={clsx(
-            isValidBinaryForecast(forecast) || forecast === ""
+            forecast === "" || forecast === undefined
               ? "focus:ring-indigo-500 focus:border-indigo-500"
-              : "focus:ring-red-500 focus:border-red-500",
-            "shadow-sm  block w-full  sm:text-sm border-gray-300 rounded-md text-right pr-7"
+              : isValidBinaryForecast(forecast)
+              ? "ring-green-500 border-green-500 focus:ring-green-500 focus:border-green-500"
+              : "ring-red-500 border-red-500 focus:ring-red-500 focus:border-red-500",
+            "shadow-sm  block w-full  sm:text-sm border-gray-300 rounded-md text-right pr-7 disabled:opacity-25 disabled:bg-gray-100"
           )}
           {...register("binaryProbability")}
         />

@@ -15,7 +15,6 @@ interface Request extends NextApiRequest {
 
 const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
   const { questionId, binaryProbability } = req.body;
-  console.log(JSON.stringify(req.body));
   if (typeof questionId !== "string" || typeof binaryProbability !== "number") {
     res.status(400).json({
       error: "invalid request",
@@ -40,7 +39,11 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
     });
     return;
   }
-  const score = binaryScore(binaryProbability, question.binaryResolution);
+  const score = binaryScore(
+    binaryProbability,
+    question.crowdForecast || /* default to 0.5 */ 0.5,
+    question.binaryResolution
+  );
   const pastcast = await prisma.pastcast.create({
     data: {
       userId: session.user.id,
@@ -51,6 +54,7 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
   });
   res.status(201).json({
     pastcast,
+    resolution: question.binaryResolution,
   });
 };
 export default createBinaryPastcast;
