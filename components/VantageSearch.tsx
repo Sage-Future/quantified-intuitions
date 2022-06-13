@@ -28,10 +28,12 @@ export const VantageSearch = ({ question }: { question: Question }) => {
         maxYear: dateObj.year,
       }),
     }).then(async (res) => {
-      const json = await res.json();
-      setResults(json);
+      if (res.status === 200) {
+        const json = await res.json();
+        setResults(json);
+      }
+      setSearching(false);
     });
-    setSearching(false);
   };
   useEffect(() => {
     setResults(undefined);

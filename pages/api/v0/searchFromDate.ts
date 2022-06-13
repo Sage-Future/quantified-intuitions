@@ -1,8 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-
-
 interface Request extends NextApiRequest {
   body: {
     query: string;
@@ -72,5 +70,5 @@ export default async function handle(req: Request, res: NextApiResponse) {
 
   const archivedResultsFiltered = archivedResults.filter(Boolean);
 
-  res.json(archivedResultsFiltered);
+  res.status(200).json(archivedResultsFiltered);
 }
