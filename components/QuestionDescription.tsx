@@ -13,7 +13,6 @@ export const QuestionDescription = ({ question }: { question: Question }) => {
   useEffect(() => {
     let links = document.links;
     for (let i = 0; i < links.length; i++) {
-      //check if href starts with  http:// or https://
       if (!links[i].href.startsWith(`${window.location.origin}`)) {
         links[i].target = "_blank";
       }
