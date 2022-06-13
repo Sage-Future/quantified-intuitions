@@ -17,7 +17,7 @@ export const Navbar = () => {
   };
   const { pathname } = useRouter();
   const navigation = [
-    { name: "Calibration", href: "/", current: pathname === "/" },
+    { name: "Pastcast", href: "/", current: pathname === "/" },
     {
       name: "Leaderboard",
       href: "/leaderboard",

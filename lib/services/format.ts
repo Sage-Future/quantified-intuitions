@@ -15,3 +15,16 @@ export const dateToObject = (date: Date) => {
     year: date.getFullYear(),
   };
 };
+
+export const valueToString = (value: string | number) => {
+  if (typeof value === "string") {
+    return value;
+  }
+  if (typeof value === "number") {
+    if (value % 1 === 0) {
+      return value.toString();
+    }
+    return value.toFixed(3);
+  }
+  return "";
+};

@@ -24,15 +24,17 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
+  const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
   return {
     props: {
       session,
-      questions,
+      questions: shuffledQuestions,
     },
   };
 };
 
 const Home = ({ questions }: { questions: Question[] }) => {
+  //randomize questions
   return (
     <div className="min-h-full">
       <Navbar />
@@ -47,7 +49,9 @@ const Home = ({ questions }: { questions: Question[] }) => {
         </header>
           */}
         <main>
-          <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
+          <div
+          //className="max-w-7xl mx-auto sm:px-6 lg:px-8"
+          >
             {/* Replace with your content */}
             <QuestionRoulette questions={questions} />
             {/* /End replace */}

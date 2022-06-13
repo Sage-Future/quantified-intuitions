@@ -1,15 +1,20 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { SearchIcon } from "@heroicons/react/solid";
 import { Question } from "@prisma/client";
 
 import { dateToObject } from "../lib/services/format";
+import { SearchSkeleton } from "./SearchSkeleton";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
   const { register, handleSubmit } = useForm();
   const [results, setResults] = useState<any>();
+  const [searching, setSearching] = useState<boolean>(false);
   const onSubmit = async (data: any) => {
+    if (searching) return;
+    setResults(undefined);
+    setSearching(true);
     const dateObj = dateToObject(question.vantageDate);
     const result = await fetch("/api/v0/searchFromDate", {
       method: "POST",
@@ -26,7 +31,11 @@ export const VantageSearch = ({ question }: { question: Question }) => {
       const json = await res.json();
       setResults(json);
     });
+    setSearching(false);
   };
+  useEffect(() => {
+    setResults(undefined);
+  }, [question]);
   return (
     <>
       <div className="flex-1 flex items-center justify-center px-2 ">
@@ -35,6 +44,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
             <label htmlFor="search" className="sr-only">
               Search
             </label>
+
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                 <SearchIcon
@@ -53,13 +63,15 @@ export const VantageSearch = ({ question }: { question: Question }) => {
           </form>
         </div>
       </div>
-      {results !== undefined && (
-        <div className="flow-root mt-6">
-          <ul role="list" className="-my-5 divide-y divide-gray-200">
-            {results.map((result: any) => (
+      <div className="flow-root mt-6">
+        <ul role="list" className="-my-5 divide-y divide-gray-200 ">
+          <li className="py-4" />
+          {searching && <SearchSkeleton num={5} />}
+          {results !== undefined &&
+            results.map((result: any) => (
               <li key={result.position} className="py-5">
                 <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
-                  <p className="text-sm text-gray-600 line-clamp-2">
+                  <p className="text-sm text-gray-500 line-clamp-2">
                     {result.displayed_link}
                   </p>
                   <h3 className="mt-1 text-sm font-semibold text-indigo-600">
@@ -79,9 +91,8 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                 </div>
               </li>
             ))}
-          </ul>
-        </div>
-      )}
+        </ul>
+      </div>
     </>
   );
 };

@@ -20,22 +20,10 @@ export const QuestionDescription = ({ question }: { question: Question }) => {
         {question.crowdForecast !== null && (
           <p>The crowd forecast is {question.crowdForecast}</p>
         )}
-        {question.url !== null && question.platform !== null && (
-          <>
-            <p>
-              This pastcasting question is thanks to{" "}
-              <a href={question.url} target="_blank" rel="noopener noreferrer">
-                {question.platform}
-              </a>
-            </p>
-            <br />
-          </>
-        )}
-        <p>
-          <ReactMarkdown remarkPlugins={[remarkGfm]}>
-            {question.description || ""}
-          </ReactMarkdown>
-        </p>
+        <br />
+        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+          {question.description || ""}
+        </ReactMarkdown>
       </div>
     </>
   );

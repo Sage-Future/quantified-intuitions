@@ -49,25 +49,27 @@ export const ForecastForm = ({
     <FormProvider {...methods}>
       <form
         onSubmit={methods.handleSubmit(onSubmit)}
-        className="space-y-8 divide-y divide-gray-200"
+        className="space-y-8 divide-y divide-gray-200 border sm:rounded-md"
       >
-        <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-          <BinaryForecast
-            disabled={questionId === undefined || answer !== undefined}
-          />
-          <CommentForm
-            disabled={questionId === undefined || answer !== undefined}
-          />
-          {pointsEarned !== undefined && answer !== undefined ? (
-            <>
-              <Result answer={answer} pointsEarned={pointsEarned} />
-              <NextQuestion nextQuestion={finishedQuestion} />
-            </>
-          ) : (
-            questionId !== undefined && (
-              <SubmitForm nextQuestion={finishedQuestion} />
-            )
-          )}
+        <div className="px-4 py-5 sm:p-6">
+          <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+            <BinaryForecast
+              disabled={questionId === undefined || answer !== undefined}
+            />
+            <CommentForm
+              disabled={questionId === undefined || answer !== undefined}
+            />
+            {pointsEarned !== undefined && answer !== undefined ? (
+              <>
+                <Result answer={answer} pointsEarned={pointsEarned} />
+                <NextQuestion nextQuestion={finishedQuestion} />
+              </>
+            ) : (
+              questionId !== undefined && (
+                <SubmitForm nextQuestion={finishedQuestion} />
+              )
+            )}
+          </div>
         </div>
       </form>
     </FormProvider>
