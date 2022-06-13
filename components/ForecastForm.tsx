@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { isValidBinaryForecast } from "../lib/services/validation";
 import { BinaryForecast } from "./BinaryForecast";
 import { CommentForm } from "./CommentForm";
 import { NextQuestion } from "./NextQuestion";
@@ -26,6 +27,13 @@ export const ForecastForm = ({
     nextQuestion();
   };
   const onSubmit = async (data: any) => {
+    if (
+      data.binaryProbability === undefined ||
+      !isValidBinaryForecast(data.binaryProbability)
+    ) {
+      return;
+    }
+
     data.questionId = questionId;
     data.binaryProbability = Number(data.binaryProbability) / 100.0;
     data.skipped = false;
@@ -43,8 +51,23 @@ export const ForecastForm = ({
       }
     });
   };
-  // TODO: validate binary forecast is valid
+  const onSkip = async () => {
+    await fetch("/api/v0/skipQuestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ questionId }),
+    }).then(async (res) => {
+      const json = await res.json();
+      if (res.status === 201) {
+        finishedQuestion();
+      }
+    });
+  };
+
   // TODO: change button to async button
+  // TODO: error message for invalid binary forecast
   return (
     <FormProvider {...methods}>
       <form
@@ -65,9 +88,7 @@ export const ForecastForm = ({
                 <NextQuestion nextQuestion={finishedQuestion} />
               </>
             ) : (
-              questionId !== undefined && (
-                <SubmitForm nextQuestion={finishedQuestion} />
-              )
+              questionId !== undefined && <SubmitForm skipQuestion={onSkip} />
             )}
           </div>
         </div>

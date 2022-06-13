@@ -13,7 +13,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
   const users = await prisma.user.findMany({
     include: {
-      pastcasts: true,
+      pastcasts: {
+        where: {
+          skipped: false,
+        },
+      },
     },
   });
 

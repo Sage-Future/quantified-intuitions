@@ -5,6 +5,7 @@ import { getSession } from "next-auth/react";
 
 import { prisma } from "../../../lib/prisma";
 import { binaryScore } from "../../../lib/services/scoring";
+import { isValidBinaryProbability } from "../../../lib/services/validation";
 
 interface Request extends NextApiRequest {
   body: {
@@ -15,7 +16,11 @@ interface Request extends NextApiRequest {
 
 const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
   const { questionId, binaryProbability } = req.body;
-  if (typeof questionId !== "string" || typeof binaryProbability !== "number") {
+  if (
+    typeof questionId !== "string" ||
+    typeof binaryProbability !== "number" ||
+    !isValidBinaryProbability(binaryProbability)
+  ) {
     res.status(400).json({
       error: "invalid request",
     });

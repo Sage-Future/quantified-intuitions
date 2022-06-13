@@ -25,11 +25,11 @@ export const BinaryForecast = ({
           disabled={disabled}
           className={clsx(
             forecast === "" || forecast === undefined
-              ? "focus:ring-indigo-500 focus:border-indigo-500"
+              ? "focus:ring-indigo-500 focus:border-indigo-500 border-gray-300"
               : isValidBinaryForecast(forecast)
               ? "ring-green-500 border-green-500 focus:ring-green-500 focus:border-green-500"
               : "ring-red-500 border-red-500 focus:ring-red-500 focus:border-red-500",
-            "shadow-sm  block w-full  sm:text-sm border-gray-300 rounded-md text-right pr-7 disabled:opacity-25 disabled:bg-gray-100"
+            "shadow-sm  block w-full  sm:text-sm  rounded-md text-right pr-7 disabled:opacity-25 disabled:bg-gray-100"
           )}
           {...register("binaryProbability")}
         />

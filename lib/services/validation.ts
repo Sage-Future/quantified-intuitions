@@ -6,3 +6,10 @@ export const isValidBinaryForecast = (forecast: string) =>
     Number(forecast) > MAX_PREDICTION_PROBABILITY * 100.0 ||
     Number(forecast) < MIN_PREDICTION_PROBABILITY * 100.0
   );
+
+export const isValidBinaryProbability = (probability: number) =>
+  !(
+    Number.isNaN(probability) ||
+    probability > MAX_PREDICTION_PROBABILITY ||
+    probability < MIN_PREDICTION_PROBABILITY
+  );

@@ -4,7 +4,7 @@ import { useForm } from "react-hook-form";
 import { SearchIcon } from "@heroicons/react/solid";
 import { Question } from "@prisma/client";
 
-import { dateToObject } from "../lib/services/format";
+import { dateMed, dateToObject } from "../lib/services/format";
 import { SearchSkeleton } from "./SearchSkeleton";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
@@ -42,6 +42,12 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     <>
       <div className="flex-1 flex items-center justify-center px-2 ">
         <div className="max-w-lg w-full ">
+          <div className="prose">
+            <h3 className="text-center mb-6">
+              <span className="text-gray-500">{`Search the web as of `}</span>
+              <span className="">{dateMed(question.vantageDate)}</span>
+            </h3>
+          </div>
           <form onSubmit={handleSubmit(onSubmit)}>
             <label htmlFor="search" className="sr-only">
               Search
@@ -76,7 +82,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                   <p className="text-sm text-gray-500 line-clamp-2">
                     {result.displayed_link}
                   </p>
-                  <h3 className="mt-1 text-sm font-semibold text-indigo-600">
+                  <h3 className="mt-1 text-sm font-semibold text-indigo-700">
                     <a
                       href={result.link}
                       target="_blank"
