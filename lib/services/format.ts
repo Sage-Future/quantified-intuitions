@@ -8,10 +8,14 @@ export const dateMed = (date: Date) => {
   return DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED);
 };
 
+export const numToTwoDigits = (num: number) => {
+  return num < 10 ? `0${num}` : `${num}`;
+};
+
 export const dateToObject = (date: Date) => {
   return {
-    month: date.getMonth() + 1,
-    day: date.getDate(),
+    month: numToTwoDigits(date.getMonth() + 1),
+    day: numToTwoDigits(date.getDay()),
     year: date.getFullYear(),
   };
 };

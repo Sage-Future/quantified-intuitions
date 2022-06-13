@@ -14,6 +14,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
   const start = Date.now();
 
   const { query, maxMonth, maxDay, maxYear } = req.body;
+
   const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=b1345b2c7e4bc848fa01b269898eeae970907e8abecc064f93b912a3812d7960&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=25`;
 
   const rawResult = await fetch(fetchUrl);
@@ -34,6 +35,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
     const result = serpapiResults[i];
     //console.log(Date.now());
     const cdxFetchURL = `http://web.archive.org/cdx/search/cdx?url=${result["link"]}&to=${maxYear}${maxMonth}${maxDay}&output=json&limit=-2&fl=timestamp&fastLatest=true`;
+    console.log(cdxFetchURL);
     let cdxResponse = undefined;
     try {
       cdxResponse = await fetch(cdxFetchURL);
