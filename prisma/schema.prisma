@@ -46,6 +46,7 @@ model User {
   accounts      Account[]
   sessions      Session[]
   pastcasts     Pastcast[]
+  searches      Search[]
 }
 
 model VerificationToken {
@@ -81,4 +82,23 @@ model Pastcast {
   question          Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 
   @@id([questionId, userId])
+}
+
+model Search {
+  id       String         @id @default(cuid())
+  userId   String
+  finished Boolean        @default(false)
+  results  SearchResult[]
+  user     User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model SearchResult {
+  id            String  @id @default(cuid())
+  position      Int
+  displayedLink String
+  link          String
+  title         String
+  snippet       String
+  searchId      String?
+  search        Search? @relation(fields: [searchId], references: [id])
 }

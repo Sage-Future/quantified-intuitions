@@ -1,8 +1,13 @@
 import type { NextApiRequest, NextApiResponse } from "next";
+import { getSession } from "next-auth/react";
+
+import { prisma } from "../../../lib/prisma";
+import { MAX_SEARCH_RESULTS } from "../../../lib/services/magicNumbers";
 
 interface Request extends NextApiRequest {
   body: {
     query: string;
+    searchId: string;
     maxMonth: string;
     maxDay: string;
     maxYear: string;
@@ -10,30 +15,50 @@ interface Request extends NextApiRequest {
 }
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-export default async function handle(req: Request, res: NextApiResponse) {
+const newSearch = async (searchId: string, userId: string) => {
+  const search = await prisma.search.create({
+    data: {
+      id: searchId,
+      user: {
+        connect: {
+          id: userId,
+        },
+      },
+    },
+  });
+};
+
+const createSearchResult = async (result: any, searchId: string) => {
+  const searchResult = await prisma.searchResult.create({
+    data: {
+      position: result.position,
+      displayedLink: result.displayed_link,
+      link: result.link,
+      title: result.title,
+      snippet: result.snippet,
+      search: {
+        connect: {
+          id: searchId,
+        },
+      },
+    },
+  });
+  return searchResult;
+};
+
+const processSearch = async (
+  serpapiResults: any[],
+  searchId: string,
+  maxYear: string,
+  maxMonth: string,
+  maxDay: string
+) => {
   const start = Date.now();
-
-  const { query, maxMonth, maxDay, maxYear } = req.body;
-
-  const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=b1345b2c7e4bc848fa01b269898eeae970907e8abecc064f93b912a3812d7960&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=25`;
-
-  const rawResult = await fetch(fetchUrl);
-
-  if (!rawResult.ok) {
-    console.log(rawResult);
-    res.status(400);
-    return;
-  }
-
-  const serpapiResults = (await rawResult.json())["organic_results"] as any[];
-
-  const archivedResults = [] as any[];
   for (let i = 0; i < serpapiResults.length; i++) {
-    if (Date.now() - start > 9 * 1000) {
+    if (Date.now() - start > 50000) {
       break;
     }
     const result = serpapiResults[i];
-    //console.log(Date.now());
     const cdxFetchURL = `http://web.archive.org/cdx/search/cdx?url=${result["link"]}&to=${maxYear}${maxMonth}${maxDay}&output=json&limit=-2&fl=timestamp&fastLatest=true`;
     console.log(cdxFetchURL);
     let cdxResponse = undefined;
@@ -62,11 +87,39 @@ export default async function handle(req: Request, res: NextApiResponse) {
     } else {
       continue;
     }
+    createSearchResult(result, searchId);
+  }
+  const search = await prisma.search.update({
+    where: {
+      id: searchId,
+    },
+    data: {
+      finished: true,
+    },
+  });
+};
 
-    archivedResults.push(result);
+export default async function handle(req: Request, res: NextApiResponse) {
+  const { query, searchId, maxMonth, maxDay, maxYear } = req.body;
+  const session = await getSession({ req });
+  if (session === null) {
+    res.status(401).json({ message: "Not logged in" });
+    return;
   }
 
-  const archivedResultsFiltered = archivedResults.filter(Boolean);
+  const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=b1345b2c7e4bc848fa01b269898eeae970907e8abecc064f93b912a3812d7960&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=${MAX_SEARCH_RESULTS}`;
 
-  res.status(200).json(archivedResultsFiltered);
+  const rawResult = await fetch(fetchUrl);
+
+  if (!rawResult.ok) {
+    console.log(rawResult);
+    res.status(400);
+    return;
+  }
+  const serpapiResults = (await rawResult.json())["organic_results"] as any[];
+
+  newSearch(searchId, session.user.id);
+  processSearch(serpapiResults, searchId, maxYear, maxMonth, maxDay);
+
+  res.status(200).json({});
 }
