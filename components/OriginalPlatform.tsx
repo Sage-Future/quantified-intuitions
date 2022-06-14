@@ -10,7 +10,7 @@ export const OriginalPlatform = ({ question }: { question: Question }) => {
           target="_blank"
           rel="noopener noreferrer"
           //underline
-          className="text-blue-500 hover:text-blue-700 underline font-bold"
+          className="text-blue-500 hover:text-blue-700 underline font-bold capitalize"
         >
           {question.platform}
         </a>
