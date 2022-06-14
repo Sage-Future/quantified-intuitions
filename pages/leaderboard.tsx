@@ -1,5 +1,4 @@
-import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { GetStaticProps } from "next";
 import { useState } from "react";
 
 import { ChevronDownIcon } from "@heroicons/react/solid";
@@ -9,8 +8,7 @@ import { prisma } from "../lib/prisma";
 import { valueToString } from "../lib/services/format";
 import { UserWithPastcasts } from "../types/additional";
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+export const getStaticProps: GetStaticProps = async (ctx) => {
   const users = await prisma.user.findMany({
     include: {
       pastcasts: true,
@@ -19,9 +17,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
   return {
     props: {
-      session,
       users,
     },
+    revalidate: 10,
   };
 };
 
