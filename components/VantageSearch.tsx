@@ -41,7 +41,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
       const archivedResults = [] as any[];
       for (let i = 0; i < searchResults.length; i++) {
         const result = searchResults[i];
-        const cdxFetchURL = `http://web.archive.org/cdx/search/cdx?url=${result["link"]}&to=${dateObj.year}${dateObj.month}${dateObj.day}&output=json&limit=-2&fl=timestamp&fastLatest=true`;
+        const cdxFetchURL = `https://web.archive.org/cdx/search/cdx?url=${result["link"]}&to=${dateObj.year}${dateObj.month}${dateObj.day}&output=json&limit=-2&fl=timestamp&fastLatest=true`;
         let cdxResponse = undefined;
         try {
           cdxResponse = await fetch(cdxFetchURL);
@@ -71,7 +71,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
 
         archivedResults.push(result);
       }
-      setResults(archivedResults);
+      setResults(archivedResults.filter(Boolean));
     };
     if (searchResults !== undefined) {
       fetchWayback();
