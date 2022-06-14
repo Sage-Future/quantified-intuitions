@@ -29,7 +29,7 @@ export const QuestionDescription = ({ question }: { question: Question }) => {
       </h3>
       <div className="flex space-x-4 items-center justify-center">
         <h2 className="text-center my-0">{question.title}</h2>
-        <div className="">
+        <div className="flex flex-col items-center justify-center">
           <h3 className="text-sky-500 my-0">Crowd:</h3>
           <h1 className="text-sky-600 my-0">
             {question.crowdForecast !== null
