@@ -111,8 +111,8 @@ export const ForecastForm = ({
           <div className="grid gap-y-6">
             <div className="grid gap-y-2">
               <div className="block text-sm font-medium text-gray-700 text-center">
-                If you have prior knowledge on this question, what was the
-                answer?
+                If you have prior knowledge on this question, what do you
+                remember as the most likely answer?
               </div>
               <div className="flex justify-center">
                 <div className="grid grid-cols-2 gap-4">

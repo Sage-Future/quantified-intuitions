@@ -43,7 +43,7 @@ export const Result = ({
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">
                 {skipped
-                  ? "Don't be overconfident!"
+                  ? "Not quite! But that's okay!"
                   : `You lost ${valueToString(-1 * pointsEarned)} points`}
               </p>
             </div>
