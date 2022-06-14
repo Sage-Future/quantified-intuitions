@@ -24,11 +24,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
-  const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+  //get random question from questions
+  const question = questions[Math.floor(Math.random() * questions.length)];
+  //const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
   return {
     props: {
       session,
-      questions: shuffledQuestions,
+      questions: [question],
+      //questions: shuffledQuestions,
     },
   };
 };

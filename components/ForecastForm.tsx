@@ -63,7 +63,6 @@ export const ForecastForm = ({
       if (res.status === 201) {
         setPointsEarned(json.pastcast.score);
         setAnswer(json.resolution);
-        setMyAnswer(undefined);
       } else {
         setIsFormDisabled(false);
       }
@@ -110,9 +109,12 @@ export const ForecastForm = ({
         <div className="px-4 py-5 sm:p-6">
           <div className="grid gap-y-6">
             <div className="grid gap-y-2">
-              <div className="block text-sm font-medium text-gray-700 text-center">
+              <div className="block text-sm font-medium text-gray-700 ">
                 If you have prior knowledge on this question, what do you
                 remember as the most likely answer?
+                <span className="block text-gray-500">
+                  (Answering will skip this question)
+                </span>
               </div>
               <div className="flex justify-center">
                 <div className="grid grid-cols-2 gap-4">
@@ -122,6 +124,8 @@ export const ForecastForm = ({
                       "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100",
                       (myAnswer === undefined || myAnswer === false) &&
                         "disabled:opacity-50",
+                      myAnswer === true &&
+                        "outline-none ring-2 ring-offset-2 ring-green-500",
                       !isFormDisabled &&
                         " hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
                     )}
@@ -136,6 +140,8 @@ export const ForecastForm = ({
                       "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100",
                       (myAnswer === undefined || myAnswer === true) &&
                         "disabled:opacity-50",
+                      myAnswer === false &&
+                        "outline-none ring-2 ring-offset-2 ring-red-500",
                       !isFormDisabled &&
                         " hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                     )}
