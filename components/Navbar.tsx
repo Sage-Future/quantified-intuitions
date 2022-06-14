@@ -13,11 +13,11 @@ export const Navbar = () => {
     email: session?.user?.email ?? "",
     imageUrl:
       session?.user?.image ??
-      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80",
+      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
   };
   const { pathname } = useRouter();
   const navigation = [
-    { name: "Pastcast", href: "/", current: pathname === "/" },
+    { name: "Pastcasting ", href: "/", current: pathname === "/" },
     {
       name: "Leaderboard",
       href: "/leaderboard",
@@ -43,7 +43,9 @@ export const Navbar = () => {
         <>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
+              <div className="flex" />
               <div className="flex">
+                {/*
                 <div className="flex-shrink-0 flex items-center">
                   <img
                     className="block lg:hidden h-8 w-auto"
@@ -56,6 +58,7 @@ export const Navbar = () => {
                     alt="Workflow"
                   />
                 </div>
+                */}
                 <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
                   {navigation.map((item) => (
                     <a
