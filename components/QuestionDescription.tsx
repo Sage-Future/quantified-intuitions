@@ -24,16 +24,19 @@ export const QuestionDescription = ({ question }: { question: Question }) => {
   return (
     <div className="prose">
       <h3 className="text-center">
-        <span className="text-gray-500">{`Today's date is `}</span>
+        <span className="text-gray-500">{`The date is `}</span>
         <span className="">{dateMed(question.vantageDate)}</span>
       </h3>
       <div className="flex space-x-4 items-center justify-center">
         <h2 className="text-center my-0">{question.title}</h2>
-        <h1 className="text-sky-600 my-0">
-          {question.crowdForecast !== null
-            ? floatToPercent(question.crowdForecast)
-            : "N/A"}
-        </h1>
+        <div className="">
+          <h3 className="text-sky-500 my-0">Crowd:</h3>
+          <h1 className="text-sky-600 my-0">
+            {question.crowdForecast !== null
+              ? floatToPercent(question.crowdForecast)
+              : "N/A"}
+          </h1>
+        </div>
       </div>
       <ReactMarkdown remarkPlugins={[remarkGfm]}>
         {question.description || ""}

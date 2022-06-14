@@ -13,11 +13,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
   const users = await prisma.user.findMany({
     include: {
-      pastcasts: {
-        where: {
-          skipped: false,
-        },
-      },
+      pastcasts: true,
     },
   });
 
@@ -33,16 +29,32 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
   const formattedUsers = users.map((user) => ({
     id: user.id,
     name: user.name,
-    pastcasts: user.pastcasts.length,
-    points: user.pastcasts.reduce((acc, curr) => acc + curr.score, 0),
+    pastcasts: user.pastcasts.reduce(
+      (acc, pastcast) => acc + (pastcast.skipped === false ? 1 : 0),
+      0
+    ),
+    points: user.pastcasts.reduce(
+      (acc, curr) => acc + (curr.skipped ? 0 : curr.score),
+      0
+    ),
+    skippedCorrectly: user.pastcasts.reduce(
+      (acc, curr) => acc + (curr.skipped ? (curr.score > 0 ? 1 : 0) : 0),
+      0
+    ),
   }));
-  const validSortsArray = ["Pastcasts", "Points"];
+  const validSortsArray = ["Pastcasts", "Points", "Prior Knowledge"];
   const [sortType, setSortType] = useState<string>("Points");
   const sortedUsers = formattedUsers.sort((a, b) => {
     if (sortType === "Pastcasts") {
       return b.pastcasts - a.pastcasts;
     }
-    return b.points - a.points;
+    if (sortType === "Points") {
+      return b.points - a.points;
+    }
+    if (sortType === "Prior Knowledge") {
+      return b.skippedCorrectly - a.skippedCorrectly;
+    }
+    return 0;
   });
   return (
     <div className="min-h-full">
@@ -58,7 +70,12 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
                       <table className="min-w-full divide-y divide-gray-300">
                         <thead className="bg-gray-50">
                           <tr>
-                            {["Name", "Pastcasts", "Points"].map((header) => (
+                            {[
+                              "Name",
+                              "Pastcasts",
+                              "Points",
+                              "Prior Knowledge",
+                            ].map((header) => (
                               //header is valid sort type
                               <th
                                 key={header}
@@ -105,7 +122,12 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
                         <tbody className="divide-y divide-gray-200 bg-white">
                           {sortedUsers.map((user) => (
                             <tr key={user.id}>
-                              {["name", "pastcasts", "points"].map((key) => (
+                              {[
+                                "name",
+                                "pastcasts",
+                                "points",
+                                "skippedCorrectly",
+                              ].map((key) => (
                                 <td
                                   key={key}
                                   className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"

@@ -5,9 +5,11 @@ import { valueToString } from "../lib/services/format";
 export const Result = ({
   answer,
   pointsEarned,
+  skipped,
 }: {
   answer: string;
   pointsEarned: number;
+  skipped: boolean;
 }) => {
   return (
     <div className="sm:col-span-6">
@@ -22,7 +24,9 @@ export const Result = ({
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-green-800">
-                You earned {valueToString(pointsEarned)} points!
+                {skipped
+                  ? "Your memory is fantastic!"
+                  : `You earned ${valueToString(pointsEarned)} points!`}
               </p>
             </div>
           </div>
@@ -38,7 +42,9 @@ export const Result = ({
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">
-                You lost {valueToString(-1 * pointsEarned)} points
+                {skipped
+                  ? "Don't be overconfident!"
+                  : `You lost ${valueToString(-1 * pointsEarned)} points`}
               </p>
             </div>
           </div>

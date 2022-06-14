@@ -14,9 +14,7 @@ export const QuestionRoulette = ({ questions }: { questions: Question[] }) => {
   return (
     <ThreeColumnLayout
       question={question}
-      right={
-        <ForecastForm questionId={question?.id} nextQuestion={nextQuestion} />
-      }
+      right={<ForecastForm question={question} nextQuestion={nextQuestion} />}
     />
   );
 };
