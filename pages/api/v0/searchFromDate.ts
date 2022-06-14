@@ -11,7 +11,7 @@ interface Request extends NextApiRequest {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 export default async function handle(req: Request, res: NextApiResponse) {
-  //const start = Date.now();
+  const start = Date.now();
 
   const { query, maxMonth, maxDay, maxYear } = req.body;
 
@@ -27,7 +27,6 @@ export default async function handle(req: Request, res: NextApiResponse) {
 
   const serpapiResults = (await rawResult.json())["organic_results"] as any[];
 
-  /*
   const archivedResults = [] as any[];
   for (let i = 0; i < serpapiResults.length; i++) {
     if (Date.now() - start > 9 * 1000) {
@@ -68,7 +67,6 @@ export default async function handle(req: Request, res: NextApiResponse) {
   }
 
   const archivedResultsFiltered = archivedResults.filter(Boolean);
-  */
 
-  res.status(200).json(serpapiResults);
+  res.status(200).json(archivedResultsFiltered);
 }

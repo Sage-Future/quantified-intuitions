@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { SearchIcon } from "@heroicons/react/solid";
@@ -9,14 +9,13 @@ import { SearchSkeleton } from "./SearchSkeleton";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
   const { register, handleSubmit } = useForm();
-  const id = useRef(0);
-  const dateObj = dateToObject(question.vantageDate);
-  const [searchResults, setSearchResults] = useState<any>();
   const [results, setResults] = useState<any>();
   const [searching, setSearching] = useState<boolean>(false);
   const onSubmit = async (data: any) => {
+    if (searching) return;
     setResults(undefined);
-    setSearchResults(undefined);
+    setSearching(true);
+    const dateObj = dateToObject(question.vantageDate);
     const result = await fetch("/api/v0/searchFromDate", {
       method: "POST",
       headers: {
@@ -31,57 +30,13 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     }).then(async (res) => {
       if (res.status === 200) {
         const json = await res.json();
-        setSearchResults(json);
+        setResults(json);
       }
+      setSearching(false);
     });
   };
   useEffect(() => {
-    const fetchWayback = async () => {
-      const initialId = id.current;
-      const archivedResults = [] as any[];
-      for (let i = 0; i < searchResults.length; i++) {
-        const result = searchResults[i];
-        const cdxFetchURL = `https://web.archive.org/cdx/search/cdx?url=${result["link"]}&to=${dateObj.year}${dateObj.month}${dateObj.day}&output=json&limit=-2&fl=timestamp&fastLatest=true`;
-        let cdxResponse = undefined;
-        try {
-          cdxResponse = await fetch(cdxFetchURL);
-        } catch (e) {
-          // TODO: retry with exponential backoff maybe?
-          console.log(cdxFetchURL);
-          console.log(e);
-          continue;
-        }
-        if (!cdxResponse.ok) {
-          console.log(cdxResponse);
-          continue;
-        }
-        const cdxArr = await cdxResponse.json();
-        //console.log(cdxArr);
-        if (cdxArr[2] && cdxArr[2][0]) {
-          result[
-            "link"
-          ] = `https://web.archive.org/web/${cdxArr[2][0]}/${result["link"]}`;
-        } else if (cdxArr[1] && cdxArr[1][0]) {
-          result[
-            "link"
-          ] = `https://web.archive.org/web/${cdxArr[1][0]}/${result["link"]}`;
-        } else {
-          continue;
-        }
-
-        archivedResults.push(result);
-      }
-      setResults(archivedResults.filter(Boolean));
-    };
-    if (searchResults !== undefined) {
-      fetchWayback();
-    }
-  }, [searchResults]);
-
-  useEffect(() => {
-    setSearchResults(undefined);
     setResults(undefined);
-    setSearching(false);
   }, [question]);
   return (
     <>
