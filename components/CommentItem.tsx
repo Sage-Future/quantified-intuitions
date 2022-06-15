@@ -52,8 +52,10 @@ export const CommentItem = ({
                   </p>
                 </div>
                 <p className="mt-0.5 text-sm text-gray-500">
-                  Commented on {dateMed(comment.createdAt)}
+                  Commented on {dateMed(comment.createdAt)} with{" "}
+                  {comment.voteTotal} upvotes
                 </p>
+                <p className="mt-0.5 text-sm text-gray-500"></p>
               </div>
               <div className="prose mt-2 text-sm text-gray-700">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
