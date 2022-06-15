@@ -3,7 +3,7 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-import { prisma } from "../../../lib/prisma";
+import { Prisma } from "../../../lib/prisma";
 import { binaryScore } from "../../../lib/services/scoring";
 import { isValidBinaryProbability } from "../../../lib/services/validation";
 
@@ -35,7 +35,7 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
     });
     return;
   }
-  const question = await prisma.question.findUnique({
+  const question = await Prisma.question.findUnique({
     where: {
       id: questionId,
     },
@@ -51,7 +51,7 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
     question.crowdForecast || /* default to 0.5 */ 0.5,
     question.binaryResolution
   );
-  const pastcast = await prisma.pastcast.create({
+  const pastcast = await Prisma.pastcast.create({
     data: {
       userId: session.user.id,
       questionId,

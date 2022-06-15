@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
-import { prisma } from "../../../lib/prisma";
+import { Prisma } from "../../../lib/prisma";
 import { MAX_SEARCH_RESULTS } from "../../../lib/services/magicNumbers";
 
 interface Request extends NextApiRequest {
@@ -16,7 +16,7 @@ interface Request extends NextApiRequest {
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
 const newSearch = async (searchId: string, userId: string) => {
-  const search = await prisma.search.create({
+  const search = await Prisma.search.create({
     data: {
       id: searchId,
       user: {
@@ -29,7 +29,7 @@ const newSearch = async (searchId: string, userId: string) => {
 };
 
 const createSearchResult = async (result: any, searchId: string) => {
-  const searchResult = await prisma.searchResult.create({
+  const searchResult = await Prisma.searchResult.create({
     data: {
       position: result.position,
       displayedLink: result.displayed_link,
@@ -89,7 +89,7 @@ const processSearch = async (
     }
     createSearchResult(result, searchId);
   }
-  const search = await prisma.search.update({
+  const search = await Prisma.search.update({
     where: {
       id: searchId,
     },

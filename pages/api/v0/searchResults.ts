@@ -1,6 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 
-import { prisma } from "../../../lib/prisma";
+import { Prisma } from "../../../lib/prisma";
 
 const searchResults = async (req: NextApiRequest, res: NextApiResponse) => {
   const { searchId } = req.query;
@@ -8,7 +8,7 @@ const searchResults = async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(400).json({ message: "Bad Request" });
     return;
   }
-  const search = await prisma.search.findUnique({
+  const search = await Prisma.search.findUnique({
     where: {
       id: searchId,
     },

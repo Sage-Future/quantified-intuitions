@@ -2,7 +2,7 @@ import { getSession } from "next-auth/react";
 
 import { Navbar } from "../components/Navbar";
 import { QuestionRoulette } from "../components/QuestionRoulette";
-import { prisma } from "../lib/prisma";
+import { Prisma } from "../lib/prisma";
 import { QuestionWithComments } from "../types/additional";
 
 import type { GetServerSideProps, NextPage } from "next";
@@ -14,7 +14,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return { props: {} };
   }
   const userId = session?.user?.id || "";
-  const questions = await prisma.question.findMany({
+  const questions = await Prisma.question.findMany({
     where: {
       pastcasts: {
         none: {

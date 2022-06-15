@@ -4,12 +4,12 @@ import { useState } from "react";
 import { ChevronDownIcon } from "@heroicons/react/solid";
 
 import { Navbar } from "../components/Navbar";
-import { prisma } from "../lib/prisma";
+import { Prisma } from "../lib/prisma";
 import { valueToString } from "../lib/services/format";
 import { UserWithPastcasts } from "../types/additional";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
-  const users = await prisma.user.findMany({
+  const users = await Prisma.user.findMany({
     include: {
       pastcasts: true,
     },
