@@ -23,6 +23,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
     include: {
+      pastcasts: true,
       comments: {
         orderBy: {
           createdAt: "desc",
@@ -30,13 +31,35 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     },
   });
+  const minSkipped = questions.reduce(
+    (acc, curr) =>
+      Math.min(
+        curr.pastcasts.reduce(
+          (acc2, pastcast) => acc2 + (pastcast.skipped ? 1 : 0),
+          0
+        ),
+        acc
+      ),
+    Number.MAX_VALUE
+  );
+  const filteredQuestions = questions.filter(
+    (question) =>
+      question.pastcasts.reduce(
+        (acc, curr) => acc + (curr.skipped ? 1 : 0),
+        0
+      ) === minSkipped
+  );
+
   //get random question from questions
-  const question = questions[Math.floor(Math.random() * questions.length)];
+  const question =
+    filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)];
   //const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
   //filter comments after vantage point
-  question.comments = question.comments.filter(
-    (comment) => comment.createdAt < question.vantageDate
-  );
+  if (question.comments !== undefined) {
+    question.comments = question.comments.filter(
+      (comment) => comment.createdAt < question.vantageDate
+    );
+  }
   return {
     props: {
       session,

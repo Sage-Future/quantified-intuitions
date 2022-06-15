@@ -52,8 +52,13 @@ export const CommentItem = ({
                   </p>
                 </div>
                 <p className="mt-0.5 text-sm text-gray-500">
-                  Commented on {dateMed(comment.createdAt)} with{" "}
-                  {comment.voteTotal} upvotes
+                  Commented on{" "}
+                  <span className="text-gray-600">
+                    {dateMed(comment.createdAt)}
+                  </span>{" "}
+                  with{" "}
+                  <span className="text-gray-600">{comment.voteTotal}</span>{" "}
+                  upvotes
                 </p>
                 <p className="mt-0.5 text-sm text-gray-500"></p>
               </div>
