@@ -1,10 +1,9 @@
 import { getSession } from "next-auth/react";
 
-import { Question } from "@prisma/client";
-
 import { Navbar } from "../components/Navbar";
 import { QuestionRoulette } from "../components/QuestionRoulette";
 import { prisma } from "../lib/prisma";
+import { QuestionWithComments } from "../types/additional";
 
 import type { GetServerSideProps, NextPage } from "next";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -23,6 +22,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         },
       },
     },
+    include: {
+      comments: {
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
+    },
   });
   //get random question from questions
   const question = questions[Math.floor(Math.random() * questions.length)];
@@ -36,7 +42,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-const Home = ({ questions }: { questions: Question[] }) => {
+const Home = ({ questions }: { questions: QuestionWithComments[] }) => {
   //randomize questions
   return (
     <div className="min-h-full">

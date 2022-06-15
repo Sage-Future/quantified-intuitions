@@ -1,9 +1,9 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
-import { Question } from "@prisma/client";
 
-import { CalibrationOptions } from "../types/additional";
+
+import { CalibrationOptions, QuestionWithComments } from "../types/additional";
 import { QuestionDescription } from "./QuestionDescription";
 import { Sidebar } from "./Sidebar";
 import { VantageSearch } from "./VantageSearch";
@@ -12,7 +12,7 @@ export const ThreeColumnLayout = ({
   question,
   right,
 }: {
-  question: Question;
+  question: QuestionWithComments;
   right: React.ReactNode;
 }) => {
   const [sidebarSelected, setSidebarSelected] = useState<CalibrationOptions>(

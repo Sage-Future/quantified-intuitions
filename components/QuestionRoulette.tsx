@@ -1,11 +1,16 @@
 import Router, { useRouter } from "next/router";
 
-import { Question } from "@prisma/client";
 
+
+import { QuestionWithComments } from "../types/additional";
 import { ForecastForm } from "./ForecastForm";
 import { ThreeColumnLayout } from "./ThreeColumnLayout";
 
-export const QuestionRoulette = ({ questions }: { questions: Question[] }) => {
+export const QuestionRoulette = ({
+  questions,
+}: {
+  questions: QuestionWithComments[];
+}) => {
   /*
   const [questionIndex, setQuestionIndex] = useState<number>(0);
   const nextQuestion = () => {

@@ -69,6 +69,23 @@ model Question {
   platform         String?
   fetched          DateTime?
   pastcasts        Pastcast[]
+  comments         Comment[]
+}
+
+model Comment {
+  // E.g. "metaculus-123"
+  id              String   @id @default(cuid())
+  isDeleted       Boolean  @default(false)
+  content         String
+  createdAt       DateTime
+  voteTotal       Int      @default(0)
+  parentCommentId String?
+  questionId      String
+  authorName      String
+  predictionValue Float?
+  fetched         DateTime @db.Timestamp(6)
+  platform        String
+  question        Question @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
 
 model Pastcast {

@@ -6,14 +6,14 @@ import { Fragment } from "react";
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 
+import { STOCK_PHOTO } from "../lib/services/magicNumbers";
+
 export const Navbar = () => {
   const { data: session } = useSession();
   const user = {
     name: session?.user?.name ?? "",
     email: session?.user?.email ?? "",
-    imageUrl:
-      session?.user?.image ??
-      "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_1280.png",
+    imageUrl: session?.user?.image ?? STOCK_PHOTO,
   };
   const { pathname } = useRouter();
   const navigation = [

@@ -36,3 +36,5 @@ yarn-error.log*
 
 # large files
 *importData.ts
+*importComments.ts
+*importQuestions.ts
