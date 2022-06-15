@@ -40,9 +40,10 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
       0
     ),
   }));
+  const filteredUsers = formattedUsers.filter((user) => user.pastcasts > 0);
   const validSortsArray = ["Pastcasts", "Points", "Prior Knowledge"];
   const [sortType, setSortType] = useState<string>("Points");
-  const sortedUsers = formattedUsers.sort((a, b) => {
+  const sortedUsers = filteredUsers.sort((a, b) => {
     if (sortType === "Pastcasts") {
       return b.pastcasts - a.pastcasts;
     }

@@ -33,6 +33,10 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   //get random question from questions
   const question = questions[Math.floor(Math.random() * questions.length)];
   //const shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+  //filter comments after vantage point
+  question.comments = question.comments.filter(
+    (comment) => comment.createdAt < question.vantageDate
+  );
   return {
     props: {
       session,
