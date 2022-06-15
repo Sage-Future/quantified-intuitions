@@ -113,7 +113,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                 >
                   <div className="relative focus-within:ring-2 focus-within:ring-indigo-500">
                     <p className="text-sm text-gray-500 line-clamp-2">
-                      {result.displayed_link}
+                      {result.displayedLink}
                     </p>
                     <h3 className="mt-1 text-sm font-semibold text-indigo-700">
                       <a
