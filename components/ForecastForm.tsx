@@ -103,7 +103,9 @@ export const ForecastForm = ({
                     <NextQuestion nextQuestion={finishedQuestion} />
                   </>
                 )
-              : questionId !== undefined && <SubmitForm />}
+              : questionId !== undefined && (
+                  <SubmitForm disabled={isFormDisabled} />
+                )}
           </div>
         </div>
         <div className="px-4 py-5 sm:p-6">
