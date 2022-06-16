@@ -27,7 +27,7 @@ export const QuestionDescription = ({
   }
   return (
     <>
-      <div className="prose">
+      <div className="prose break-words">
         <h3 className="text-center">
           <span className="text-gray-500">{`The date is `}</span>
           <span className="">{dateMed(question.vantageDate)}</span>

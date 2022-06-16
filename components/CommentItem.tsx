@@ -62,7 +62,7 @@ export const CommentItem = ({
                 </p>
                 <p className="mt-0.5 text-sm text-gray-500"></p>
               </div>
-              <div className="prose mt-2 text-sm text-gray-700">
+              <div className="prose break-words mt-2 text-sm text-gray-700">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
                   {comment.content}
                 </ReactMarkdown>
