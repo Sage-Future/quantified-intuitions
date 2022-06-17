@@ -1,10 +1,11 @@
 import clsx from "clsx";
 import { signIn, signOut, useSession } from "next-auth/react";
+import Link from "next/link";
 import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { MenuIcon, XIcon } from "@heroicons/react/outline";
+import { ClockIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
@@ -17,7 +18,7 @@ export const Navbar = () => {
   };
   const { pathname } = useRouter();
   const navigation = [
-    { name: "Pastcasting ", href: "/", current: pathname === "/" },
+    { name: "Home", href: "/", current: pathname === "/" },
     {
       name: "Leaderboard",
       href: "/leaderboard",
@@ -49,7 +50,18 @@ export const Navbar = () => {
         <>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
-              <div className="flex" />
+              <div className="flex">
+                <div className="flex-shrink-0 flex items-center">
+                  <Link href="/">
+                    <a className="prose">
+                      <div className="flex items-center">
+                        <ClockIcon className="w-8 h-8 text-indigo-600" />
+                        <h3 className="m-0 ml-2">Pastcasting</h3>
+                      </div>
+                    </a>
+                  </Link>
+                </div>
+              </div>
               <div className="flex">
                 {/*
                 <div className="flex-shrink-0 flex items-center">
