@@ -1,7 +1,7 @@
 import { GetStaticProps } from "next";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-import { ChevronDownIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 
 import { Navbar } from "../components/Navbar";
 import { Prisma } from "../lib/prisma";
@@ -26,7 +26,7 @@ export const getStaticProps: GetStaticProps = async (ctx) => {
 const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
   const formattedUsers = users.map((user) => ({
     id: user.id,
-    name: user.name,
+    name: user.name || "Anonymous",
     pastcasts: user.pastcasts.reduce(
       (acc, pastcast) => acc + (pastcast.skipped === false ? 1 : 0),
       0
@@ -41,8 +41,9 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
     ),
   }));
   const filteredUsers = formattedUsers.filter((user) => user.pastcasts > 0);
-  const validSortsArray = ["Pastcasts", "Points", "Prior Knowledge"];
+  const validSortsArray = ["Name", "Pastcasts", "Points", "Prior Knowledge"];
   const [sortType, setSortType] = useState<string>("Points");
+  const [sortDescending, setSortDescending] = useState(true);
   const sortedUsers = filteredUsers.sort((a, b) => {
     if (sortType === "Pastcasts") {
       return b.pastcasts - a.pastcasts;
@@ -53,8 +54,20 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
     if (sortType === "Prior Knowledge") {
       return b.skippedCorrectly - a.skippedCorrectly;
     }
+    if (sortType === "Name") {
+      return b.name.localeCompare(a.name);
+    }
+
     return 0;
   });
+  const sortedUsersReversed = sortedUsers.slice().reverse();
+  const sortedUsersToDisplay = sortDescending
+    ? sortedUsers
+    : sortedUsersReversed;
+  useEffect(() => {
+    setSortDescending(true);
+  }, [sortType]);
+
   return (
     <div className="min-h-full">
       <Navbar />
@@ -88,16 +101,26 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
                                   <button
                                     className="group inline-flex"
                                     onClick={() => {
+                                      if (header === sortType) {
+                                        setSortDescending(!sortDescending);
+                                      }
                                       setSortType(header);
                                     }}
                                   >
                                     {header}
                                     {sortType === header ? (
                                       <span className="ml-2 flex-none rounded bg-gray-200 text-gray-900 group-hover:bg-gray-300">
-                                        <ChevronDownIcon
-                                          className="h-5 w-5"
-                                          aria-hidden="true"
-                                        />
+                                        {sortDescending ? (
+                                          <ChevronDownIcon
+                                            className="h-5 w-5"
+                                            aria-hidden="true"
+                                          />
+                                        ) : (
+                                          <ChevronUpIcon
+                                            className="h-5 w-5"
+                                            aria-hidden="true"
+                                          />
+                                        )}
                                       </span>
                                     ) : (
                                       <span className="invisible ml-2 flex-none rounded text-gray-400 group-hover:visible group-focus:visible">
@@ -119,7 +142,7 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
                           </tr>
                         </thead>
                         <tbody className="divide-y divide-gray-200 bg-white">
-                          {sortedUsers.map((user) => (
+                          {sortedUsersToDisplay.map((user) => (
                             <tr key={user.id}>
                               {[
                                 "name",

@@ -1,7 +1,5 @@
 import Router, { useRouter } from "next/router";
 
-
-
 import { QuestionWithComments } from "../types/additional";
 import { ForecastForm } from "./ForecastForm";
 import { ThreeColumnLayout } from "./ThreeColumnLayout";

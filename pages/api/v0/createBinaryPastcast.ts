@@ -12,16 +12,18 @@ interface Request extends NextApiRequest {
     questionId: string;
     binaryProbability: number;
     skipped: boolean;
+    timeSpent: number;
   };
 }
 
 const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
-  const { questionId, binaryProbability, skipped } = req.body;
+  const { questionId, binaryProbability, skipped, timeSpent } = req.body;
   if (
     typeof questionId !== "string" ||
     typeof binaryProbability !== "number" ||
     !isValidBinaryProbability(binaryProbability) ||
-    typeof skipped !== "boolean"
+    typeof skipped !== "boolean" ||
+    typeof timeSpent !== "number"
   ) {
     res.status(400).json({
       error: "invalid request",
@@ -58,6 +60,7 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
       binaryProbability,
       score,
       skipped,
+      timeSpent,
     },
   });
   res.status(201).json({

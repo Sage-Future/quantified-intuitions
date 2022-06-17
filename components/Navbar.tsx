@@ -4,7 +4,7 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import { MenuIcon, XIcon } from "@heroicons/react/outline";
 
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
@@ -84,6 +84,7 @@ export const Navbar = () => {
                 </div>
               </div>
               <div className="hidden sm:ml-6 sm:flex sm:items-center">
+                {/*
                 <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -91,6 +92,7 @@ export const Navbar = () => {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
+                  */}
 
                 {/* Profile dropdown */}
                 <Menu as="div" className="ml-3 relative">
@@ -191,6 +193,7 @@ export const Navbar = () => {
                     {user.email}
                   </div>
                 </div>
+                {/*
                 <button
                   type="button"
                   className="ml-auto bg-white flex-shrink-0 p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -198,6 +201,7 @@ export const Navbar = () => {
                   <span className="sr-only">View notifications</span>
                   <BellIcon className="h-6 w-6" aria-hidden="true" />
                 </button>
+                  */}
               </div>
               <div className="mt-3 space-y-1">
                 {userNavigation.map(

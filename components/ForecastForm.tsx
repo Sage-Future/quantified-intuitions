@@ -1,12 +1,14 @@
 import clsx from "clsx";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
+import { XIcon } from "@heroicons/react/solid";
 import { Question } from "@prisma/client";
 
 import { isValidBinaryForecast } from "../lib/services/validation";
 import { BinaryForecast } from "./BinaryForecast";
 import { CommentForm } from "./CommentForm";
+import { Errors } from "./Errors";
 import { NextQuestion } from "./NextQuestion";
 import { OriginalPlatform } from "./OriginalPlatform";
 import { Result } from "./Result";
@@ -29,26 +31,29 @@ export const ForecastForm = ({
   const [answer, setAnswer] = useState<string | undefined>(undefined);
   const [skipped, setSkipped] = useState(false);
   const [myAnswer, setMyAnswer] = useState<boolean | undefined>(undefined);
+  const [showPriorForm, setShowPriorForm] = useState(true);
+  const [showErrors, setShowErrors] = useState(false);
+  const [errors, setErrors] = useState<string[]>([]);
+  const [timeStarted, setTimeStarted] = useState<number>(Date.now());
   const finishedQuestion = () => {
-    setPointsEarned(undefined);
-    setAnswer(undefined);
-    setSkipped(false);
-    setMyAnswer(undefined);
-    methods.reset();
-    setIsFormDisabled(false);
+    setIsLoading(true);
     nextQuestion();
   };
   const onSubmit = async (data: any) => {
     setIsLoading(true);
+    setShowErrors(false);
     if (
       data.binaryProbability === undefined ||
       !isValidBinaryForecast(data.binaryProbability)
     ) {
       setIsLoading(false);
+      setShowErrors(true);
+      setErrors(["Please enter a probability between 0.1% and 99.9%"]);
       return;
     }
     data.questionId = questionId;
     data.binaryProbability = Number(data.binaryProbability) / 100.0;
+    data.timeSpent = Date.now() - timeStarted;
     if (data.skipped === undefined) data.skipped = false;
     setSkipped(data.skipped);
     setIsFormDisabled(true);
@@ -76,9 +81,20 @@ export const ForecastForm = ({
       skipped: true,
     });
   };
+  useEffect(() => {
+    setPointsEarned(undefined);
+    setAnswer(undefined);
+    setSkipped(false);
+    setMyAnswer(undefined);
+    methods.reset();
+    setIsFormDisabled(false);
+    setShowPriorForm(true);
+    setShowErrors(false);
+    setErrors([]);
+    setIsLoading(false);
+    setTimeStarted(Date.now());
+  }, [question]);
 
-  // TODO: change button to async button
-  // TODO: error message for invalid binary forecast
   return (
     <FormProvider {...methods}>
       <form
@@ -87,91 +103,118 @@ export const ForecastForm = ({
       >
         <div className="px-4 py-5 sm:p-6">
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-            <BinaryForecast disabled={isFormDisabled} />
-            <CommentForm disabled={isFormDisabled} />
-            {isFormDisabled && !isLoading
-              ? !skipped &&
-                pointsEarned !== undefined &&
-                answer !== undefined && (
-                  <>
+            <BinaryForecast disabled={isFormDisabled || isLoading} />
+            <CommentForm disabled={isFormDisabled || isLoading} />
+            {showErrors && (
+              <div className="col-span-6">
+                <Errors errors={errors} />
+              </div>
+            )}
+            {!skipped && pointsEarned !== undefined && answer !== undefined ? (
+              <>
+                <Result
+                  answer={answer}
+                  pointsEarned={pointsEarned}
+                  skipped={false}
+                />
+                <OriginalPlatform question={question} />
+                <NextQuestion
+                  nextQuestion={finishedQuestion}
+                  isLoading={isLoading}
+                />
+              </>
+            ) : (
+              questionId !== undefined && (
+                <SubmitForm
+                  disabled={isFormDisabled}
+                  isLoading={isLoading && myAnswer === undefined}
+                />
+              )
+            )}
+          </div>
+        </div>
+        {showPriorForm && (
+          <div className="px-4 py-5 sm:p-6">
+            <div className="grid gap-y-6">
+              <div className="grid gap-y-4">
+                <div className="">
+                  {myAnswer === undefined && (
+                    <button
+                      type="button"
+                      className="float-right bg-white rounded-md inline-flex text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      onClick={() => {
+                        setShowPriorForm(false);
+                      }}
+                    >
+                      <span className="sr-only">Close</span>
+                      <XIcon className="w-5 h-5" aria-hidden="true" />
+                    </button>
+                  )}
+                  <div className="block text-sm font-medium text-gray-700 ">
+                    If you have prior knowledge on this question, what do you
+                    remember as the most likely answer?
+                    <span className="block text-gray-500">
+                      (Answering will skip this question)
+                    </span>
+                  </div>
+                </div>
+                <div className="flex justify-center">
+                  <div className="grid grid-cols-2 gap-4">
+                    <button
+                      type="button"
+                      className={clsx(
+                        "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100",
+                        (myAnswer === undefined || myAnswer === false) &&
+                          "disabled:opacity-50",
+                        myAnswer === true &&
+                          "outline-none ring-2 ring-offset-2 ring-green-500",
+                        !isFormDisabled &&
+                          " hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      )}
+                      onClick={() => onSkip(true)}
+                      disabled={isFormDisabled}
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      className={clsx(
+                        "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100",
+                        (myAnswer === undefined || myAnswer === true) &&
+                          "disabled:opacity-50",
+                        myAnswer === false &&
+                          "outline-none ring-2 ring-offset-2 ring-red-500",
+                        !isFormDisabled &&
+                          " hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
+                      )}
+                      onClick={() => onSkip(false)}
+                      disabled={isFormDisabled}
+                    >
+                      No
+                    </button>
+                  </div>
+                </div>
+              </div>
+              {isFormDisabled &&
+                skipped &&
+                answer !== undefined &&
+                pointsEarned !== undefined && (
+                  <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                     <Result
                       answer={answer}
                       pointsEarned={pointsEarned}
-                      skipped={false}
+                      skipped={skipped}
                     />
                     <OriginalPlatform question={question} />
-                    <NextQuestion nextQuestion={finishedQuestion} />
-                  </>
-                )
-              : questionId !== undefined && (
-                  <SubmitForm disabled={isFormDisabled} />
+                    <NextQuestion
+                      nextQuestion={finishedQuestion}
+                      isLoading={isLoading}
+                    />
+                  </div>
                 )}
-          </div>
-        </div>
-        <div className="px-4 py-5 sm:p-6">
-          <div className="grid gap-y-6">
-            <div className="grid gap-y-2">
-              <div className="block text-sm font-medium text-gray-700 ">
-                If you have prior knowledge on this question, what do you
-                remember as the most likely answer?
-                <span className="block text-gray-500">
-                  (Answering will skip this question)
-                </span>
-              </div>
-              <div className="flex justify-center">
-                <div className="grid grid-cols-2 gap-4">
-                  <button
-                    type="button"
-                    className={clsx(
-                      "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100",
-                      (myAnswer === undefined || myAnswer === false) &&
-                        "disabled:opacity-50",
-                      myAnswer === true &&
-                        "outline-none ring-2 ring-offset-2 ring-green-500",
-                      !isFormDisabled &&
-                        " hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
-                    )}
-                    onClick={() => onSkip(true)}
-                    disabled={isFormDisabled}
-                  >
-                    Yes
-                  </button>
-                  <button
-                    type="button"
-                    className={clsx(
-                      "inline-flex justify-center px-4 py-2 border border-transparent text-sm font-medium rounded-md text-red-700 bg-red-100",
-                      (myAnswer === undefined || myAnswer === true) &&
-                        "disabled:opacity-50",
-                      myAnswer === false &&
-                        "outline-none ring-2 ring-offset-2 ring-red-500",
-                      !isFormDisabled &&
-                        " hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
-                    )}
-                    onClick={() => onSkip(false)}
-                    disabled={isFormDisabled}
-                  >
-                    No
-                  </button>
-                </div>
-              </div>
             </div>
-            {isFormDisabled &&
-              !isLoading &&
-              skipped &&
-              answer !== undefined &&
-              pointsEarned !== undefined && (
-                <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                  <Result
-                    answer={answer}
-                    pointsEarned={pointsEarned}
-                    skipped={skipped}
-                  />
-                  <OriginalPlatform question={question} />
-                  <NextQuestion nextQuestion={finishedQuestion} />
-                </div>
-              )}
           </div>
-        </div>
+        )}
       </form>
     </FormProvider>
   );
