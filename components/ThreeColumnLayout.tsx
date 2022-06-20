@@ -1,8 +1,6 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
-
-
 import { CalibrationOptions, QuestionWithComments } from "../types/additional";
 import { QuestionDescription } from "./QuestionDescription";
 import { Sidebar } from "./Sidebar";
@@ -44,7 +42,7 @@ export const ThreeColumnLayout = ({
           <div className="bg-white lg:min-w-0 lg:flex-1 ">
             <div className="h-full py-6 px-4 sm:px-6 lg:px-8">
               {/* Start main area*/}
-              <div className="max-w-prose sm:w-screen">
+              <div className="max-w-prose">
                 <div
                   className={clsx(
                     sidebarSelected !== "QuestionDescription" && "hidden"

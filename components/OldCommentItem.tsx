@@ -6,7 +6,7 @@ import { Comment } from "@prisma/client";
 import { dateMed, floatToPercent } from "../lib/services/format";
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
-export const CommentItem = ({
+export const OldCommentItem = ({
   comment,
   commentIdx,
   possibleChildren,
@@ -71,7 +71,7 @@ export const CommentItem = ({
                 <div className="flow-root my-6">
                   <ul role="list" className="-mb-8">
                     {children.map((child, childIdx) => (
-                      <CommentItem
+                      <OldCommentItem
                         key={child.id}
                         comment={child}
                         commentIdx={childIdx}

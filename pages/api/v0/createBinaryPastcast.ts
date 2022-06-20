@@ -13,23 +13,27 @@ interface Request extends NextApiRequest {
     binaryProbability: number;
     skipped: boolean;
     timeSpent: number;
+    comment: string | undefined;
   };
 }
 
 const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
-  const { questionId, binaryProbability, skipped, timeSpent } = req.body;
+  const { questionId, binaryProbability, skipped, timeSpent, comment } =
+    req.body;
   if (
     typeof questionId !== "string" ||
     typeof binaryProbability !== "number" ||
     !isValidBinaryProbability(binaryProbability) ||
     typeof skipped !== "boolean" ||
-    typeof timeSpent !== "number"
+    typeof timeSpent !== "number" ||
+    (typeof comment !== "string" && typeof comment !== "undefined")
   ) {
     res.status(400).json({
       error: "invalid request",
     });
     return;
   }
+
   const session = await getSession({ req });
   if (session === null || session === undefined) {
     res.status(401).json({

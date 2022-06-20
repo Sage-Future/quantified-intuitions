@@ -20,9 +20,6 @@ const searchResults = async (req: NextApiRequest, res: NextApiResponse) => {
       },
     },
   });
-  console.log(searchId);
-  console.log("tmp");
-  console.log(JSON.stringify(search, null, 2));
   res.json(search);
 };
 export default searchResults;

@@ -54,6 +54,9 @@ export const ForecastForm = ({
     data.questionId = questionId;
     data.binaryProbability = Number(data.binaryProbability) / 100.0;
     data.timeSpent = Date.now() - timeStarted;
+    if (data.comment === "" || data.comment === undefined) {
+      delete data.comment;
+    }
     if (data.skipped === undefined) data.skipped = false;
     setSkipped(data.skipped);
     setIsFormDisabled(true);
@@ -126,7 +129,7 @@ export const ForecastForm = ({
             ) : (
               questionId !== undefined && (
                 <SubmitForm
-                  disabled={isFormDisabled}
+                  disabled={isFormDisabled || isLoading}
                   isLoading={isLoading && myAnswer === undefined}
                 />
               )
@@ -188,7 +191,7 @@ export const ForecastForm = ({
                           " hover:bg-red-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-500"
                       )}
                       onClick={() => onSkip(false)}
-                      disabled={isFormDisabled}
+                      disabled={isFormDisabled || isLoading}
                     >
                       No
                     </button>

@@ -5,7 +5,7 @@ import remarkGfm from "remark-gfm";
 
 import { dateMed, floatToPercent } from "../lib/services/format";
 import { QuestionWithComments } from "../types/additional";
-import { Comments } from "./Comments";
+import { OldComments } from "./OldComments";
 import { Sorry } from "./Sorry";
 
 export const QuestionDescription = ({
@@ -48,7 +48,7 @@ export const QuestionDescription = ({
         </ReactMarkdown>
         {question.comments.length > 0 && <hr />}
       </div>
-      <Comments comments={question.comments} />
+      <OldComments comments={question.comments} />
     </>
   );
 };

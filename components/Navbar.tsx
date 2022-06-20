@@ -36,6 +36,12 @@ export const Navbar = () => {
     */
     session
       ? {
+          name: "Calibration",
+          href: "/calibration",
+        }
+      : null,
+    session
+      ? {
           name: "Settings",
           href: "/settings",
         }

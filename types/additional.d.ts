@@ -1,5 +1,13 @@
 import { Comment, Pastcast, Question, User } from "@prisma/client";
 
+export type PastcastWithQuestion = Pastcast & {
+  question: Question;
+};
+
+export type UserWithPastcastsWithQuestion = User & {
+  pastcasts: PastcastWithQuestion[];
+};
+
 export type UserWithPastcasts = User & {
   pastcasts: Pastcast[];
 };

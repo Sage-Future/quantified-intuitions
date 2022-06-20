@@ -10,12 +10,14 @@ import { Question, SearchResult } from "@prisma/client";
 import { fetcher } from "../lib/services/data";
 import { dateMed, dateToObject } from "../lib/services/format";
 import { SearchSkeleton } from "./SearchSkeleton";
+import { Warning } from "./Warning";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
   const { register, handleSubmit } = useForm();
   const [results, setResults] = useState<SearchResult[]>();
   const [searching, setSearching] = useState<boolean>(false);
   const [searchId, setSearchId] = useState<string>("");
+  const [showWarning, setShowWarning] = useState<boolean>(false);
   const { data } = useSWR(
     searching ? `/api/v0/searchResults?searchId=${searchId}` : null,
     fetcher,
@@ -26,7 +28,10 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   useEffect(() => {
     if (data !== undefined && data !== null) {
       setResults(data.results);
-      if (data.finished) setSearching(false);
+      if (data.finished) {
+        setSearching(false);
+        setShowWarning(false);
+      }
     }
   }, [data]);
 
@@ -35,6 +40,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     //TODO rate limit users
     setResults(undefined);
     setSearching(true);
+    setShowWarning(true);
     const newSearchId = cuid();
     setSearchId(newSearchId);
     const result = await fetch("/api/v0/searchFromDate", {
@@ -64,8 +70,9 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   }, [question]);
   return (
     <>
+      <div className="w-[100rem]" />
       <div className="flex-1 flex items-center justify-center px-2 ">
-        <div className="max-w-lg w-full ">
+        <div className="">
           <div className="prose">
             <h3 className="text-center mb-6">
               <span className="text-gray-500">{`Search the web as of `}</span>
@@ -100,6 +107,14 @@ export const VantageSearch = ({ question }: { question: Question }) => {
           </form>
         </div>
       </div>
+      {showWarning && (
+        <div className="mt-6">
+          <Warning
+            message="Experiencing slowness? Results from Vantage Search are rate-limited by the Wayback Machine API."
+            onClose={() => setShowWarning(false)}
+          />
+        </div>
+      )}
       <div className="flow-root mt-6">
         <ul role="list" className="-my-5 divide-y divide-gray-200 ">
           <li className="py-4" />
