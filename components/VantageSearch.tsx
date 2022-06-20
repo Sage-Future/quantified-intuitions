@@ -70,9 +70,8 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   }, [question]);
   return (
     <>
-      <div className="w-[100rem]" />
       <div className="flex-1 flex items-center justify-center px-2 ">
-        <div className="">
+        <div className="grow">
           <div className="prose">
             <h3 className="text-center mb-6">
               <span className="text-gray-500">{`Search the web as of `}</span>
