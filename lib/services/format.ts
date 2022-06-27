@@ -24,15 +24,18 @@ export const dateToObject = (date: Date) => {
   };
 };
 
-export const valueToString = (value: string | number) => {
+export const valueToString = (value: string | number, hasDecimals: boolean) => {
   if (typeof value === "string") {
     return value;
   }
-  if (typeof value === "number") {
-    if (value % 1 === 0) {
-      return value.toString();
-    }
+  if (hasDecimals) {
     return value.toFixed(3);
   }
-  return "";
+  return value.toFixed(0);
+};
+
+export const truncateError = (error: number, median: number) => {
+  const minVal = Math.min(median, error);
+  const maxVal = Math.min(100 - median, error);
+  return [minVal, maxVal];
 };

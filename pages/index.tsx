@@ -69,9 +69,7 @@ const Home = ({ questions }: { questions: QuestionWithComments[] }) => {
           <div
           //className="max-w-7xl mx-auto sm:px-6 lg:px-8"
           >
-            {/* Replace with your content */}
             <QuestionRoulette questions={questions} />
-            {/* /End replace */}
           </div>
         </main>
       </div>

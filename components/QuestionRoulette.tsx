@@ -9,13 +9,6 @@ export const QuestionRoulette = ({
 }: {
   questions: QuestionWithComments[];
 }) => {
-  /*
-  const [questionIndex, setQuestionIndex] = useState<number>(0);
-  const nextQuestion = () => {
-    setQuestionIndex((questionIndex) => questionIndex + 1);
-  };
-  const question = questions[questionIndex];
-  */
   const router = useRouter();
   const nextQuestion = () => {
     router.replace(router.asPath);

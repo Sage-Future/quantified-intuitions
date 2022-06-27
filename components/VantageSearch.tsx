@@ -13,7 +13,7 @@ import { SearchSkeleton } from "./SearchSkeleton";
 import { Warning } from "./Warning";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
-  const { register, handleSubmit } = useForm();
+  const { register, handleSubmit, reset } = useForm();
   const [results, setResults] = useState<SearchResult[]>();
   const [searching, setSearching] = useState<boolean>(false);
   const [searchId, setSearchId] = useState<string>("");
@@ -67,6 +67,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   useEffect(() => {
     setResults(undefined);
     setSearching(false);
+    reset({ search: "" });
   }, [question]);
   return (
     <>

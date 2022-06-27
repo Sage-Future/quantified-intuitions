@@ -73,30 +73,6 @@ export const ThreeColumnLayout = ({
           </div>
         </div>
       </div>
-      {/*
-      <div className="flex-grow w-full max-w-7xl mx-auto xl:px-8 lg:flex">
-        <div className="hidden lg:block lg:col-span-3 xl:col-span-2">
-          <nav
-            aria-label="Sidebar"
-            className="sticky top-6 divide-y divide-gray-300"
-          >
-            <Sidebar
-              selected={sidebarSelected}
-              setSelected={setSidebarSelected}
-            />
-          </nav>
-        </div>
-        <main className="lg:col-span-9 xl:col-span-6">
-          <>
-            {center[sidebarSelected]}
-            <div className="xl:hidden">{right}</div>
-          </>
-        </main>
-        <aside className="hidden xl:block xl:col-span-4">
-          <div className="sticky top-6 space-y-4">{right}</div>
-        </aside>
-      </div>
-      */}
     </>
   );
 };

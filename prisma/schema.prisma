@@ -48,8 +48,7 @@ model User {
   pastcasts           Pastcast[]
   searches            Search[]
   commentInteractions UserCommentInteraction[]
-  currentRoom         Room?                    @relation(fields: [roomId], references: [id])
-  roomId              String?
+  activeRooms         Room[]
 }
 
 model VerificationToken {
@@ -151,6 +150,7 @@ model SearchResult {
 
 model Room {
   id                    String     @id @default(cuid())
+  name                  String
   createdAt             DateTime   @default(now())
   maxSecondsPerQuestion Int        @default(600)
   totalQuestions        Int        @default(1)

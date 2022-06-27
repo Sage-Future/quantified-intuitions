@@ -38,13 +38,13 @@ export const Sidebar = ({
   return (
     <nav className="flex-1 bg-white space-y-1" aria-label="Sidebar">
       {navigation.map((item) => (
-        <a
+        <button
           key={item.name}
           className={clsx(
             item.current
               ? "bg-gray-100 text-gray-900"
               : "text-gray-600 hover:bg-gray-50 hover:text-gray-900",
-            "group flex items-center px-3 py-2 text-sm font-medium rounded-md"
+            "group flex items-center px-3 py-2 text-sm font-medium rounded-md w-full"
           )}
           onClick={item.onClick}
         >
@@ -58,7 +58,7 @@ export const Sidebar = ({
             aria-hidden="true"
           />
           <span className="truncate">{item.name}</span>
-        </a>
+        </button>
       ))}
     </nav>
   );

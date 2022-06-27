@@ -2,19 +2,19 @@ import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
 import { getSession } from "next-auth/react";
 
-import { Room, User } from "@prisma/client";
+import { Comment, Pastcast, Question, Room, User } from "@prisma/client";
 
 import { Prisma } from "../../lib/prisma";
 
 export type RoomProps = {
   room: Room & {
     members: User[];
+    questions: (Question & {
+      comments: Comment[];
+    })[];
+    pastcasts: Pastcast[];
+    currentQuestion: Question | null;
   };
-  oldRoom:
-    | (Room & {
-        members: User[];
-      })
-    | null;
   session: Session;
 };
 
@@ -27,49 +27,36 @@ export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
     ctx.res.end();
     return { props: {} };
   }
-  const user = await Prisma.user.findUnique({
-    where: {
-      id: session?.user?.id || "",
-    },
+  const roomId = ctx.query.roomId as string;
+  const room = await Prisma.room.findUnique({
+    where: { id: roomId },
     include: {
-      currentRoom: {
+      members: true,
+      questions: {
         include: {
-          members: true,
+          comments: true,
         },
       },
+      pastcasts: true,
+      currentQuestion: true,
     },
   });
-  if (user === null) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
-    return { props: {} };
-  }
-  const { roomId: userRoomId } = user;
-  const roomId = ctx.query.id?.toString() || "N/A";
-  let pageRoom = null;
-  if (userRoomId !== roomId) {
-    pageRoom = await Prisma.room.findUnique({
-      where: {
-        id: roomId,
-      },
-      include: {
-        members: true,
-      },
-    });
-  } else {
-    pageRoom = user.currentRoom;
-  }
-
   return {
     props: {
       session,
-      room: pageRoom,
-      oldRoom: userRoomId !== roomId ? user.currentRoom : null,
+      room,
     },
   };
 };
 
-const RoomPage: NextPage<RoomProps> = ({ room, oldRoom }) => {
+const RoomPage: NextPage<RoomProps> = ({ room }) => {
+  if (room !== null) {
+    // TODO:
+    //ask user if they want to leave oldRoom and join room
+    //if yes, change user.currentRoom to room
+    //if no, redirect to oldRoom
+  }
+
   return <></>;
 };
 export default RoomPage;

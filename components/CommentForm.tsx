@@ -5,12 +5,17 @@ export const CommentForm = ({ disabled = false }: { disabled?: boolean }) => {
   const { register } = useFormContext();
   return (
     <div className="sm:col-span-6">
-      <label
-        htmlFor="about"
-        className="block text-sm font-medium text-gray-700"
-      >
-        Reasoning
-      </label>
+      <div className="flex justify-between">
+        <label
+          htmlFor="about"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Reasoning
+        </label>
+        <span className="text-sm text-gray-500" id="reasoning-optional">
+          Optional
+        </span>
+      </div>
       <div className="mt-1">
         <ReactTextareaAutosize
           id="about"
