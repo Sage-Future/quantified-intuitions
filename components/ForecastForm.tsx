@@ -1,11 +1,13 @@
 import clsx from "clsx";
-import { useEffect, useState } from "react";
+import { useSession } from "next-auth/react";
+import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { XIcon } from "@heroicons/react/solid";
-import { Question } from "@prisma/client";
 
+import { secondsToTime } from "../lib/services/format";
 import { isValidBinaryForecast } from "../lib/services/validation";
+import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { BinaryForecast } from "./BinaryForecast";
 import { CommentForm } from "./CommentForm";
 import { Errors } from "./Errors";
@@ -15,26 +17,83 @@ import { Result } from "./Result";
 import { SubmitForm } from "./SubmitForm";
 
 export const ForecastForm = ({
+  startTime,
+  maxTime,
   question,
   nextQuestion,
 }: {
-  question: Question;
+  startTime: Date | null;
+  maxTime: number | null;
+  question: QuestionWithCommentsAndPastcasts;
   nextQuestion: () => void;
 }) => {
   const { id: questionId } = question;
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const myPastcast = question.pastcasts.find(
+    (pastcast) => pastcast.userId === userId
+  );
+  const endTime = useMemo(
+    () =>
+      startTime && maxTime
+        ? new Date(startTime?.getTime() + maxTime * 1000)
+        : null,
+    [startTime, maxTime]
+  );
+
+  const waitForNextQuestion = endTime !== null;
   const methods = useForm();
   const [isLoading, setIsLoading] = useState(false);
   type FormState = "initial" | "submittedForecast" | "submittedPrior";
-  const [formState, setFormState] = useState<FormState>("initial");
+  const [formState, setFormState] = useState<FormState>(
+    myPastcast !== undefined
+      ? myPastcast.skipped
+        ? "submittedPrior"
+        : "submittedForecast"
+      : "initial"
+  );
   const [pointsEarned, setPointsEarned] = useState<number | undefined>(
-    undefined
+    myPastcast !== undefined ? myPastcast.score : undefined
   );
   const [showPriorForm, setShowPriorForm] = useState(true);
   const [priorAnswer, setPriorAnswer] = useState<boolean | undefined>(
-    undefined
+    myPastcast !== undefined &&
+      myPastcast.skipped &&
+      myPastcast.binaryProbability
+      ? myPastcast.binaryProbability > 0.5
+        ? true
+        : false
+      : undefined
   );
   const [errors, setErrors] = useState<string[]>([]);
   const [timeStarted, setTimeStarted] = useState<number>(Date.now());
+  const [secondsRemaining, setSecondsRemaining] = useState<number | undefined>(
+    undefined
+  );
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setSecondsRemaining(
+        endTime
+          ? Math.floor((endTime.getTime() - new Date().getTime()) / 1000)
+          : 0
+      );
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [endTime]);
+
+  useEffect(() => {
+    if (
+      secondsRemaining !== undefined &&
+      secondsRemaining < 0 &&
+      formState === "initial" &&
+      !isLoading
+    ) {
+      onSubmit({
+        binaryProbability: (question.crowdForecast || 0.5) * 100,
+      });
+    }
+  }, [secondsRemaining !== undefined && secondsRemaining < 0]);
+
   const loadNextQuestion = () => {
     setIsLoading(true);
     nextQuestion();
@@ -70,6 +129,8 @@ export const ForecastForm = ({
         const json = await res.json();
         setFormState(data.skipped ? "submittedPrior" : "submittedForecast");
         setPointsEarned(json.pastcast.score);
+      } else {
+        setPriorAnswer(undefined);
       }
     });
     setIsLoading(false);
@@ -84,13 +145,28 @@ export const ForecastForm = ({
   useEffect(() => {
     setIsLoading(false);
     methods.reset();
-    setFormState("initial");
-    setPointsEarned(undefined);
+    setFormState(
+      myPastcast !== undefined
+        ? myPastcast.skipped
+          ? "submittedPrior"
+          : "submittedForecast"
+        : "initial"
+    );
+    setPointsEarned(myPastcast !== undefined ? myPastcast.score : undefined);
     setShowPriorForm(true);
-    setPriorAnswer(undefined);
+    setPriorAnswer(
+      myPastcast !== undefined &&
+        myPastcast.skipped &&
+        myPastcast.binaryProbability
+        ? myPastcast.binaryProbability > 0.5
+          ? true
+          : false
+        : undefined
+    );
     setErrors([]);
     setTimeStarted(Date.now());
-  }, [question]);
+    setSecondsRemaining(undefined);
+  }, [question.id]);
 
   return (
     <FormProvider {...methods}>
@@ -98,6 +174,21 @@ export const ForecastForm = ({
         onSubmit={methods.handleSubmit(onSubmit)}
         className=" divide-y divide-gray-200 border sm:rounded-md"
       >
+        {endTime !== null && (
+          <div className="px-4 py-5">
+            <h3 className="text-lg leading-6 font-medium text-gray-900">
+              {secondsRemaining !== undefined ? (
+                secondsRemaining < 0 ? (
+                  "Time's up!"
+                ) : (
+                  `${secondsToTime(secondsRemaining)} remaining`
+                )
+              ) : (
+                <span>&nbsp;</span>
+              )}
+            </h3>
+          </div>
+        )}
         <div className="px-4 py-5 sm:p-6">
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <BinaryForecast disabled={isLoading || formState !== "initial"} />
@@ -114,6 +205,11 @@ export const ForecastForm = ({
                 <NextQuestion
                   nextQuestion={loadNextQuestion}
                   isLoading={isLoading}
+                  loadingText={
+                    waitForNextQuestion
+                      ? "Waiting for host"
+                      : "Loading next question"
+                  }
                 />
               </>
             ) : (
@@ -199,6 +295,11 @@ export const ForecastForm = ({
                   <NextQuestion
                     nextQuestion={loadNextQuestion}
                     isLoading={isLoading}
+                    loadingText={
+                      waitForNextQuestion
+                        ? "Waiting for host"
+                        : "Loading next question"
+                    }
                   />
                 </div>
               )}

@@ -1,19 +1,23 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
-import { getSession } from "next-auth/react";
+import { getSession, useSession } from "next-auth/react";
+import { useState } from "react";
+import { deserialize } from "superjson";
+import { SuperJSONValue } from "superjson/dist/types";
+import useSWR from "swr";
 
-import { Comment, Pastcast, Question, Room, User } from "@prisma/client";
+import { Room, User } from "@prisma/client";
 
+import { ForecastForm } from "../../components/ForecastForm";
+import { Navbar } from "../../components/Navbar";
+import { ThreeColumnLayout } from "../../components/ThreeColumnLayout";
 import { Prisma } from "../../lib/prisma";
+import { QuestionWithCommentsAndPastcasts } from "../../types/additional";
 
 export type RoomProps = {
   room: Room & {
     members: User[];
-    questions: (Question & {
-      comments: Comment[];
-    })[];
-    pastcasts: Pastcast[];
-    currentQuestion: Question | null;
+    questions: QuestionWithCommentsAndPastcasts[];
   };
   session: Session;
 };
@@ -27,7 +31,17 @@ export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
     ctx.res.end();
     return { props: {} };
   }
-  const roomId = ctx.query.roomId as string;
+  const roomId = ctx.query.id as string;
+  const updatedRoom = await Prisma.room.update({
+    where: { id: roomId },
+    data: {
+      members: {
+        connect: {
+          id: session.user.id,
+        },
+      },
+    },
+  });
   const room = await Prisma.room.findUnique({
     where: { id: roomId },
     include: {
@@ -35,10 +49,9 @@ export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
       questions: {
         include: {
           comments: true,
+          pastcasts: true,
         },
       },
-      pastcasts: true,
-      currentQuestion: true,
     },
   });
   return {
@@ -50,13 +63,98 @@ export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
 };
 
 const RoomPage: NextPage<RoomProps> = ({ room }) => {
-  if (room !== null) {
-    // TODO:
-    //ask user if they want to leave oldRoom and join room
-    //if yes, change user.currentRoom to room
-    //if no, redirect to oldRoom
-  }
+  const loadNewQuestion = async () => {
+    await fetch("/api/v0/pickQuestion", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        roomId: room.id,
+      }),
+    });
+  };
+  const { data: session } = useSession();
+  const userId = session?.user?.id;
+  const isHost = userId === room.hostId;
+  const { currentQuestionId } = room;
+  const currentQuestion = room.questions.find(
+    (question) => question.id === currentQuestionId
+  );
 
-  return <></>;
+  const [shouldFetch, setShouldFetch] = useState(true);
+  const fetcher = (arg: string) => fetch(arg).then((res) => res.json());
+
+  const { data } = useSWR<SuperJSONValue>(
+    shouldFetch ? `/api/v0/getQuestion?roomId=${room.id}` : null,
+    fetcher,
+    {
+      refreshInterval: 5000,
+    }
+  );
+  const deserializedRoom = deserialize({
+    json: data?.json,
+    meta: data?.meta,
+  }) as
+    | (Room & {
+        questions: QuestionWithCommentsAndPastcasts[];
+      })
+    | undefined;
+  const deserializedQuestion =
+    deserializedRoom !== undefined
+      ? deserializedRoom.questions.find(
+          (question) => question.id === deserializedRoom.currentQuestionId
+        )
+      : undefined;
+  return (
+    <div className="min-h-full">
+      <Navbar />
+      <div className="py-0 ">
+        <main>
+          {/*
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+            <RoomHeading room={room} />
+          </div>
+            */}
+          {currentQuestion !== undefined ||
+          deserializedQuestion !== undefined ? (
+            <ThreeColumnLayout
+              question={
+                deserializedQuestion !== undefined
+                  ? deserializedQuestion
+                  : (currentQuestion as QuestionWithCommentsAndPastcasts)
+              }
+              right={
+                <ForecastForm
+                  startTime={
+                    deserializedRoom !== undefined
+                      ? deserializedRoom.currentStartTime
+                      : room.currentStartTime
+                  }
+                  maxTime={room.maxSecondsPerQuestion}
+                  question={
+                    deserializedQuestion !== undefined
+                      ? deserializedQuestion
+                      : (currentQuestion as QuestionWithCommentsAndPastcasts)
+                  }
+                  nextQuestion={isHost ? () => loadNewQuestion() : () => {}}
+                />
+              }
+            />
+          ) : (
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
+              <h1>Waiting for a question to be picked for this room.</h1>
+              <h1>This page is not yet built</h1>
+              {isHost && (
+                <button onClick={() => loadNewQuestion()}>
+                  Pick a question
+                </button>
+              )}
+            </div>
+          )}
+        </main>
+      </div>
+    </div>
+  );
 };
 export default RoomPage;

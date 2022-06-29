@@ -52,7 +52,18 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
     );
   });
   const bucketedPastcastsAccuracy = bucketedPastcasts.map((ps, idx) => {
-    const confidence = Math.round(buckets[idx] * 100);
+    if (ps.length === 0) {
+      return {};
+    }
+    // mean of binaryProbability
+    const confidence = Math.round(
+      (ps.reduce(
+        (acc, pastcast) => acc + (pastcast.binaryProbability ?? 0.5),
+        0
+      ) /
+        ps.length) *
+        100
+    );
     const successes = ps.reduce(
       (acc, p) => acc + (p.question.binaryResolution ? 1 : 0),
       0
@@ -118,9 +129,10 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
               />
               <Tooltip
                 cursor={{
-                  stroke: "red",
+                  stroke: "black",
                   strokeWidth: 2,
                   strokeDasharray: "3 3",
+                  opacity: 0.5,
                 }}
                 content={({ active, payload, label }) => {
                   if (active && payload && payload.length > 0) {
@@ -155,9 +167,7 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
                     y: 100,
                   },
                 ]}
-                stroke="green"
-                strokeWidth={25}
-                opacity={0.5}
+                stroke="red"
               />
               <Scatter data={data} fill="#4f46e5">
                 <ErrorBar dataKey="ErrorY" direction="y" />

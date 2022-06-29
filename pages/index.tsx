@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 import { Navbar } from "../components/Navbar";
 import { QuestionRoulette } from "../components/QuestionRoulette";
 import { Prisma } from "../lib/prisma";
-import { QuestionWithComments } from "../types/additional";
+import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 
 import type { GetServerSideProps, NextPage } from "next";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -34,6 +34,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     where: { id: rows[0].id },
     include: {
       comments: true,
+      pastcasts: true,
     },
   });
   if (question !== null && question.comments !== undefined) {
@@ -44,14 +45,13 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       session,
-      questions: [question],
+      question: question,
       //questions: shuffledQuestions,
     },
   };
 };
 
-const Home = ({ questions }: { questions: QuestionWithComments[] }) => {
-  //randomize questions
+const Home = ({ question }: { question: QuestionWithCommentsAndPastcasts }) => {
   return (
     <div className="min-h-full">
       <Navbar />
@@ -69,7 +69,7 @@ const Home = ({ questions }: { questions: QuestionWithComments[] }) => {
           <div
           //className="max-w-7xl mx-auto sm:px-6 lg:px-8"
           >
-            <QuestionRoulette questions={questions} />
+            <QuestionRoulette question={question} />
           </div>
         </main>
       </div>

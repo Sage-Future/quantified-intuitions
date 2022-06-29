@@ -39,3 +39,14 @@ export const truncateError = (error: number, median: number) => {
   const maxVal = Math.min(100 - median, error);
   return [minVal, maxVal];
 };
+
+export const secondsToTime = (seconds: number) => {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.floor((seconds % 3600) / 60);
+  const secondsLeft = Math.floor(seconds % 60);
+  if (hours > 0) {
+    return `${hours}:${numToTwoDigits(minutes)}:${numToTwoDigits(secondsLeft)}`;
+  } else {
+    return `${minutes}:${numToTwoDigits(secondsLeft)}`;
+  }
+};

@@ -48,7 +48,7 @@ model User {
   pastcasts           Pastcast[]
   searches            Search[]
   commentInteractions UserCommentInteraction[]
-  activeRooms         Room[]
+  rooms               Room[]
 }
 
 model VerificationToken {
@@ -72,8 +72,7 @@ model Question {
   fetched          DateTime?
   pastcasts        Pastcast[]
   comments         Comment[]
-  currentRooms     Room[]     @relation("CurrentQuestion")
-  pastRooms        Room[]     @relation("PastQuestion")
+  rooms            Room[]
 }
 
 model Comment {
@@ -155,10 +154,10 @@ model Room {
   maxSecondsPerQuestion Int        @default(600)
   totalQuestions        Int        @default(1)
   currentQuestionId     String?
+  hostId                String?
   currentStartTime      DateTime?
   isFinshed             Boolean    @default(false)
   pastcasts             Pastcast[]
-  questions             Question[] @relation(name: "PastQuestion")
-  currentQuestion       Question?  @relation(name: "CurrentQuestion", fields: [currentQuestionId], references: [id])
+  questions             Question[]
   members               User[]
 }

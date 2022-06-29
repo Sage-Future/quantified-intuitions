@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { useEffect, useState } from "react";
 
-import { CalibrationOptions, QuestionWithComments } from "../types/additional";
+import { CalibrationOptions, QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { QuestionDescription } from "./QuestionDescription";
 import { Sidebar } from "./Sidebar";
 import { VantageSearch } from "./VantageSearch";
@@ -10,7 +10,7 @@ export const ThreeColumnLayout = ({
   question,
   right,
 }: {
-  question: QuestionWithComments;
+  question: QuestionWithCommentsAndPastcasts;
   right: React.ReactNode;
 }) => {
   const [sidebarSelected, setSidebarSelected] = useState<CalibrationOptions>(

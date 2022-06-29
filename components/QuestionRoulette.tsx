@@ -1,23 +1,29 @@
 import Router, { useRouter } from "next/router";
 
-import { QuestionWithComments } from "../types/additional";
+import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { ForecastForm } from "./ForecastForm";
 import { ThreeColumnLayout } from "./ThreeColumnLayout";
 
 export const QuestionRoulette = ({
-  questions,
+  question,
 }: {
-  questions: QuestionWithComments[];
+  question: QuestionWithCommentsAndPastcasts;
 }) => {
   const router = useRouter();
   const nextQuestion = () => {
     router.replace(router.asPath);
   };
-  const question = questions[0];
   return (
     <ThreeColumnLayout
       question={question}
-      right={<ForecastForm question={question} nextQuestion={nextQuestion} />}
+      right={
+        <ForecastForm
+          startTime={null}
+          maxTime={null}
+          question={question}
+          nextQuestion={nextQuestion}
+        />
+      }
     />
   );
 };
