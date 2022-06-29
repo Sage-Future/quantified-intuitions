@@ -1,16 +1,22 @@
 import clsx from "clsx";
+import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
+
+import { User } from "@prisma/client";
 
 import { CalibrationOptions, QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { QuestionDescription } from "./QuestionDescription";
+import { QuestionScores } from "./QuestionScores";
 import { Sidebar } from "./Sidebar";
 import { VantageSearch } from "./VantageSearch";
 
 export const ThreeColumnLayout = ({
   question,
+  members,
   right,
 }: {
   question: QuestionWithCommentsAndPastcasts;
+  members: User[];
   right: React.ReactNode;
 }) => {
   const [sidebarSelected, setSidebarSelected] = useState<CalibrationOptions>(
@@ -18,7 +24,17 @@ export const ThreeColumnLayout = ({
   );
   useEffect(() => {
     setSidebarSelected("QuestionDescription");
-  }, [question]);
+  }, [question.id]);
+  const { data: session } = useSession();
+  const showScores =
+    question.pastcasts.find(
+      (pastcast) => pastcast.userId === session?.user?.id
+    ) !== undefined;
+  useEffect(() => {
+    if (showScores) {
+      setSidebarSelected("Scores");
+    }
+  }, [showScores]);
 
   return (
     <>
@@ -33,6 +49,7 @@ export const ThreeColumnLayout = ({
                 <Sidebar
                   selected={sidebarSelected}
                   setSelected={setSidebarSelected}
+                  showScores={showScores}
                 />
               </div>
               {/* End left column area */}
@@ -57,6 +74,9 @@ export const ThreeColumnLayout = ({
                   )}
                 >
                   <VantageSearch question={question} />
+                </div>
+                <div className={clsx(sidebarSelected !== "Scores" && "hidden")}>
+                  <QuestionScores question={question} members={members} />
                 </div>
               </div>
 

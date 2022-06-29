@@ -28,6 +28,7 @@ const getQuestion = async (req: Request, res: NextApiResponse) => {
           comments: true,
         },
       },
+      members: true,
     },
   });
   if (!room) {

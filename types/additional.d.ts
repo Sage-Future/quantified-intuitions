@@ -21,4 +21,7 @@ export type QuestionWithCommentsAndPastcasts = Question & {
   pastcasts: Pastcast[];
 };
 
-export type CalibrationOptions = "QuestionDescription" | "VantageSearch";
+export type CalibrationOptions =
+  | "QuestionDescription"
+  | "VantageSearch"
+  | "Scores";

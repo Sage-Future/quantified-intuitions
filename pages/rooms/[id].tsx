@@ -10,6 +10,7 @@ import { Room, User } from "@prisma/client";
 
 import { ForecastForm } from "../../components/ForecastForm";
 import { Navbar } from "../../components/Navbar";
+import { RoomLeaderboard } from "../../components/RoomLeaderboard";
 import { ThreeColumnLayout } from "../../components/ThreeColumnLayout";
 import { Prisma } from "../../lib/prisma";
 import { QuestionWithCommentsAndPastcasts } from "../../types/additional";
@@ -98,6 +99,7 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
   }) as
     | (Room & {
         questions: QuestionWithCommentsAndPastcasts[];
+        members: User[];
       })
     | undefined;
   const deserializedQuestion =
@@ -106,6 +108,8 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
           (question) => question.id === deserializedRoom.currentQuestionId
         )
       : undefined;
+  const realRoom = deserializedRoom || room;
+  const realQuestion = deserializedQuestion || currentQuestion;
   return (
     <div className="min-h-full">
       <Navbar />
@@ -116,31 +120,21 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
             <RoomHeading room={room} />
           </div>
             */}
-          {currentQuestion !== undefined ||
-          deserializedQuestion !== undefined ? (
+          {realQuestion ? (
             <ThreeColumnLayout
-              question={
-                deserializedQuestion !== undefined
-                  ? deserializedQuestion
-                  : (currentQuestion as QuestionWithCommentsAndPastcasts)
-              }
+              question={realQuestion as QuestionWithCommentsAndPastcasts}
+              members={realRoom.members}
               right={
                 <ForecastForm
-                  startTime={
-                    deserializedRoom !== undefined
-                      ? deserializedRoom.currentStartTime
-                      : room.currentStartTime
-                  }
-                  maxTime={room.maxSecondsPerQuestion}
-                  question={
-                    deserializedQuestion !== undefined
-                      ? deserializedQuestion
-                      : (currentQuestion as QuestionWithCommentsAndPastcasts)
-                  }
+                  startTime={realRoom.currentStartTime}
+                  maxTime={realRoom.maxSecondsPerQuestion}
+                  question={realQuestion as QuestionWithCommentsAndPastcasts}
                   nextQuestion={isHost ? () => loadNewQuestion() : () => {}}
                 />
               }
             />
+          ) : realRoom.isFinshed ? (
+            <RoomLeaderboard room={realRoom} />
           ) : (
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
               <h1>Waiting for a question to be picked for this room.</h1>

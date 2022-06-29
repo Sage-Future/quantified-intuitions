@@ -68,7 +68,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     setResults(undefined);
     setSearching(false);
     reset({ search: "" });
-  }, [question]);
+  }, [question.id]);
   return (
     <>
       <div className="flex-1 flex items-center justify-center px-2 ">

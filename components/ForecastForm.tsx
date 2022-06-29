@@ -145,6 +145,13 @@ export const ForecastForm = ({
   useEffect(() => {
     setIsLoading(false);
     methods.reset();
+    if (
+      myPastcast !== undefined &&
+      !myPastcast.skipped &&
+      myPastcast.binaryProbability !== null
+    ) {
+      methods.setValue("binaryProbability", myPastcast.binaryProbability * 100);
+    }
     setFormState(
       myPastcast !== undefined
         ? myPastcast.skipped

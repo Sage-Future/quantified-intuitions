@@ -1,18 +1,20 @@
 import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
 
-import { DocumentReportIcon, SearchIcon } from "@heroicons/react/outline";
+import { ChartBarIcon, DocumentReportIcon, SearchIcon } from "@heroicons/react/outline";
 
 import { CalibrationOptions } from "../types/additional";
 
 export const Sidebar = ({
   selected,
   setSelected,
+  showScores,
 }: {
   selected: string;
   setSelected: Dispatch<SetStateAction<CalibrationOptions>>;
+  showScores: boolean;
 }) => {
-  const navigation = [
+  let navigation = [
     /*
     { name: "Dashboard", icon: HomeIcon, href: "#", current: true },
     { name: "Team", icon: UsersIcon, href: "#", current: false },
@@ -34,6 +36,14 @@ export const Sidebar = ({
       current: selected === "VantageSearch",
     },
   ];
+  if (showScores) {
+    navigation.push({
+      name: "Scores",
+      icon: ChartBarIcon,
+      onClick: () => setSelected("Scores"),
+      current: selected === "Scores",
+    });
+  }
 
   return (
     <nav className="flex-1 bg-white space-y-1" aria-label="Sidebar">
