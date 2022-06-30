@@ -17,18 +17,25 @@ export const RoomLeaderboard = ({
       id: member.id,
       name: member.name,
       points: questions.reduce((acc, question) => {
-        return question.pastcasts
-          .filter((pastcast) => pastcast.userId === member.id)
-          .reduce((acc2, pastcast) => {
-            return acc2 + (pastcast.skipped ? 0 : pastcast.score);
-          }, 0);
+        return (
+          acc +
+          question.pastcasts
+            .filter((pastcast) => pastcast.userId === member.id)
+            .reduce((acc2, pastcast) => {
+              return acc2 + (pastcast.skipped ? 0 : pastcast.score);
+            }, 0)
+        );
       }, 0),
       skippedCorrectly: questions.reduce((acc, question) => {
         return (
           acc +
-          question.pastcasts.reduce((acc2, pastcast) => {
-            return acc2 + (pastcast.skipped ? (pastcast.score > 0 ? 1 : 0) : 0);
-          }, 0)
+          question.pastcasts
+            .filter((pastcast) => pastcast.userId === member.id)
+            .reduce((acc2, pastcast) => {
+              return (
+                acc2 + (pastcast.skipped ? (pastcast.score > 0 ? 1 : 0) : 0)
+              );
+            }, 0)
         );
       }, 0),
     }))
