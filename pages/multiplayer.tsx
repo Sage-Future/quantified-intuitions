@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
 import { getSession, useSession } from "next-auth/react";
+import Link from "next/link";
 
 import { PlusIcon } from "@heroicons/react/solid";
 import { Room, User } from "@prisma/client";
@@ -74,17 +75,18 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
                     </h3>
                   </div>
                   <div className="ml-4 mt-2 flex-shrink-0">
-                    <a
-                      type="button"
-                      className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      href="/multiplayer/create"
-                    >
-                      <PlusIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      Create a new game
-                    </a>
+                    <Link href="/multiplayer/create" passHref>
+                      <a
+                        type="button"
+                        className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      >
+                        <PlusIcon
+                          className="-ml-1 mr-2 h-5 w-5"
+                          aria-hidden="true"
+                        />
+                        Create a new game
+                      </a>
+                    </Link>
                   </div>
                 </div>
               </div>
