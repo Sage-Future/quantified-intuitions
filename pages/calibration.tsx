@@ -91,13 +91,26 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
   });
   const data = bucketedPastcastsAccuracy;
 
+  const xs = filteredPastcasts.map((pastcast) =>
+    pastcast.binaryProbability
+      ? pastcast.question.binaryResolution
+        ? pastcast.binaryProbability
+        : 1 - pastcast.binaryProbability
+      : 0
+  );
+  const overConfidence =
+    xs.map((x) => (x - 1) * (x - 0.5)).reduce((acc, x) => acc + x, 0) /
+    xs.length /
+    (xs.map((x) => (x - 0.5) * (x - 0.5)).reduce((acc, x) => acc + x, 0) /
+      xs.length);
+
   return (
     <div className="min-h-full">
       <Navbar />
       <div className="py-10 h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Your Calibration Curve
+            Your Calibration Curve (Overconfidence: {overConfidence.toFixed(3)})
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart

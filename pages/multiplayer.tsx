@@ -42,10 +42,11 @@ export const getServerSideProps: GetServerSideProps<
 
 const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
   const { data: session } = useSession();
-  const myRooms = rooms.filter((room) =>
+  const openRooms = rooms.filter((room) => !room.isFinshed);
+  const myRooms = openRooms.filter((room) =>
     room.members.some((member) => member.id === session?.user?.id)
   );
-  const openRooms = rooms.filter(
+  const publicRooms = openRooms.filter(
     (room) => !room.members.some((member) => member.id === session?.user?.id)
   );
   return (
@@ -73,20 +74,21 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
                     </h3>
                   </div>
                   <div className="ml-4 mt-2 flex-shrink-0">
-                    <button
+                    <a
                       type="button"
                       className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      href="/multiplayer/create"
                     >
                       <PlusIcon
                         className="-ml-1 mr-2 h-5 w-5"
                         aria-hidden="true"
                       />
                       Create a new game
-                    </button>
+                    </a>
                   </div>
                 </div>
               </div>
-              <Rooms rooms={openRooms} />
+              <Rooms rooms={publicRooms} />
             </div>
           </div>
         </main>

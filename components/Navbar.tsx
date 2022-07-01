@@ -24,6 +24,12 @@ export const Navbar = () => {
       href: "/leaderboard",
       current: pathname === "/leaderboard",
     },
+    {
+      name: "Multiplayer",
+      href: "/multiplayer",
+      current: pathname.startsWith("/multiplayer"),
+    },
+
     /*
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },

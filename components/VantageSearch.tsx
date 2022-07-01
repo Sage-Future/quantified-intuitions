@@ -1,3 +1,4 @@
+import clsx from "clsx";
 import cuid from "cuid";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,6 +10,7 @@ import { Question, SearchResult } from "@prisma/client";
 
 import { fetcher } from "../lib/services/data";
 import { dateMed, dateToObject } from "../lib/services/format";
+import { isWaybackUrl } from "../lib/services/validation";
 import { SearchSkeleton } from "./SearchSkeleton";
 import { Warning } from "./Warning";
 
@@ -30,7 +32,6 @@ export const VantageSearch = ({ question }: { question: Question }) => {
       setResults(data.results);
       if (data.finished) {
         setSearching(false);
-        setShowWarning(false);
       }
     }
   }, [data]);
@@ -110,7 +111,9 @@ export const VantageSearch = ({ question }: { question: Question }) => {
       {showWarning && (
         <div className="mt-6">
           <Warning
-            message="Experiencing slowness? Results from Vantage Search are rate-limited by the Wayback Machine API."
+            message={`Preliminary results are shown in yellow. As of ${dateMed(
+              question.vantageDate
+            )}, they have not been archived and may leak information about the future.`}
             onClose={() => setShowWarning(false)}
           />
         </div>
@@ -135,7 +138,14 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                     <p className="text-sm text-gray-500 line-clamp-2">
                       {result.displayedLink}
                     </p>
-                    <h3 className="mt-1 text-sm font-semibold text-indigo-700">
+                    <h3
+                      className={clsx(
+                        "mt-1 text-sm font-semibold",
+                        isWaybackUrl(result.link)
+                          ? "text-indigo-700"
+                          : "text-yellow-700"
+                      )}
+                    >
                       <a
                         href={result.link}
                         target="_blank"

@@ -13,3 +13,8 @@ export const isValidBinaryProbability = (probability: number) =>
     probability > MAX_PREDICTION_PROBABILITY + 1e-4 ||
     probability < MIN_PREDICTION_PROBABILITY - 1e-4
   );
+
+export const isWaybackUrl = (url: string) => {
+  const regex = /^https?:\/\/web\.archive\.org\/web\/[0-9]{14}\/.*$/;
+  return regex.test(url);
+};

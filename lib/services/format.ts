@@ -29,7 +29,7 @@ export const valueToString = (value: string | number, hasDecimals: boolean) => {
     return value;
   }
   if (hasDecimals) {
-    return value.toFixed(3);
+    return (value * 1000).toFixed(0);
   }
   return value.toFixed(0);
 };

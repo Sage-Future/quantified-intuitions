@@ -14,29 +14,45 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     return { props: {} };
   }
   const userId = session?.user?.id || "";
-  const rows = await Prisma.$queryRaw<{ id: string }[]>`
-  SELECT q.id
-  FROM "Question" AS q, "Pastcast" AS p
-  WHERE p."questionId" = q.id
-  GROUP BY q.id
-  HAVING EVERY(p."userId" != ${userId}) AND COUNT(CASE WHEN p.skipped THEN 1 END) = (
-    SELECT MIN(ts) FROM (
-      SELECT COUNT(CASE WHEN p.skipped THEN 1 END) AS ts
-      FROM "Question" AS q, "Pastcast" AS p
-      WHERE p."questionId" = q.id
-      GROUP BY q.id
-      HAVING EVERY(p."userId" != ${userId})
-    ) AS t
-  )
-  ORDER BY RANDOM() LIMIT 1
-`;
+  const questions = await Prisma.question.findMany({
+    include: {
+      pastcasts: true,
+    },
+  });
+  const uniqueQuestions = questions.filter(
+    (question) =>
+      !question.pastcasts.some((pastcast) => pastcast.userId === userId)
+  );
+  const minSkipped = uniqueQuestions.reduce(
+    (acc, question) =>
+      Math.min(
+        question.pastcasts.reduce(
+          (acc2, pastcast) => (pastcast.skipped ? acc2 + 1 : acc2),
+          0
+        ),
+        acc
+      ),
+    Number.MAX_SAFE_INTEGER
+  );
+  const filteredQuestions = uniqueQuestions.filter(
+    (question) =>
+      question.pastcasts.reduce(
+        (acc, pastcast) => (pastcast.skipped ? acc + 1 : acc),
+        0
+      ) === minSkipped
+  );
+  const questionId =
+    filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)].id;
   const question = await Prisma.question.findUnique({
-    where: { id: rows[0].id },
+    where: {
+      id: questionId,
+    },
     include: {
       comments: true,
       pastcasts: true,
     },
   });
+
   if (question !== null && question.comments !== undefined) {
     question.comments = question.comments.filter(
       (comment) => comment.createdAt < question.vantageDate

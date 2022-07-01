@@ -35,12 +35,24 @@ const createSearchResult = async (result: any, searchId: string) => {
       displayedLink: result.displayed_link,
       link: result.link,
       title: result.title,
-      snippet: result.snippet,
+      snippet: result.snippet ?? "",
       search: {
         connect: {
           id: searchId,
         },
       },
+    },
+  });
+  return searchResult;
+};
+
+const updateSearchResult = async (result: any, searchId: string) => {
+  const searchResult = await Prisma.searchResult.update({
+    where: {
+      id: result.id,
+    },
+    data: {
+      link: result.link,
     },
   });
   return searchResult;
@@ -54,6 +66,11 @@ const processSearch = async (
   maxDay: string
 ) => {
   const start = Date.now();
+  for (let i = 0; i < serpapiResults.length; i++) {
+    const searchResult = await createSearchResult(serpapiResults[i], searchId);
+    console.log(searchResult);
+    serpapiResults[i].id = searchResult.id;
+  }
   for (let i = 0; i < serpapiResults.length; i++) {
     if (Date.now() - start > 50000) {
       break;
@@ -87,7 +104,9 @@ const processSearch = async (
     } else {
       continue;
     }
-    createSearchResult(result, searchId);
+    console.error(result.id);
+    console.error(result.link);
+    updateSearchResult(result, searchId);
   }
   const search = await Prisma.search.update({
     where: {
@@ -118,7 +137,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
   }
   const serpapiResults = (await rawResult.json())["organic_results"] as any[];
 
-  newSearch(searchId, session.user.id);
+  await newSearch(searchId, session.user.id);
   processSearch(serpapiResults, searchId, maxYear, maxMonth, maxDay);
 
   res.status(200).json({});

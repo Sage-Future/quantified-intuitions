@@ -11,6 +11,7 @@ import { Room, User } from "@prisma/client";
 import { ForecastForm } from "../../components/ForecastForm";
 import { Navbar } from "../../components/Navbar";
 import { RoomLeaderboard } from "../../components/RoomLeaderboard";
+import { RoomLobby } from "../../components/RoomLobby";
 import { ThreeColumnLayout } from "../../components/ThreeColumnLayout";
 import { Prisma } from "../../lib/prisma";
 import { QuestionWithCommentsAndPastcasts } from "../../types/additional";
@@ -120,7 +121,9 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
             <RoomHeading room={room} />
           </div>
             */}
-          {realQuestion ? (
+          {realRoom.isFinshed ? (
+            <RoomLeaderboard room={realRoom} />
+          ) : realQuestion !== undefined ? (
             <ThreeColumnLayout
               question={realQuestion as QuestionWithCommentsAndPastcasts}
               members={realRoom.members}
@@ -133,18 +136,11 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
                 />
               }
             />
-          ) : realRoom.isFinshed ? (
-            <RoomLeaderboard room={realRoom} />
           ) : (
-            <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
-              <h1>Waiting for a question to be picked for this room.</h1>
-              <h1>This page is not yet built</h1>
-              {isHost && (
-                <button onClick={() => loadNewQuestion()}>
-                  Pick a question
-                </button>
-              )}
-            </div>
+            <RoomLobby
+              room={realRoom}
+              loadNewQuestion={isHost ? () => loadNewQuestion() : () => {}}
+            />
           )}
         </main>
       </div>

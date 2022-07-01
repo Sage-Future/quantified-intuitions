@@ -1,9 +1,6 @@
-import {
-    CalendarIcon, ChevronRightIcon, ClockIcon, QuestionMarkCircleIcon
-} from "@heroicons/react/solid";
+import { ChevronRightIcon, ClockIcon, QuestionMarkCircleIcon } from "@heroicons/react/solid";
 import { Room, User } from "@prisma/client";
 
-import { dateMed } from "../lib/services/format";
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
 type RoomsProps = {
@@ -16,7 +13,7 @@ export const Rooms = ({ rooms }: RoomsProps) => {
     <ul role="list" className="divide-y divide-gray-200">
       {rooms.map((room) => (
         <li key={room.id}>
-          <a href={`rooms/${room.id}`} className="block hover:bg-gray-50">
+          <a href={`multiplayer/${room.id}`} className="block hover:bg-gray-50">
             <div className="px-4 py-4 flex items-center sm:px-6">
               <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                 <div className="truncate">
@@ -24,16 +21,19 @@ export const Rooms = ({ rooms }: RoomsProps) => {
                     <p className="font-medium text-indigo-600 truncate">
                       {room.name}
                     </p>
-                    {room.hostId && (
-                      <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
-                        by{" "}
-                        {
-                          room.members.find(
-                            (member) => member.id === room.hostId
-                          )?.name
-                        }
-                      </p>
-                    )}
+                    {room.hostId &&
+                      room.members.find(
+                        (member) => member.id === room.hostId
+                      ) !== undefined && (
+                        <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
+                          by{" "}
+                          {
+                            room.members.find(
+                              (member) => member.id === room.hostId
+                            )?.name
+                          }
+                        </p>
+                      )}
                   </div>
                   <div className="mt-2 flex">
                     <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 ">
@@ -50,13 +50,6 @@ export const Rooms = ({ rooms }: RoomsProps) => {
                         aria-hidden="true"
                       />
                       {room.maxSecondsPerQuestion} seconds per question
-                    </p>
-                    <p className="mt-2 flex items-center text-sm text-gray-500 sm:mt-0 sm:ml-6">
-                      <CalendarIcon
-                        className="flex-shrink-0 mr-1.5 h-5 w-5 text-gray-400"
-                        aria-hidden="true"
-                      />
-                      Created on {dateMed(room.createdAt)}
                     </p>
                   </div>
                 </div>
