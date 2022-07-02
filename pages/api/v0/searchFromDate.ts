@@ -1,9 +1,10 @@
-import type { NextApiRequest, NextApiResponse } from "next";
+import cuid from "cuid";
 import { getSession } from "next-auth/react";
 
 import { Prisma } from "../../../lib/prisma";
 import { MAX_SEARCH_RESULTS } from "../../../lib/services/magicNumbers";
 
+import type { NextApiRequest, NextApiResponse } from "next";
 interface Request extends NextApiRequest {
   body: {
     query: string;
@@ -28,24 +29,6 @@ const newSearch = async (searchId: string, userId: string) => {
   });
 };
 
-const createSearchResult = async (result: any, searchId: string) => {
-  const searchResult = await Prisma.searchResult.create({
-    data: {
-      position: result.position,
-      displayedLink: result.displayed_link,
-      link: result.link,
-      title: result.title,
-      snippet: result.snippet ?? "",
-      search: {
-        connect: {
-          id: searchId,
-        },
-      },
-    },
-  });
-  return searchResult;
-};
-
 const updateSearchResult = async (result: any, searchId: string) => {
   const searchResult = await Prisma.searchResult.update({
     where: {
@@ -67,10 +50,21 @@ const processSearch = async (
 ) => {
   const start = Date.now();
   for (let i = 0; i < serpapiResults.length; i++) {
-    const searchResult = await createSearchResult(serpapiResults[i], searchId);
-    console.log(searchResult);
-    serpapiResults[i].id = searchResult.id;
+    serpapiResults[i].id = cuid();
   }
+  const searchResults = await Prisma.searchResult.createMany({
+    data: serpapiResults.map((result) => {
+      return {
+        id: result.id,
+        position: result.position,
+        displayedLink: result.displayed_link,
+        link: result.link,
+        title: result.title,
+        snippet: result.snippet ?? "",
+        searchId: searchId,
+      };
+    }),
+  });
   for (let i = 0; i < serpapiResults.length; i++) {
     if (Date.now() - start > 50000) {
       break;

@@ -21,11 +21,13 @@ export const ForecastForm = ({
   maxTime,
   question,
   nextQuestion,
+  isHost,
 }: {
   startTime: Date | null;
   maxTime: number | null;
   question: QuestionWithCommentsAndPastcasts;
   nextQuestion: () => void;
+  isHost: boolean;
 }) => {
   const { id: questionId } = question;
   const { data: session } = useSession();
@@ -205,15 +207,22 @@ export const ForecastForm = ({
               <>
                 {pointsEarned !== undefined && (
                   <>
-                    <Result pointsEarned={pointsEarned || 0} skipped={false} />
+                    <Result
+                      pointsEarned={pointsEarned || 0}
+                      skipped={false}
+                      answer={question.binaryResolution}
+                    />
                     <OriginalPlatform question={question} />
                   </>
                 )}
                 <NextQuestion
                   nextQuestion={loadNextQuestion}
+                  nextText={
+                    isHost ? "Move room to next question" : "Next Question"
+                  }
                   isLoading={isLoading}
                   loadingText={
-                    waitForNextQuestion
+                    waitForNextQuestion && !isHost
                       ? "Waiting for host"
                       : "Loading next question"
                   }
@@ -297,10 +306,17 @@ export const ForecastForm = ({
               </div>
               {formState === "submittedPrior" && (
                 <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                  <Result pointsEarned={pointsEarned || 0} skipped={true} />
+                  <Result
+                    pointsEarned={pointsEarned || 0}
+                    skipped={true}
+                    answer={priorAnswer || false}
+                  />
                   <OriginalPlatform question={question} />
                   <NextQuestion
                     nextQuestion={loadNextQuestion}
+                    nextText={
+                      isHost ? "Move room to next question" : "Next Question"
+                    }
                     isLoading={isLoading}
                     loadingText={
                       waitForNextQuestion

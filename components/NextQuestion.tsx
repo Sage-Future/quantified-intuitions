@@ -1,9 +1,11 @@
 export const NextQuestion = ({
   nextQuestion,
+  nextText,
   isLoading,
   loadingText,
 }: {
   nextQuestion: () => void;
+  nextText: string;
   isLoading: boolean;
   loadingText: string;
 }) => {
@@ -38,7 +40,7 @@ export const NextQuestion = ({
             {` ${loadingText}`}
           </>
         ) : (
-          "Next Question"
+          <>{nextText}</>
         )}
       </button>
     </div>

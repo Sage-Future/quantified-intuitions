@@ -23,8 +23,10 @@ export const QuestionRoulette = ({
           maxTime={null}
           question={question}
           nextQuestion={nextQuestion}
+          isHost={false}
         />
       }
+      isHost={false}
     />
   );
 };

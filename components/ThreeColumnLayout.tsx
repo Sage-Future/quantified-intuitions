@@ -14,22 +14,24 @@ export const ThreeColumnLayout = ({
   question,
   members,
   right,
+  isHost,
 }: {
   question: QuestionWithCommentsAndPastcasts;
   members: User[];
   right: React.ReactNode;
+  isHost: boolean;
 }) => {
-  const [sidebarSelected, setSidebarSelected] = useState<CalibrationOptions>(
-    "QuestionDescription"
-  );
-  useEffect(() => {
-    setSidebarSelected("QuestionDescription");
-  }, [question.id]);
   const { data: session } = useSession();
   const showScores =
     question.pastcasts.find(
       (pastcast) => pastcast.userId === session?.user?.id
     ) !== undefined;
+  const [sidebarSelected, setSidebarSelected] = useState<CalibrationOptions>(
+    showScores ? "Scores" : "QuestionDescription"
+  );
+  useEffect(() => {
+    setSidebarSelected("QuestionDescription");
+  }, [question.id]);
   useEffect(() => {
     if (showScores) {
       setSidebarSelected("Scores");

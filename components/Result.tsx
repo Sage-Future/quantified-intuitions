@@ -5,9 +5,11 @@ import { valueToString } from "../lib/services/format";
 export const Result = ({
   pointsEarned,
   skipped,
+  answer,
 }: {
   pointsEarned: number;
   skipped: boolean;
+  answer: boolean;
 }) => {
   return (
     <div className="sm:col-span-6">
@@ -24,7 +26,10 @@ export const Result = ({
               <p className="text-sm font-medium text-green-800">
                 {skipped
                   ? "Your memory is fantastic!"
-                  : `You earned ${valueToString(pointsEarned, true)} points!`}
+                  : `${answer ? "Yes" : "No"}, you earned ${valueToString(
+                      pointsEarned,
+                      true
+                    )} points!`}
               </p>
             </div>
           </div>
@@ -42,7 +47,10 @@ export const Result = ({
               <p className="text-sm font-medium text-red-800">
                 {skipped
                   ? "Not quite! But that's okay!"
-                  : `You lost ${valueToString(-1 * pointsEarned, true)} points`}
+                  : `${answer ? "Yes" : "No"}, you lost ${valueToString(
+                      -1 * pointsEarned,
+                      true
+                    )} points`}
               </p>
             </div>
           </div>

@@ -111,9 +111,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
       {showWarning && (
         <div className="mt-6">
           <Warning
-            message={`Preliminary results are shown in yellow. As of ${dateMed(
-              question.vantageDate
-            )}, they have not been archived and may leak information about the future.`}
+            message={`Preliminary results are shown in yellow and may leak information about the future. As archived results load, they will be shown in blue.`}
             onClose={() => setShowWarning(false)}
           />
         </div>

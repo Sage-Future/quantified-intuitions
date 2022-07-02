@@ -133,8 +133,10 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
                   maxTime={realRoom.maxSecondsPerQuestion}
                   question={realQuestion as QuestionWithCommentsAndPastcasts}
                   nextQuestion={isHost ? () => loadNewQuestion() : () => {}}
+                  isHost={isHost}
                 />
               }
+              isHost={isHost}
             />
           ) : (
             <RoomLobby
