@@ -30,6 +30,11 @@ export const Navbar = () => {
       current: pathname.startsWith("/multiplayer"),
     },
 
+    {
+      name: "FAQ",
+      href: "/faq",
+      current: pathname === "/faq",
+    },
     /*
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
