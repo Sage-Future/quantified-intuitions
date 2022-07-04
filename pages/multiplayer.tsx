@@ -57,7 +57,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
         <main>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {myRooms.length > 0 && (
-              <div className="bg-white shadow overflow-hidden sm:rounded-lg">
+              <div className="bg-white shadow overflow-hidden sm:rounded-lg mb-10">
                 <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
                   <h3 className="text-lg leading-6 font-medium text-gray-900">
                     My Active Games
@@ -66,7 +66,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
                 <Rooms rooms={myRooms} />
               </div>
             )}
-            <div className="mt-10 bg-white shadow overflow-hidden sm:rounded-lg">
+            <div className="bg-white shadow overflow-hidden sm:rounded-lg">
               <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
                 <div className="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
                   <div className="ml-4 mt-2">
