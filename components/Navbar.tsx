@@ -20,14 +20,14 @@ export const Navbar = () => {
   const navigation = [
     { name: "Home", href: "/", current: pathname === "/" },
     {
-      name: "Leaderboard",
-      href: "/leaderboard",
-      current: pathname === "/leaderboard",
-    },
-    {
       name: "Multiplayer",
       href: "/multiplayer",
       current: pathname.startsWith("/multiplayer"),
+    },
+    {
+      name: "Leaderboard",
+      href: "/leaderboard",
+      current: pathname === "/leaderboard",
     },
 
     {
