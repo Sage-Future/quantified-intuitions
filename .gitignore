@@ -38,3 +38,5 @@ yarn-error.log*
 *importData.ts
 *importComments.ts
 *importQuestions.ts
+*importQuestionsGJO.ts
+*autocast_questions.json
