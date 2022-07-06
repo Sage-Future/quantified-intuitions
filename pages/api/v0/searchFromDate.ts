@@ -1,4 +1,3 @@
-import cuid from "cuid";
 import { getSession } from "next-auth/react";
 
 import { Prisma } from "../../../lib/prisma";
@@ -29,18 +28,6 @@ const newSearch = async (searchId: string, userId: string) => {
   });
 };
 
-const updateSearchResult = async (result: any, searchId: string) => {
-  const searchResult = await Prisma.searchResult.update({
-    where: {
-      id: result.id,
-    },
-    data: {
-      link: result.link,
-    },
-  });
-  return searchResult;
-};
-
 const processSearch = async (
   serpapiResults: any[],
   searchId: string,
@@ -49,22 +36,6 @@ const processSearch = async (
   maxDay: string
 ) => {
   const start = Date.now();
-  for (let i = 0; i < serpapiResults.length; i++) {
-    serpapiResults[i].id = cuid();
-  }
-  const searchResults = await Prisma.searchResult.createMany({
-    data: serpapiResults.map((result) => {
-      return {
-        id: result.id,
-        position: result.position,
-        displayedLink: result.displayed_link,
-        link: result.link,
-        title: result.title,
-        snippet: result.snippet ?? "",
-        searchId: searchId,
-      };
-    }),
-  });
   for (let i = 0; i < serpapiResults.length; i++) {
     if (Date.now() - start > 50000) {
       break;
@@ -98,9 +69,17 @@ const processSearch = async (
     } else {
       continue;
     }
-    console.error(result.id);
-    console.error(result.link);
-    updateSearchResult(result, searchId);
+    await Prisma.searchResult.create({
+      data: {
+        position: result.position,
+        waybackUrl: result.link,
+        search: {
+          connect: {
+            id: searchId,
+          },
+        },
+      },
+    });
   }
   const search = await Prisma.search.update({
     where: {
@@ -131,8 +110,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
   }
   const serpapiResults = (await rawResult.json())["organic_results"] as any[];
 
+  res.status(200).json(serpapiResults);
   await newSearch(searchId, session.user.id);
   processSearch(serpapiResults, searchId, maxYear, maxMonth, maxDay);
-
-  res.status(200).json({});
 }

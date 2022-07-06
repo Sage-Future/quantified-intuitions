@@ -8,8 +8,8 @@ export const dateMed = (date: Date) => {
   return DateTime.fromJSDate(date).toLocaleString(DateTime.DATE_MED);
 };
 
-export const floatToPercent = (float: number) => {
-  return `${Math.round(float * 100)}%`;
+export const floatToPercent = (float: number, decimals: number) => {
+  return `${(float * 100).toFixed(decimals)}%`;
 };
 
 export const numToTwoDigits = (num: number) => {

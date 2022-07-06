@@ -6,17 +6,16 @@ import useSWR from "swr";
 
 import { Transition } from "@headlessui/react";
 import { SearchIcon } from "@heroicons/react/solid";
-import { Question, SearchResult } from "@prisma/client";
+import { Question } from "@prisma/client";
 
 import { fetcher } from "../lib/services/data";
 import { dateMed, dateToObject } from "../lib/services/format";
 import { isWaybackUrl } from "../lib/services/validation";
-import { SearchSkeleton } from "./SearchSkeleton";
 import { Warning } from "./Warning";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
   const { register, handleSubmit, reset } = useForm();
-  const [results, setResults] = useState<SearchResult[]>();
+  const [results, setResults] = useState<any[]>([]);
   const [searching, setSearching] = useState<boolean>(false);
   const [searchId, setSearchId] = useState<string>("");
   const [showWarning, setShowWarning] = useState<boolean>(false);
@@ -29,7 +28,17 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   );
   useEffect(() => {
     if (data !== undefined && data !== null) {
-      setResults(data.results);
+      setResults(
+        results?.map((result) => {
+          const waybackedResult = data.results.find(
+            (r: { position: any }) => r.position === result.position
+          );
+          if (waybackedResult) {
+            result.link = waybackedResult.waybackUrl;
+          }
+          return result;
+        })
+      );
       if (data.finished) {
         setSearching(false);
       }
@@ -39,7 +48,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   const dateObj = dateToObject(question.vantageDate);
   const onSubmit = async (data: any) => {
     //TODO rate limit users
-    setResults(undefined);
+    setResults([]);
     setSearching(true);
     setShowWarning(true);
     const newSearchId = cuid();
@@ -59,6 +68,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     }).then(async (res) => {
       if (res.status === 200) {
         const json = await res.json();
+        setResults(json);
         console.log(json);
       } else {
         setSearching(false);
@@ -66,7 +76,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     });
   };
   useEffect(() => {
-    setResults(undefined);
+    setResults([]);
     setSearching(false);
     reset({ search: "" });
   }, [question.id]);
@@ -161,15 +171,6 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                 </Transition>
               </li>
             ))}
-          {searching && (
-            <SearchSkeleton
-              num={
-                results !== undefined && results.length > 0
-                  ? Math.max(5 - results.length, 1)
-                  : 5
-              }
-            />
-          )}
         </ul>
       </div>
     </>

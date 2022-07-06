@@ -38,7 +38,7 @@ export const QuestionDescription = ({
             <h3 className="text-sky-500 my-0">Crowd:</h3>
             <h1 className="text-sky-600 my-0">
               {question.crowdForecast !== null
-                ? floatToPercent(question.crowdForecast)
+                ? floatToPercent(question.crowdForecast, 0)
                 : "N/A"}
             </h1>
           </div>

@@ -45,7 +45,7 @@ export const OldCommentItem = ({
                       <>
                         <span className="text-gray-500 font-normal">{` predicted `}</span>
                         <span className="font-semi-bold">
-                          {floatToPercent(comment.predictionValue)}
+                          {floatToPercent(comment.predictionValue, 0)}
                         </span>
                       </>
                     )}

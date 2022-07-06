@@ -23,7 +23,7 @@ export const QuestionScores = ({
         name: member.name,
         pastcast: pastcast?.skipped
           ? "Skipped"
-          : floatToPercent(pastcast?.binaryProbability ?? 0.5),
+          : floatToPercent(pastcast?.binaryProbability ?? 0.5, 1),
         points: pastcast?.skipped ? 0 : pastcast?.score ?? 0,
       };
     })
