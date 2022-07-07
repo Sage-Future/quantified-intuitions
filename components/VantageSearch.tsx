@@ -11,6 +11,7 @@ import { Question } from "@prisma/client";
 import { fetcher } from "../lib/services/data";
 import { dateMed, dateToObject } from "../lib/services/format";
 import { isWaybackUrl } from "../lib/services/validation";
+import { SearchSkeleton } from "./SearchSkeleton";
 import { Warning } from "./Warning";
 
 export const VantageSearch = ({ question }: { question: Question }) => {
@@ -171,6 +172,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
                 </Transition>
               </li>
             ))}
+          {searching && results.length === 0 && <SearchSkeleton num={5} />}
         </ul>
       </div>
     </>
