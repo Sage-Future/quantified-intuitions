@@ -26,10 +26,9 @@ export const Result = ({
               <p className="text-sm font-medium text-green-800">
                 {skipped
                   ? "Your memory is fantastic!"
-                  : `${answer ? "Yes" : "No"}, you earned ${valueToString(
-                      pointsEarned,
-                      true
-                    )} points!`}
+                  : `Answer: ${answer ? "Yes" : "No"}`}
+                <br />
+                You earned {valueToString(pointsEarned, true)} points!
               </p>
             </div>
           </div>

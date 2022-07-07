@@ -22,17 +22,32 @@ const Faq = () => {
     {
       question: "Why should I pastcast?",
       answer:
-        "Pastcasting allows users to get quick feedback on their forecasting skills, even on questions that were open for a long time, which might be systematically different than questions with shorter time horizons.",
+        "Unlike forecasting, pastcasting allows for quick feedback even on questions that were open for a long time, which might be systematically different than questions with shorter time horizons. Unlike calibration training, it also tests relevant forecasting skills (trend extrapolation, investigating different views, and determining trustworthiness of news sources).",
+    },
+    {
+      question: "What is Vantage Search?",
+      answer:
+        "Vantage Search is a custom search engine that only shows results from before the vantage point to prevent information leaks from the future.",
+    },
+    {
+      question: "Why is Vantage Search so slow?",
+      answer:
+        "Preliminary results should be available within a few seconds. If you're experiencing a much longer delay, please check your adblocker and/or VPN. Archived results take much longer to load due to rate limiting by the Wayback Machine API.",
+    },
+    {
+      question: "I already know the answer to these questions!",
+      answer:
+        "Unfortunately, we don't have the capacity to manually filter out questions that people already know the answer to. By checking that you have prior knowledge of the question, you can help us improve the quality of our questions.",
     },
     {
       question: "How are pastcasts scored?",
       answer:
-        "Pastcasts are scored using log scoring relative to the original crowd forecast at that time.",
+        "Pastcasts are scored using log scoring relative to the original crowd forecast at that time, meaning that you will recieve zero points if you submit the same value as the crowd. The scoring rule is also strictly proper, which means that your expected score is maximized if you report your true beliefs.",
     },
     {
-      question: "How do I use this site to pastcast?",
+      question: "When will feature X be available?",
       answer:
-        "You can create pastcasts by viewing questions from our homepage, forming a forecast using information from the question and the vantage search, and then submitting your forecast in the form provided. After submitting your pastcast, you'll be able to immediately view the result of the question and how you did relative to the crowd forecast.",
+        "We're currently guaging whether pastcasting is a useful addition to the forecasting ecosystem (mostly by usage). If it is, we'll commit to spending more time improving the website and adding more features.",
     },
     {
       question: "How can I submit feedback about the site?",
