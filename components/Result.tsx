@@ -24,11 +24,15 @@ export const Result = ({
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-green-800">
-                {skipped
-                  ? "Your memory is fantastic!"
-                  : `Answer: ${answer ? "Yes" : "No"}`}
-                <br />
-                You earned {valueToString(pointsEarned, true)} points!
+                {skipped ? (
+                  "Your memory is fantastic!"
+                ) : (
+                  <>
+                    Answer: ${answer ? "Yes" : "No"}`
+                    <br />
+                    You earned {valueToString(pointsEarned, true)} points!
+                  </>
+                )}
               </p>
             </div>
           </div>
