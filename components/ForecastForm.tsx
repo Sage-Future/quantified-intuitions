@@ -202,7 +202,11 @@ export const ForecastForm = ({
           <div className="grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
             <BinaryForecast disabled={isLoading || formState !== "initial"} />
             <CommentForm disabled={isLoading || formState !== "initial"} />
-            {errors.length > 0 && <Errors errors={errors} />}
+            {errors.length > 0 && (
+              <div className="sm:col-span-6">
+                <Errors errors={errors} />
+              </div>
+            )}
             {formState === "submittedForecast" ? (
               <>
                 {pointsEarned !== undefined && (
