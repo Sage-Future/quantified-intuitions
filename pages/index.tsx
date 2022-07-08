@@ -9,9 +9,20 @@ import type { GetServerSideProps, NextPage } from "next";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
-    return { props: {} };
+    const question = await Prisma.question.findUnique({
+      where: {
+        id: "metaculus-395",
+      },
+      include: {
+        comments: true,
+        pastcasts: true,
+      },
+    });
+    return {
+      props: {
+        question,
+      },
+    };
   }
   const userId = session?.user?.id || "";
   const questions = await Prisma.question.findMany({

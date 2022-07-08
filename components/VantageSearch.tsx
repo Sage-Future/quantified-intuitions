@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import cuid from "cuid";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import useSWR from "swr";
@@ -47,6 +48,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
   }, [data]);
 
   const dateObj = dateToObject(question.vantageDate);
+  const { data: session } = useSession();
   const onSubmit = async (data: any) => {
     //TODO rate limit users
     setResults([]);
@@ -54,6 +56,11 @@ export const VantageSearch = ({ question }: { question: Question }) => {
     setShowWarning(true);
     const newSearchId = cuid();
     setSearchId(newSearchId);
+    if (session === null) {
+      signIn();
+      return;
+    }
+
     const result = await fetch("/api/v0/searchFromDate", {
       method: "POST",
       headers: {

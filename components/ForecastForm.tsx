@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { useSession } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
@@ -101,6 +101,10 @@ export const ForecastForm = ({
     nextQuestion();
   };
   const onSubmit = async (data: any) => {
+    if (session === null) {
+      signIn();
+      return;
+    }
     setIsLoading(true);
     setErrors([]);
     if (

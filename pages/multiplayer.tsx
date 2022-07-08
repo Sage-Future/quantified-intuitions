@@ -21,11 +21,6 @@ export const getServerSideProps: GetServerSideProps<
   MultiplayerProps | {}
 > = async (ctx) => {
   const session = await getSession(ctx);
-  if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
-    return { props: {} };
-  }
 
   const rooms = await Prisma.room.findMany({
     include: {
