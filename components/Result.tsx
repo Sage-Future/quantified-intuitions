@@ -28,7 +28,7 @@ export const Result = ({
                   "Your memory is fantastic!"
                 ) : (
                   <>
-                    Answer: ${answer ? "Yes" : "No"}`
+                    Answer: {answer ? "Yes" : "No"}
                     <br />
                     You earned {valueToString(pointsEarned, true)} points!
                   </>
