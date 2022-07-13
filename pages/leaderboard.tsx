@@ -6,10 +6,16 @@ import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 import { Navbar } from "../components/Navbar";
 import { Prisma } from "../lib/prisma";
 import { valueToString } from "../lib/services/format";
+import { HIDDEN_USERS } from "../lib/services/magicNumbers";
 import { UserWithPastcasts } from "../types/additional";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const users = await Prisma.user.findMany({
+    where: {
+      email: {
+        notIn: HIDDEN_USERS,
+      },
+    },
     include: {
       pastcasts: true,
     },
