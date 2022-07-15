@@ -3,6 +3,8 @@ import "../styles/globals.css";
 import { SessionProvider } from "next-auth/react";
 import Head from "next/head";
 
+import { Meta } from "../components/Meta";
+
 import type { AppProps } from "next/app";
 function MyApp({ Component, pageProps }: AppProps) {
   return (
@@ -10,6 +12,7 @@ function MyApp({ Component, pageProps }: AppProps) {
       <Head>
         <title>Pastcasting</title>
       </Head>
+      <Meta />
       <Component {...pageProps} />
     </SessionProvider>
   );
