@@ -122,11 +122,16 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
           </div>
             */}
           {realRoom.isFinshed ? (
-            <RoomLeaderboard room={realRoom} />
+            <div className="py-10 min-h-screen bg-gray-100">
+              <h1 className="text-center text-xl font-semibold text-gray-900">
+                Leaderboard for {room.name}
+              </h1>
+              <RoomLeaderboard room={realRoom} />
+            </div>
           ) : realQuestion !== undefined ? (
             <ThreeColumnLayout
               question={realQuestion as QuestionWithCommentsAndPastcasts}
-              members={realRoom.members}
+              room={realRoom}
               right={
                 <ForecastForm
                   startTime={realRoom.currentStartTime}

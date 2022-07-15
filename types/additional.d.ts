@@ -24,4 +24,5 @@ export type QuestionWithCommentsAndPastcasts = Question & {
 export type CalibrationOptions =
   | "QuestionDescription"
   | "VantageSearch"
-  | "Scores";
+  | "Scores"
+  | "Leaderboard";

@@ -2,26 +2,33 @@ import clsx from "clsx";
 import { useSession } from "next-auth/react";
 import { useEffect, useState } from "react";
 
-import { User } from "@prisma/client";
+import { Room, User } from "@prisma/client";
 
 import { CalibrationOptions, QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { QuestionDescription } from "./QuestionDescription";
 import { QuestionScores } from "./QuestionScores";
+import { RoomLeaderboard } from "./RoomLeaderboard";
 import { Sidebar } from "./Sidebar";
 import { VantageSearch } from "./VantageSearch";
 
 export const ThreeColumnLayout = ({
   question,
-  members,
+  room,
   right,
   isHost,
 }: {
   question: QuestionWithCommentsAndPastcasts;
-  members: User[];
+  room:
+    | (Room & {
+        members: User[];
+        questions: QuestionWithCommentsAndPastcasts[];
+      })
+    | null;
   right: React.ReactNode;
   isHost: boolean;
 }) => {
   const { data: session } = useSession();
+  const { members } = room || { members: [] };
   const showScores =
     question.pastcasts.find(
       (pastcast) => pastcast.userId === session?.user?.id
@@ -79,6 +86,13 @@ export const ThreeColumnLayout = ({
                 </div>
                 <div className={clsx(sidebarSelected !== "Scores" && "hidden")}>
                   <QuestionScores question={question} members={members} />
+                </div>
+                <div
+                  className={clsx(
+                    sidebarSelected !== "Leaderboard" && "hidden"
+                  )}
+                >
+                  {room !== null && <RoomLeaderboard room={room} />}
                 </div>
               </div>
 

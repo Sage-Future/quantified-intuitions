@@ -1,7 +1,10 @@
 import { useRouter } from "next/router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
+
+import { Transition } from "@headlessui/react";
+import { EyeOffIcon } from "@heroicons/react/solid";
 
 import { dateMed, floatToPercent } from "../lib/services/format";
 import { QuestionWithComments } from "../types/additional";
@@ -14,6 +17,7 @@ export const QuestionDescription = ({
   question: QuestionWithComments;
 }) => {
   const router = useRouter();
+  const [isHidden, setIsHidden] = useState<string>("");
   useEffect(() => {
     let links = document.links;
     for (let i = 0; i < links.length; i++) {
@@ -36,11 +40,32 @@ export const QuestionDescription = ({
           <h2 className="text-center my-0">{question.title}</h2>
           <div className="flex flex-col items-center justify-center">
             <h3 className="text-sky-500 my-0">Crowd:</h3>
-            <h1 className="text-sky-600 my-0">
-              {question.crowdForecast !== null
-                ? floatToPercent(question.crowdForecast, 0)
-                : "N/A"}
-            </h1>
+            <div className="flex flex-col items-center justify-center">
+              <h1 className="text-sky-600 my-0">
+                {question.crowdForecast !== null
+                  ? floatToPercent(question.crowdForecast, 0)
+                  : "N/A"}
+              </h1>
+              <Transition
+                show={isHidden !== question.id}
+                leave="transition-opacity duration-300 "
+                leaveFrom="opacity-100"
+                leaveTo="opacity-0"
+              >
+                <button
+                  type="button"
+                  onClick={() => setIsHidden(question.id)}
+                  className="inline-flex items-center px-4 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-sky-700 bg-sky-100
+                hover:bg-sky-200 absolute -translate-x-14 -translate-y-10"
+                >
+                  <EyeOffIcon
+                    className="-ml-1 mr-3 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                  Show
+                </button>
+              </Transition>
+            </div>
           </div>
         </div>
         <ReactMarkdown remarkPlugins={[remarkGfm]}>

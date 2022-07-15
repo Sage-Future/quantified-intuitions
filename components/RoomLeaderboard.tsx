@@ -43,49 +43,44 @@ export const RoomLeaderboard = ({
       return b.points - a.points;
     });
   return (
-    <div className="py-10 min-h-screen bg-gray-100">
-      <h1 className="text-center text-xl font-semibold text-gray-900">
-        Leaderboard for {room.name}
-      </h1>
-      <div className="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
-        <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto">
-            <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
-              <table className="min-w-full divide-y divide-gray-300">
-                <thead className="bg-gray-50">
-                  <tr>
-                    {["Name", "Points", "Skipped Correctly"].map((header) => (
-                      //header is valid sort type
-                      <th
-                        key={header}
-                        scope="col"
-                        className="
+    <div className="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
+      <div className="inline-block min-w-full py-2 align-middle md:px-6 lg:px-8">
+        <div className="max-w-3xl mx-auto">
+          <div className="overflow-hidden shadow ring-1 ring-black ring-opacity-5 md:rounded-lg">
+            <table className="min-w-full divide-y divide-gray-300">
+              <thead className="bg-gray-50">
+                <tr>
+                  {["Name", "Points", "Skipped Correctly"].map((header) => (
+                    //header is valid sort type
+                    <th
+                      key={header}
+                      scope="col"
+                      className="
             px-3 py-3.5 first:py-3.5 first:pl-4 first:pr-3 text-left text-sm font-semibold text-gray-900 first:sm:pl-6"
+                    >
+                      {header}
+                    </th>
+                  ))}
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-200 bg-white">
+                {formattedUsers.map((user) => (
+                  <tr key={user.id}>
+                    {["name", "points", "skippedCorrectly"].map((key) => (
+                      <td
+                        key={key}
+                        className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
                       >
-                        {header}
-                      </th>
+                        {
+                          //@ts-ignore
+                          valueToString(user[key], key === "points")
+                        }
+                      </td>
                     ))}
                   </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-200 bg-white">
-                  {formattedUsers.map((user) => (
-                    <tr key={user.id}>
-                      {["name", "points", "skippedCorrectly"].map((key) => (
-                        <td
-                          key={key}
-                          className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
-                        >
-                          {
-                            //@ts-ignore
-                            valueToString(user[key], key === "points")
-                          }
-                        </td>
-                      ))}
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+                ))}
+              </tbody>
+            </table>
           </div>
         </div>
       </div>

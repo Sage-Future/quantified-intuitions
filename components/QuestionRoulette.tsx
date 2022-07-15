@@ -16,7 +16,7 @@ export const QuestionRoulette = ({
   return (
     <ThreeColumnLayout
       question={question}
-      members={[]}
+      room={null}
       right={
         <ForecastForm
           startTime={null}

@@ -231,7 +231,9 @@ export const ForecastForm = ({
                 <NextQuestion
                   nextQuestion={loadNextQuestion}
                   nextText={
-                    isHost ? "Move room to next question" : "Next Question"
+                    isHost
+                      ? "Move EVERYONE in room to next question"
+                      : "Next Question"
                   }
                   isLoading={isLoading}
                   loadingText={
@@ -328,7 +330,9 @@ export const ForecastForm = ({
                   <NextQuestion
                     nextQuestion={loadNextQuestion}
                     nextText={
-                      isHost ? "Move room to next question" : "Next Question"
+                      isHost
+                        ? "Move EVERYONE in room to next question"
+                        : "Next Question"
                     }
                     isLoading={isLoading}
                     loadingText={
