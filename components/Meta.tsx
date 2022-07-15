@@ -15,7 +15,9 @@ export const Meta = () => {
         site_name: "Pastcast",
         images: [
           {
-            url: "/og.png",
+            url: "https://pastcast-sage.vercel.app/og.png",
+            width: 1024,
+            height: 1024,
           },
         ],
       }}
