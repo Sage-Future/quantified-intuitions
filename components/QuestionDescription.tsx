@@ -48,7 +48,9 @@ export const QuestionDescription = ({
         </ReactMarkdown>
         {question.comments.length > 0 && <hr />}
       </div>
-      <OldComments comments={question.comments} />
+      {question.comments.length > 0 && (
+        <OldComments comments={question.comments} />
+      )}
     </>
   );
 };

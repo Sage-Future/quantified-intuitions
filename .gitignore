@@ -39,4 +39,4 @@ yarn-error.log*
 *importComments.ts
 *importQuestions.ts
 *importQuestionsGJO.ts
-*autocast_questions.json
+*.json

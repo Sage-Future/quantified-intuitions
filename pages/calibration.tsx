@@ -107,7 +107,7 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
   return (
     <div className="min-h-full">
       <Navbar />
-      <div className="py-10 h-screen bg-gray-100">
+      <div className="py-10 min-h-screen bg-gray-100">
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Your Calibration Curve (Overconfidence: {overConfidence.toFixed(3)})

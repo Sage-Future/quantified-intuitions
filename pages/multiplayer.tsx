@@ -48,7 +48,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
   return (
     <div className="min-h-full">
       <Navbar />
-      <div className="py-10 h-screen bg-gray-100">
+      <div className="py-10 min-h-screen bg-gray-100">
         <main>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {myRooms.length > 0 && (

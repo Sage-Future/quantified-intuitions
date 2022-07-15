@@ -1,7 +1,9 @@
 import clsx from "clsx";
 import { signIn, useSession } from "next-auth/react";
+import { useRouter } from "next/router";
 import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { useSWRConfig } from "swr";
 
 import { XIcon } from "@heroicons/react/solid";
 
@@ -72,6 +74,8 @@ export const ForecastForm = ({
   const [secondsRemaining, setSecondsRemaining] = useState<number | undefined>(
     undefined
   );
+  const { mutate } = useSWRConfig();
+  const router = useRouter();
   useEffect(() => {
     const interval = setInterval(() => {
       setSecondsRemaining(
@@ -135,8 +139,9 @@ export const ForecastForm = ({
         const json = await res.json();
         setFormState(data.skipped ? "submittedPrior" : "submittedForecast");
         setPointsEarned(json.pastcast.score);
-      } else {
         setPriorAnswer(undefined);
+        const roomId = router.asPath.split("/")[2];
+        mutate(`/api/v0/getQuestion?roomId=${roomId}`);
       }
     });
     setIsLoading(false);

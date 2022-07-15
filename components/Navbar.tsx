@@ -10,7 +10,8 @@ import { ClockIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
 export const Navbar = () => {
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
   const user = {
     name: session?.user?.name ?? "",
     email: session?.user?.email ?? "",

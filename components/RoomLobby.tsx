@@ -43,7 +43,7 @@ export const RoomLobby = ({
   };
 
   return (
-    <div className="py-10 h-screen bg-gray-100">
+    <div className="py-10 min-h-screen bg-gray-100">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl font-bold leading-tight text-gray-900">
           Waiting for the host to start the game...

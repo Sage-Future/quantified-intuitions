@@ -77,7 +77,7 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
   return (
     <div className="min-h-full">
       <Navbar />
-      <div className="py-10 h-screen bg-gray-100">
+      <div className="py-10 min-h-screen bg-gray-100">
         <main>
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col ">

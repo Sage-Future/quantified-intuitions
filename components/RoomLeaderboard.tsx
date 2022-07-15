@@ -43,7 +43,7 @@ export const RoomLeaderboard = ({
       return b.points - a.points;
     });
   return (
-    <div className="py-10 h-screen bg-gray-100">
+    <div className="py-10 min-h-screen bg-gray-100">
       <h1 className="text-center text-xl font-semibold text-gray-900">
         Leaderboard for {room.name}
       </h1>

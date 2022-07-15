@@ -13,6 +13,11 @@ export const Meta = () => {
         title: "Pastcast",
         description: "Pastcast is a tool for practicing forecasting.",
         site_name: "Pastcast",
+        images: [
+          {
+            url: "/og.png",
+          },
+        ],
       }}
       additionalLinkTags={[
         {

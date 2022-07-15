@@ -71,7 +71,7 @@ const Settings = ({ user }: { user: User }) => {
   return (
     <div className="min-h-full">
       <Navbar />
-      <div className="py-10 h-screen bg-gray-100">
+      <div className="py-10 min-h-screen bg-gray-100">
         <main>
           <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
             <form
