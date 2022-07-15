@@ -21,7 +21,7 @@ export const QuestionDescription = ({
         links[i].target = "_blank";
       }
     }
-  }, []);
+  }, [question.id]);
   if (question === undefined) {
     return <Sorry />;
   }
