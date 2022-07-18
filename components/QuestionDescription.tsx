@@ -55,11 +55,11 @@ export const QuestionDescription = ({
                 <button
                   type="button"
                   onClick={() => setIsHidden(question.id)}
-                  className="inline-flex items-center px-4 py-3 border border-transparent shadow-sm text-base font-medium rounded-md text-sky-700 bg-sky-100
-                hover:bg-sky-200 absolute -translate-x-14 -translate-y-10"
+                  className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-sky-700 bg-sky-100
+                hover:bg-sky-200 absolute -translate-x-12 -translate-y-10"
                 >
                   <EyeOffIcon
-                    className="-ml-1 mr-3 h-5 w-5"
+                    className="-ml-0.5 mr-2 h-4 w-4"
                     aria-hidden="true"
                   />
                   Show
