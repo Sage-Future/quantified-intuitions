@@ -5,6 +5,7 @@ import { useState } from "react";
 import { useForm } from "react-hook-form";
 
 import { Errors } from "../../components/Errors";
+import { Footer } from "../../components/Footer";
 import { Navbar } from "../../components/Navbar";
 import { Success } from "../../components/Success";
 
@@ -73,9 +74,9 @@ const MultiplayerCreate = () => {
   const { data: session } = useSession();
 
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-10 min-h-screen bg-gray-100">
+      <div className="py-10 grow bg-gray-100">
         <main>
           <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
             <form
@@ -180,6 +181,7 @@ const MultiplayerCreate = () => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

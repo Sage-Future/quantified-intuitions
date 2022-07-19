@@ -1,5 +1,6 @@
 import { getSession } from "next-auth/react";
 
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { QuestionRoulette } from "../components/QuestionRoulette";
 import { Prisma } from "../lib/prisma";
@@ -80,9 +81,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
 const Home = ({ question }: { question: QuestionWithCommentsAndPastcasts }) => {
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-0">
+      <div className="py-0 grow">
         {/*
         <header>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -100,6 +101,7 @@ const Home = ({ question }: { question: QuestionWithCommentsAndPastcasts }) => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

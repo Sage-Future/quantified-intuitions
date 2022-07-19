@@ -4,6 +4,7 @@ import {
     XAxis, YAxis
 } from "recharts";
 
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Prisma } from "../lib/prisma";
 import { truncateError } from "../lib/services/format";
@@ -105,9 +106,9 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
       xs.length);
 
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-10 min-h-screen bg-gray-100">
+      <div className="py-10 grow bg-gray-100">
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
             Your Calibration Curve (Overconfidence: {overConfidence.toFixed(3)})
@@ -189,6 +190,7 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
           </ResponsiveContainer>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

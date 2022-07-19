@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 
 import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
 
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Prisma } from "../lib/prisma";
 import { valueToString } from "../lib/services/format";
@@ -75,9 +76,9 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
   }, [sortType]);
 
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-10 min-h-screen bg-gray-100">
+      <div className="py-10 grow bg-gray-100">
         <main>
           <div className="px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col ">
@@ -178,6 +179,7 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

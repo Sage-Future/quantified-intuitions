@@ -4,6 +4,7 @@ import { GetStaticProps } from "next";
 import { Disclosure } from "@headlessui/react";
 import { ChevronDownIcon } from "@heroicons/react/outline";
 
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
@@ -55,10 +56,10 @@ const Faq = () => {
     },
   ];
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="bg-gray-50 min-h-screen">
-        <div className="max-w-7xl mx-auto py-12 px-4 sm:py-16 sm:px-6 lg:px-8">
+      <div className="bg-gray-50 grow">
+        <div className="max-w-7xl mx-auto py-8 px-4 sm:py-10 sm:px-6 lg:px-8">
           <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
             <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
               Frequently asked questions
@@ -95,6 +96,7 @@ const Faq = () => {
           </div>
         </div>
       </div>
+      <Footer />
     </div>
   );
 };

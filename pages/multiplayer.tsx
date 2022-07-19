@@ -6,6 +6,7 @@ import Link from "next/link";
 import { PlusIcon } from "@heroicons/react/solid";
 import { Room, User } from "@prisma/client";
 
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Rooms } from "../components/Rooms";
 import { Prisma } from "../lib/prisma";
@@ -46,9 +47,9 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
     (room) => !room.members.some((member) => member.id === session?.user?.id)
   );
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-10 min-h-screen bg-gray-100">
+      <div className="py-10 grow bg-gray-100">
         <main>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
             {myRooms.length > 0 && (
@@ -90,6 +91,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };

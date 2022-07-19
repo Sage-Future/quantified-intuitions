@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { User } from "@prisma/client";
 
 import { Errors } from "../components/Errors";
+import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Success } from "../components/Success";
 import { Prisma } from "../lib/prisma";
@@ -69,9 +70,9 @@ const Settings = ({ user }: { user: User }) => {
   };
 
   return (
-    <div className="min-h-full">
+    <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="py-10 min-h-screen bg-gray-100">
+      <div className="py-10 bg-gray-100 grow">
         <main>
           <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
             <form
@@ -144,6 +145,7 @@ const Settings = ({ user }: { user: User }) => {
           </div>
         </main>
       </div>
+      <Footer />
     </div>
   );
 };
