@@ -56,8 +56,12 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         0
       ) === minSkipped
   );
-  const questionId =
-    filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)].id;
+  const questionId = uniqueQuestions.some(
+    (question) => question.id === "metaculus-395"
+  )
+    ? "metaculus-395"
+    : filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)]
+        .id;
   const question = await Prisma.question.findUnique({
     where: {
       id: questionId,
