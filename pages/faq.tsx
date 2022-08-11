@@ -68,7 +68,7 @@ const Faq = () => {
             <dl className="divide-y divide-gray-200">
               {faqs.map((faq) => (
                 <div
-                  key={faq.id}
+                  key={faq.question}
                   className="pt-6 pb-8 md:grid md:grid-cols-12 md:gap-8"
                 >
                   <dt className="text-base font-medium text-gray-900 md:col-span-5">
