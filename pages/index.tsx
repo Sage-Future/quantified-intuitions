@@ -27,6 +27,9 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
   const userId = session?.user?.id || "";
   const questions = await Prisma.question.findMany({
+    where: {
+      isDeleted: false,
+    },
     include: {
       pastcasts: true,
     },

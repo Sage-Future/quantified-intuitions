@@ -48,12 +48,15 @@ export const Result = ({
             </div>
             <div className="ml-3">
               <p className="text-sm font-medium text-red-800">
-                {skipped
-                  ? "Not quite! But that's okay!"
-                  : `${answer ? "Yes" : "No"}, you lost ${valueToString(
-                      -1 * pointsEarned,
-                      true
-                    )} points`}
+                {skipped ? (
+                  "Not quite! But that's okay!"
+                ) : (
+                  <>
+                    Answer: {answer ? "Yes" : "No"}
+                    <br />
+                    You lost {valueToString(pointsEarned, true)} points!
+                  </>
+                )}
               </p>
             </div>
           </div>

@@ -27,10 +27,13 @@ const MultiplayerCreate = () => {
   const { register, handleSubmit } = useForm();
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState<string>("");
+  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const onSubmit = async (data: any) => {
+    if (isLoading) return;
     setErrors([]);
     setSuccess("");
+    setIsLoading(true);
     let errors: string[] = [];
     if (data.name.length < 3 || data.name.length > 20) {
       errors.push("Name must be between 3 and 20 characters.");
@@ -68,6 +71,7 @@ const MultiplayerCreate = () => {
         router.push(`/multiplayer/${roomId}`);
       } else {
         setErrors(["Error creating room."]);
+        setIsLoading(false);
       }
     });
   };
@@ -170,7 +174,8 @@ const MultiplayerCreate = () => {
                     }
                     <button
                       type="submit"
-                      className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                      className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                      disabled={isLoading}
                     >
                       Create
                     </button>

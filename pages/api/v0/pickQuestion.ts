@@ -51,11 +51,16 @@ const pickQuestion = async (req: Request, res: NextApiResponse) => {
       },
     });
     res.status(200).json({ room: updatedRoom });
+    //revalidate leaderboard
+    res.revalidate("/leaderboard");
     return;
   }
 
   const memberIds = room.members.map((member) => member.id);
   const questions = await Prisma.question.findMany({
+    where: {
+      isDeleted: false,
+    },
     include: {
       pastcasts: true,
     },

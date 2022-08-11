@@ -98,9 +98,9 @@ export default async function handle(req: Request, res: NextApiResponse) {
     res.status(401).json({ message: "Not logged in" });
     return;
   }
-
+  const time1 = Date.now();
   const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=b1345b2c7e4bc848fa01b269898eeae970907e8abecc064f93b912a3812d7960&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=${MAX_SEARCH_RESULTS}`;
-
+  console.log(fetchUrl);
   const rawResult = await fetch(fetchUrl);
 
   if (!rawResult.ok) {
@@ -109,6 +109,8 @@ export default async function handle(req: Request, res: NextApiResponse) {
     return;
   }
   const serpapiResults = (await rawResult.json())["organic_results"] as any[];
+  const time2 = Date.now();
+  console.log(`Serpapi took ${time2 - time1}ms`);
 
   res.status(200).json(serpapiResults);
   await newSearch(searchId, session.user.id);

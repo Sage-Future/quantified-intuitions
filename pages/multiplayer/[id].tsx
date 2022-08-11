@@ -135,6 +135,7 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
               room={realRoom}
               right={
                 <ForecastForm
+                  key={realQuestion.id}
                   startTime={realRoom.currentStartTime}
                   maxTime={realRoom.maxSecondsPerQuestion}
                   question={realQuestion as QuestionWithCommentsAndPastcasts}

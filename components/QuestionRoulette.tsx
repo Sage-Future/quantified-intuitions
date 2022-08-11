@@ -19,6 +19,7 @@ export const QuestionRoulette = ({
       room={null}
       right={
         <ForecastForm
+          key={question.id}
           startTime={null}
           maxTime={null}
           question={question}

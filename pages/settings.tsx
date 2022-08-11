@@ -42,11 +42,11 @@ const Settings = ({ user }: { user: User }) => {
     //username must only contain letters, numbers, and spaces and cannot only be spaces
     if (
       data.username.length < 3 ||
-      data.username.length > 20 ||
+      data.username.length > 50 ||
       !/^[a-zA-Z0-9 ]*$/.test(data.username)
     ) {
       setErrors([
-        "Username must be between 3 and 20 characters and only contain letters, numbers, and spaces.",
+        "Username must be between 3 and 50 characters and only contain letters, numbers, and spaces.",
       ]);
       return;
     }

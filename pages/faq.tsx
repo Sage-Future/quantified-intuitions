@@ -1,8 +1,4 @@
-import clsx from "clsx";
 import { GetStaticProps } from "next";
-
-import { Disclosure } from "@headlessui/react";
-import { ChevronDownIcon } from "@heroicons/react/outline";
 
 import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
@@ -36,9 +32,14 @@ const Faq = () => {
         "Preliminary results should be available within a few seconds. If you're experiencing a much longer delay, please check your adblocker and/or VPN. Archived results take much longer to load due to rate limiting by the Wayback Machine API.",
     },
     {
+      question: "Where do these questions come from?",
+      answer:
+        "We use already resolved Metaculus and Good Judgement Open questions as sources. We provide a link to the original question page after submitting a pastcast.",
+    },
+    {
       question: "I already know the answer to these questions!",
       answer:
-        "Unfortunately, we don't have the capacity to manually filter out questions that people already know the answer to. By checking that you have prior knowledge of the question, you can help us improve the quality of our questions.",
+        "By checking that you have prior knowledge of the question, you can help us improve the quality of our questions for future users.",
     },
     {
       question: "How are pastcasts scored?",
@@ -58,39 +59,25 @@ const Faq = () => {
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
-      <div className="bg-gray-50 grow">
-        <div className="max-w-7xl mx-auto py-8 px-4 sm:py-10 sm:px-6 lg:px-8">
-          <div className="max-w-3xl mx-auto divide-y-2 divide-gray-200">
-            <h2 className="text-center text-3xl font-extrabold text-gray-900 sm:text-4xl">
-              Frequently asked questions
-            </h2>
-            <dl className="mt-6 space-y-6 divide-y divide-gray-200">
+      <div className="bg-gray-50">
+        <div className="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:py-16 lg:px-8">
+          <h2 className="text-3xl font-extrabold text-gray-900">
+            Frequently asked questions
+          </h2>
+          <div className="mt-8">
+            <dl className="divide-y divide-gray-200">
               {faqs.map((faq) => (
-                <Disclosure as="div" key={faq.question} className="pt-6">
-                  {({ open }) => (
-                    <>
-                      <dt className="text-lg">
-                        <Disclosure.Button className="text-left w-full flex justify-between items-start text-gray-400">
-                          <span className="font-medium text-gray-900">
-                            {faq.question}
-                          </span>
-                          <span className="ml-6 h-7 flex items-center">
-                            <ChevronDownIcon
-                              className={clsx(
-                                open ? "-rotate-180" : "rotate-0",
-                                "h-6 w-6 transform"
-                              )}
-                              aria-hidden="true"
-                            />
-                          </span>
-                        </Disclosure.Button>
-                      </dt>
-                      <Disclosure.Panel as="dd" className="mt-2 pr-12">
-                        <p className="text-base text-gray-500">{faq.answer}</p>
-                      </Disclosure.Panel>
-                    </>
-                  )}
-                </Disclosure>
+                <div
+                  key={faq.id}
+                  className="pt-6 pb-8 md:grid md:grid-cols-12 md:gap-8"
+                >
+                  <dt className="text-base font-medium text-gray-900 md:col-span-5">
+                    {faq.question}
+                  </dt>
+                  <dd className="mt-2 md:mt-0 md:col-span-7">
+                    <p className="text-base text-gray-500">{faq.answer}</p>
+                  </dd>
+                </div>
               ))}
             </dl>
           </div>

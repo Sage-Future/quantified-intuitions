@@ -19,7 +19,7 @@ const updateSettings = async (req: Request, res: NextApiResponse) => {
   }
   if (
     username.length < 3 ||
-    username.length > 20 ||
+    username.length > 50 ||
     !/^[a-zA-Z0-9 ]*$/.test(username)
   ) {
     res.status(400).json({

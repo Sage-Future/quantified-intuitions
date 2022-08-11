@@ -66,9 +66,20 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
               <div className="bg-white px-4 py-5 border-b border-gray-200 sm:px-6">
                 <div className="-ml-4 -mt-2 flex items-center justify-between flex-wrap sm:flex-nowrap">
                   <div className="ml-4 mt-2">
-                    <h3 className="text-lg leading-6 font-medium text-gray-900">
-                      Public Games
-                    </h3>
+                    {publicRooms.length > 0 ? (
+                      <h3 className="text-lg leading-6 font-medium text-gray-900">
+                        Public Games
+                      </h3>
+                    ) : (
+                      <>
+                        <h3 className="text-lg leading-6 font-medium text-gray-900">
+                          No Public Games
+                        </h3>
+                        <p className="mt-1 text-sm text-gray-500">
+                          Get started by creating a new game.
+                        </p>
+                      </>
+                    )}
                   </div>
                   <div className="ml-4 mt-2 flex-shrink-0">
                     <Link href="/multiplayer/create" passHref>

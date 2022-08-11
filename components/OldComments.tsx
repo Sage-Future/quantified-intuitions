@@ -8,7 +8,7 @@ export const OldComments = ({ comments }: { comments: Comment[] }) => {
   );
 
   return (
-    <div className="flow-root my-6">
+    <div className="flow-root mt-6 mb-8">
       <ul role="list" className="-mb-8">
         {topLevelComments.map((comment, commentIdx) => (
           <OldCommentItem

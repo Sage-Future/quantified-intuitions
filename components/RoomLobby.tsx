@@ -74,10 +74,21 @@ export const RoomLobby = ({
                 </div>
               </div>
               <div className="ml-4 mt-2 flex-shrink-0">
+                <button
+                  type="button"
+                  className=" relative inline-flex items-center px-4 py-2 border border-gray-300 shadow-sm text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                  onClick={leaveRoom}
+                >
+                  <ChevronLeftIcon
+                    className="-ml-1 mr-2 h-5 w-5"
+                    aria-hidden="true"
+                  />
+                  Leave Room
+                </button>
                 {isHost && (
                   <button
                     type="button"
-                    className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="ml-4 relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
                     onClick={startGame}
                     disabled={isLoading}
                   >
@@ -114,17 +125,6 @@ export const RoomLobby = ({
                     )}
                   </button>
                 )}
-                <button
-                  type="button"
-                  className="ml-4 relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-indigo-700 bg-indigo-100 hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  onClick={leaveRoom}
-                >
-                  <ChevronLeftIcon
-                    className="-ml-1 mr-2 h-5 w-5"
-                    aria-hidden="true"
-                  />
-                  Leave Room
-                </button>
               </div>
             </div>
           </div>

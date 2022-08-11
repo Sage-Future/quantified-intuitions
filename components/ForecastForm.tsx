@@ -153,6 +153,7 @@ export const ForecastForm = ({
       skipped: true,
     });
   };
+  /*
   useEffect(() => {
     setIsLoading(false);
     methods.reset();
@@ -185,6 +186,7 @@ export const ForecastForm = ({
     setTimeStarted(Date.now());
     setSecondsRemaining(undefined);
   }, [question.id]);
+  */
 
   return (
     <FormProvider {...methods}>
