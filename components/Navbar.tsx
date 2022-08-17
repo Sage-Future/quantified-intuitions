@@ -36,6 +36,11 @@ export const Navbar = () => {
       href: "/faq",
       current: pathname === "/faq",
     },
+    {
+      name: "Discord",
+      href: "https://discord.gg/mt9YVB8VDE",
+      current: false,
+    },
     /*
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
