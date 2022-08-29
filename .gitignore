@@ -39,4 +39,5 @@ yarn-error.log*
 *importComments.ts
 *importQuestions.ts
 *importQuestionsGJO.ts
+*importCalibrationQuestions.ts
 *.json
