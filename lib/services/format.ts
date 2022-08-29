@@ -34,6 +34,13 @@ export const valueToString = (value: string | number, hasDecimals: boolean) => {
   return value.toFixed(0);
 };
 
+export const formatLargeNumber = (value: number) => {
+  if (value < 1000 && value > 0.001) {
+    return value;
+  }
+  return value.toExponential(0);
+};
+
 export const truncateError = (error: number, median: number) => {
   const minVal = Math.min(median, error);
   const maxVal = Math.min(100 - median, error);

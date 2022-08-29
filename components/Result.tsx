@@ -1,15 +1,17 @@
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 
-import { valueToString } from "../lib/services/format";
+import { formatLargeNumber, valueToString } from "../lib/services/format";
 
 export const Result = ({
   pointsEarned,
   skipped,
   answer,
+  numericalAnswer,
 }: {
   pointsEarned: number;
   skipped: boolean;
   answer: boolean;
+  numericalAnswer: number | undefined;
 }) => {
   return (
     <div className="sm:col-span-6">
@@ -28,7 +30,12 @@ export const Result = ({
                   "Your memory is fantastic!"
                 ) : (
                   <>
-                    Answer: {answer ? "Yes" : "No"}
+                    Answer:{" "}
+                    {numericalAnswer === undefined
+                      ? answer
+                        ? "Yes"
+                        : "No"
+                      : formatLargeNumber(numericalAnswer)}
                     <br />
                     You earned {valueToString(pointsEarned, true)} points!
                   </>
@@ -52,7 +59,12 @@ export const Result = ({
                   "Not quite! But that's okay!"
                 ) : (
                   <>
-                    Answer: {answer ? "Yes" : "No"}
+                    Answer:{" "}
+                    {numericalAnswer === undefined
+                      ? answer
+                        ? "Yes"
+                        : "No"
+                      : formatLargeNumber(numericalAnswer)}
                     <br />
                     You lost {valueToString(pointsEarned, true)} points!
                   </>

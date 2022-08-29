@@ -226,6 +226,7 @@ export const ForecastForm = ({
                       pointsEarned={pointsEarned || 0}
                       skipped={false}
                       answer={question.binaryResolution}
+                      numericalAnswer={undefined}
                     />
                     <OriginalPlatform question={question} />
                   </>
@@ -327,6 +328,7 @@ export const ForecastForm = ({
                     pointsEarned={pointsEarned || 0}
                     skipped={true}
                     answer={priorAnswer || false}
+                    numericalAnswer={undefined}
                   />
                   <OriginalPlatform question={question} />
                   <NextQuestion

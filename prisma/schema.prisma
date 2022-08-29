@@ -49,6 +49,7 @@ model User {
   searches            Search[]
   commentInteractions UserCommentInteraction[]
   rooms               Room[]
+  CalibrationAnswer   CalibrationAnswer[]
 }
 
 model VerificationToken {
@@ -157,4 +158,29 @@ model Room {
   pastcasts             Pastcast[]
   questions             Question[]
   members               User[]
+}
+
+model CalibrationQuestion {
+  id                 String              @id @default(cuid())
+  isDeleted          Boolean             @default(false)
+  content            String
+  answer             Float
+  unit               String
+  source             String
+  calibrationAnswers CalibrationAnswer[]
+}
+
+model CalibrationAnswer {
+  id         String              @id @default(cuid())
+  isDeleted  Boolean             @default(false)
+  userId     String
+  questionId String
+  lowerBound Float
+  upperBound Float
+  score      Float
+  timeSpent  Int?                @default(0)
+  correct    Boolean
+  createdAt  DateTime            @default(now())
+  user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question   CalibrationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
