@@ -49,12 +49,14 @@ const createCalibrationAnswer = async (req: Request, res: NextApiResponse) => {
     upperBound,
     calibrationQuestion.answer,
     confidenceInterval,
-    false
+    calibrationQuestion.useLogScoring
   );
+  console.log(score);
   const calibrationAnswer = await Prisma.calibrationAnswer.create({
     data: {
       userId: session.user.id,
       questionId: questionId,
+      confidence: confidenceInterval / 100.0,
       lowerBound: lowerBound,
       upperBound: upperBound,
       score: score,

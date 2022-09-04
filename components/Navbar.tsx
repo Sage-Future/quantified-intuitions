@@ -53,8 +53,8 @@ export const Navbar = () => {
     */
     session
       ? {
-          name: "Calibration",
-          href: "/calibration",
+          name: "Charts",
+          href: "/charts",
         }
       : null,
     session

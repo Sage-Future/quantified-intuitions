@@ -3,6 +3,8 @@ import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
 import { CalibrationQuestion } from "@prisma/client";
 
@@ -11,6 +13,7 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { NextQuestion } from "../components/NextQuestion";
 import { Result } from "../components/Result";
+import { Sorry } from "../components/Sorry";
 import { SubmitForm } from "../components/SubmitForm";
 import { Prisma } from "../lib/prisma";
 
@@ -56,19 +59,38 @@ const EaCalibration = ({
   const [errors, setErrors] = useState<string[]>([]);
   const watchAllFields = watch();
   const router = useRouter();
+  const [sessionScore, setSessionScore] = useState<number>(0);
+  //60s countdown timer
+  const [countdown, setCountdown] = useState<number>(60);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setCountdown((countdown) => countdown - 1);
+    }, 1000);
+    return () => clearInterval(interval);
+  }, []);
+
   const nextQuestion = () => {
     router.replace(router.asPath);
   };
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     const { lowerBound, upperBound } = data;
+    console.log("data", data);
+    console.log("watchAllFields", watchAllFields);
     setErrors([]);
     if (lowerBound === "" || upperBound === "") {
       setErrors(["Please fill in both fields"]);
       setIsLoading(false);
       return;
     }
-    if (Number(lowerBound) > Number(upperBound)) {
+    const lowerBoundNumber = Number(lowerBound.replace(/,/g, ""));
+    const upperBoundNumber = Number(upperBound.replace(/,/g, ""));
+    if (isNaN(lowerBoundNumber) || isNaN(upperBoundNumber)) {
+      setErrors(["Please enter a number"]);
+      setIsLoading(false);
+      return;
+    }
+    if (lowerBoundNumber > upperBoundNumber) {
       setErrors(["Lower bound must be less than upper bound"]);
       console.log(lowerBound, upperBound);
       setIsLoading(false);
@@ -81,8 +103,8 @@ const EaCalibration = ({
       },
       body: JSON.stringify({
         questionId: calibrationQuestion.id,
-        lowerBound: Number(lowerBound),
-        upperBound: Number(upperBound),
+        lowerBound: lowerBoundNumber,
+        upperBound: upperBoundNumber,
         confidenceInterval: parseFloat(confidenceInterval.replace("%", "")),
       }),
     }).then(async (res) => {
@@ -90,6 +112,7 @@ const EaCalibration = ({
         const json = await res.json();
         console.log(json);
         setPointsEarned(json.score);
+        setSessionScore(sessionScore + json.score);
       }
     });
     setIsLoading(false);
@@ -101,12 +124,29 @@ const EaCalibration = ({
     setErrors([]);
     setPointsEarned(null);
   }, [calibrationQuestion]);
+  useEffect(() => {
+    let links = document.links;
+    for (let i = 0; i < links.length; i++) {
+      if (!links[i].href.startsWith(`${window.location.origin}`)) {
+        links[i].target = "_blank";
+      }
+    }
+  }, [calibrationQuestion, pointsEarned]);
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
       <div className="py-6 grow">
-        <div className="flex justify-center">
+        <div className="max-w-prose mx-auto flex justify-between ">
+          <div className="prose">
+            <h4 className="my-0 text-gray-500">Time remaining:</h4>
+            <h2 className="my-0">
+              {countdown > 0 ? countdown : "Time's up!"}
+              {countdown > 0 && (
+                <span className="text-gray-500 text-[16px]"> seconds</span>
+              )}
+            </h2>
+          </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
               Confidence Interval
@@ -174,83 +214,177 @@ const EaCalibration = ({
               </button>
             </span>
           </div>
-        </div>
-        <div className="pt-8 max-w-prose mx-auto">
-          <div className="prose break-words">
-            <h2 className="text-center my-0">{calibrationQuestion.content}</h2>
+          <div className="prose">
+            <h4 className="my-0 text-gray-500">Score:</h4>
+            <h2 className="my-0">
+              {sessionScore.toFixed(2)}
+              <span className="text-gray-500 text-[16px]"> points</span>
+            </h2>
           </div>
-          <form onSubmit={handleSubmit(onSubmit)} key={calibrationQuestion.id}>
-            <div className="pt-10">
-              <h3 className="text-lg leading-6 font-medium text-gray-900">
-                {confidenceInterval} Confidence Interval
-              </h3>
-              <div className="mt-1 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="lower-bound"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Lower Bound
-                  </label>
-                  <div className="mt-1 flex rounded-md shadow-sm">
-                    <input
-                      type="number"
-                      className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm border-gray-300"
-                      {...register("lowerBound")}
-                    />
-                    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                      {calibrationQuestion.unit || "units"}
-                    </span>
+        </div>
+        {calibrationQuestion === undefined ? (
+          <div className="mt-10">
+            <Sorry />
+          </div>
+        ) : (
+          <div className="pt-8 max-w-prose mx-auto">
+            <div className="prose break-words text-2xl">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {calibrationQuestion.content}
+              </ReactMarkdown>
+            </div>
+            <form
+              onSubmit={handleSubmit(onSubmit)}
+              key={calibrationQuestion.id}
+            >
+              <div className="pt-10">
+                <h3 className="text-lg leading-6 font-medium text-gray-900">
+                  {confidenceInterval} Confidence Interval
+                </h3>
+                <div className="mt-1 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="lower-bound"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Lower Bound
+                    </label>
+                    <div className="mt-1 flex rounded-md shadow-sm">
+                      {calibrationQuestion.prefix.length > 0 && (
+                        <span
+                          className={clsx(
+                            "inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm",
+                            (pointsEarned !== null || isLoading) && "opacity-50"
+                          )}
+                        >
+                          {calibrationQuestion.prefix}
+                        </span>
+                      )}
+                      <input
+                        type="text"
+                        className={clsx(
+                          "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
+                          calibrationQuestion.prefix.length === 0 &&
+                            "rounded-l-md",
+                          calibrationQuestion.postfix.length === 0 &&
+                            "rounded-r-md"
+                        )}
+                        disabled={pointsEarned !== null || isLoading}
+                        {...register("lowerBound", {
+                          onChange: (e) => {
+                            const value = e.target.value;
+                            const number = Number(value.replace(/,/g, ""));
+                            if (isNaN(number)) {
+                              e.target.value = "";
+                            } else {
+                              if (calibrationQuestion.answer >= 10000) {
+                                e.target.value = number.toLocaleString();
+                              }
+                            }
+                          },
+                        })}
+                      />
+                      {calibrationQuestion.postfix.length > 0 && (
+                        <span
+                          className={clsx(
+                            "inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm",
+                            (pointsEarned !== null || isLoading) && "opacity-50"
+                          )}
+                        >
+                          {calibrationQuestion.postfix}
+                        </span>
+                      )}
+                    </div>
                   </div>
-                </div>
-                <div className="sm:col-span-3">
-                  <label
-                    htmlFor="upper-bound"
-                    className="block text-sm font-medium text-gray-700"
-                  >
-                    Upper Bound
-                  </label>
-                  <div className="mt-1 flex rounded-md shadow-sm">
-                    <input
-                      type="number"
-                      className="flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none rounded-l-md sm:text-sm border-gray-300"
-                      {...register("upperBound")}
-                    />
-                    <span className="inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
-                      {calibrationQuestion.unit || "units"}
-                    </span>
+                  <div className="sm:col-span-3">
+                    <label
+                      htmlFor="upper-bound"
+                      className="block text-sm font-medium text-gray-700"
+                    >
+                      Upper Bound
+                    </label>
+                    <div className="mt-1 flex rounded-md shadow-sm">
+                      {calibrationQuestion.prefix.length > 0 && (
+                        <span
+                          className={clsx(
+                            "inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm",
+                            (pointsEarned !== null || isLoading) && "opacity-50"
+                          )}
+                        >
+                          {calibrationQuestion.prefix}
+                        </span>
+                      )}
+                      <input
+                        type="text"
+                        className={clsx(
+                          "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
+                          calibrationQuestion.prefix.length === 0 &&
+                            "rounded-l-md",
+                          calibrationQuestion.postfix.length === 0 &&
+                            "rounded-r-md"
+                        )}
+                        disabled={pointsEarned !== null || isLoading}
+                        {...register("upperBound", {
+                          onChange: (e) => {
+                            const value = e.target.value;
+                            const number = Number(value.replace(/,/g, ""));
+                            if (isNaN(number)) {
+                              e.target.value = "";
+                            } else {
+                              if (calibrationQuestion.answer >= 10000) {
+                                e.target.value = number.toLocaleString();
+                              }
+                            }
+                          },
+                        })}
+                      />
+                      {calibrationQuestion.postfix.length > 0 && (
+                        <span
+                          className={clsx(
+                            "inline-flex items-center px-3 rounded-r-md border border-l-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm",
+                            (pointsEarned !== null || isLoading) && "opacity-50"
+                          )}
+                        >
+                          {calibrationQuestion.postfix}
+                        </span>
+                      )}
+                    </div>
                   </div>
+                  {errors.length > 0 && (
+                    <div className="sm:col-span-6">
+                      <Errors errors={errors} />
+                    </div>
+                  )}
                 </div>
-                {errors.length > 0 && (
-                  <div className="sm:col-span-6">
-                    <Errors errors={errors} />
+              </div>
+              <div className="pt-6">
+                {pointsEarned === null ? (
+                  <SubmitForm disabled={isLoading} isLoading={isLoading} />
+                ) : (
+                  <div className="grid gap-y-6">
+                    <Result
+                      pointsEarned={pointsEarned}
+                      skipped={false}
+                      answer={false}
+                      numericalAnswer={calibrationQuestion.answer}
+                    />
+                    <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {"Source: " + calibrationQuestion.source}
+                      </ReactMarkdown>
+                    </div>
+                    <NextQuestion
+                      nextQuestion={nextQuestion}
+                      nextText="Next Question"
+                      isLoading={isLoading}
+                      loadingText="Loading next question"
+                    />
                   </div>
                 )}
               </div>
-            </div>
-            <div className="pt-6">
-              {pointsEarned === null ? (
-                <SubmitForm disabled={isLoading} isLoading={isLoading} />
-              ) : (
-                <div className="grid gap-y-6">
-                  <Result
-                    pointsEarned={pointsEarned}
-                    skipped={false}
-                    answer={false}
-                    numericalAnswer={calibrationQuestion.answer}
-                  />
-
-                  <NextQuestion
-                    nextQuestion={nextQuestion}
-                    nextText="Next Question"
-                    isLoading={isLoading}
-                    loadingText="Loading next question"
-                  />
-                </div>
-              )}
-            </div>
-          </form>
-        </div>
+            </form>
+          </div>
+        )}
       </div>
       <Footer />
     </div>

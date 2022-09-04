@@ -37,7 +37,13 @@ export const Result = ({
                         : "No"
                       : formatLargeNumber(numericalAnswer)}
                     <br />
-                    You earned {valueToString(pointsEarned, true)} points!
+                    You earned{" "}
+                    {valueToString(
+                      pointsEarned,
+                      true,
+                      numericalAnswer !== undefined
+                    )}{" "}
+                    points!
                   </>
                 )}
               </p>
@@ -66,7 +72,13 @@ export const Result = ({
                         : "No"
                       : formatLargeNumber(numericalAnswer)}
                     <br />
-                    You lost {valueToString(pointsEarned, true)} points!
+                    You lost{" "}
+                    {valueToString(
+                      -pointsEarned,
+                      true,
+                      numericalAnswer !== undefined
+                    )}{" "}
+                    points!
                   </>
                 )}
               </p>

@@ -165,8 +165,10 @@ model CalibrationQuestion {
   isDeleted          Boolean             @default(false)
   content            String
   answer             Float
-  unit               String
-  source             String
+  prefix             String              @default("")
+  postfix            String              @default("")
+  useLogScoring      Boolean             @default(false)
+  source             String              @default("")
   calibrationAnswers CalibrationAnswer[]
 }
 
@@ -175,6 +177,7 @@ model CalibrationAnswer {
   isDeleted  Boolean             @default(false)
   userId     String
   questionId String
+  confidence Float               @default(0.5)
   lowerBound Float
   upperBound Float
   score      Float

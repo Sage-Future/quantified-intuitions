@@ -23,12 +23,18 @@ export const dateToObject = (date: Date) => {
     year: date.getFullYear(),
   };
 };
-
-export const valueToString = (value: string | number, hasDecimals: boolean) => {
+export const valueToString = (
+  value: string | number,
+  hasDecimals: boolean,
+  showDecimals: boolean = false
+) => {
   if (typeof value === "string") {
     return value;
   }
   if (hasDecimals) {
+    if (showDecimals) {
+      return value.toFixed(2);
+    }
     return (value * 1000).toFixed(0);
   }
   return value.toFixed(0);
@@ -38,7 +44,7 @@ export const formatLargeNumber = (value: number) => {
   if (value < 1000 && value > 0.001) {
     return value;
   }
-  return value.toExponential(0);
+  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
 export const truncateError = (error: number, median: number) => {

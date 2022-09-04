@@ -8,7 +8,7 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Prisma } from "../lib/prisma";
 import { truncateError } from "../lib/services/format";
-import { UserWithPastcastsWithQuestion } from "../types/additional";
+import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from "../types/additional";
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -27,6 +27,7 @@ export const getServerSideProps = async (ctx: any) => {
           question: true,
         },
       },
+      CalibrationAnswer: true,
     },
   });
   return {
@@ -37,7 +38,11 @@ export const getServerSideProps = async (ctx: any) => {
   };
 };
 
-const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
+const Charts = ({
+  user,
+}: {
+  user: UserWithPastcastsWithQuestionWithCalibrationAnswers;
+}) => {
   //bucket pastcasts into percentile groups
   const { pastcasts } = user;
   const filteredPastcasts = pastcasts.filter(
@@ -90,7 +95,50 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
       ErrorY: truncateError(rawErrorY, isNaN(accuracy) ? confidence : accuracy),
     };
   });
+  const bucketedCalibrations = Array.from({ length: 5 }, (_, i) => i / 10 + 0.5)
+    .map((bucket) => {
+      return user.CalibrationAnswer !== undefined
+        ? user.CalibrationAnswer.filter(
+            (answer) =>
+              answer.confidence >= bucket - 0.05 &&
+              answer.confidence < bucket + 0.05
+          )
+        : [];
+    })
+    .map((answers) => {
+      if (answers.length === 0) {
+        return {};
+      }
+      const successes = answers.reduce(
+        (acc, answer) => acc + (answer.correct ? 1 : 0),
+        0
+      );
+      const total = answers.length;
+      const accuracy = Math.round((successes / total) * 100);
+      const accuracyWithPrior = Math.round(
+        ((successes + 0.5) / (total + 1)) * 100
+      );
+      const rawErrorY =
+        answers.length > 0
+          ? Math.round(
+              1.96 *
+                Math.sqrt(
+                  (accuracyWithPrior * (100 - accuracyWithPrior)) /
+                    answers.length
+                )
+            )
+          : 100;
+      return {
+        Confidence: Math.round(answers[0].confidence * 100),
+        Accuracy: accuracy,
+        "Sample Size": answers.length,
+        ErrorY: truncateError(rawErrorY, isNaN(accuracy) ? 0 : accuracy),
+      };
+    })
+    .filter((bucket) => Object.keys(bucket).length > 0);
+
   const data = bucketedPastcastsAccuracy;
+  const data2 = bucketedCalibrations;
 
   const xs = filteredPastcasts.map((pastcast) =>
     pastcast.binaryProbability
@@ -105,13 +153,30 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
     (xs.map((x) => (x - 0.5) * (x - 0.5)).reduce((acc, x) => acc + x, 0) /
       xs.length);
 
+  const xs2 =
+    user.CalibrationAnswer !== undefined
+      ? user.CalibrationAnswer.map((answer) =>
+          answer.correct ? answer.confidence : 1 - answer.confidence
+        )
+      : [];
+  const overConfidence2 =
+    xs2.map((x) => (x - 1) * (x - 0.5)).reduce((acc, x) => acc + x, 0) /
+    xs2.length /
+    (xs2.map((x) => (x - 0.5) * (x - 0.5)).reduce((acc, x) => acc + x, 0) /
+      xs2.length);
+  const cumulativeScore = user.CalibrationAnswer?.reduce(
+    (acc, answer) => acc + (answer.score ?? 0),
+    0
+  );
+
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <Navbar />
       <div className="py-10 grow bg-gray-100">
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Your Calibration Curve (Overconfidence: {overConfidence.toFixed(3)})
+            Your Pastcasting Calibration Curve (Overconfidence:{" "}
+            {overConfidence.toFixed(3)})
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart
@@ -189,10 +254,92 @@ const Calibration = ({ user }: { user: UserWithPastcastsWithQuestion }) => {
             </ScatterChart>
           </ResponsiveContainer>
         </div>
+        <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4 mt-10">
+          <h3 className="text-lg leading-6 font-medium text-gray-900">
+            Your EA-themed Calibration Curve (Overconfidence:{" "}
+            {overConfidence2.toFixed(3)}) (Cumulative Score:{" "}
+            {cumulativeScore.toFixed(2)})
+          </h3>
+          <ResponsiveContainer width="100%" height={400}>
+            <ScatterChart
+              width={600}
+              height={400}
+              margin={{
+                top: 20,
+                right: 20,
+                bottom: 20,
+                left: 20,
+              }}
+            >
+              <CartesianGrid />
+              <XAxis
+                type="number"
+                dataKey="Confidence"
+                name="Confidence"
+                unit="%"
+                domain={[50, 90]}
+                allowDuplicatedCategory={false}
+              />
+              <YAxis
+                type="number"
+                dataKey="Accuracy"
+                name="Accuracy"
+                unit="%"
+                domain={[0, 100]}
+                allowDuplicatedCategory={false}
+              />
+              <Tooltip
+                cursor={{
+                  stroke: "black",
+                  strokeWidth: 2,
+                  strokeDasharray: "3 3",
+                  opacity: 0.5,
+                }}
+                content={({ active, payload, label }) => {
+                  if (active && payload && payload.length > 0) {
+                    return (
+                      // tooltip div with outline
+                      <div className="bg-white border border-gray-600 rounded-lg shadow-lg p-2">
+                        <div className="text-sm">
+                          <p className="text-gray-900 leading-tight">
+                            Confidence: {payload[0].payload.Confidence}%
+                          </p>
+                          <p className="text-gray-900 leading-tight">
+                            Accuracy: {payload[0].payload.Accuracy}%
+                          </p>
+                          <p className="text-gray-900 leading-tight">
+                            Sample Size: {payload[0].payload["Sample Size"]}
+                          </p>
+                        </div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <ReferenceLine
+                segment={[
+                  {
+                    x: 50,
+                    y: 50,
+                  },
+                  {
+                    x: 90,
+                    y: 90,
+                  },
+                ]}
+                stroke="red"
+              />
+              <Scatter data={data2} fill="#4f46e5">
+                <ErrorBar dataKey="ErrorY" direction="y" />
+              </Scatter>
+            </ScatterChart>
+          </ResponsiveContainer>
+        </div>
       </div>
       <Footer />
     </div>
   );
 };
 
-export default Calibration;
+export default Charts;
