@@ -93,6 +93,12 @@ const EaCalibration = ({
       setIsLoading(false);
       return;
     }
+    if (lowerBoundNumber < 0 && calibrationQuestion.useLogScoring) {
+      setErrors(["Lower bound must be greater than 0"]);
+      setIsLoading(false);
+      return;
+    }
+
     await fetch("/api/v0/createCalibrationAnswer", {
       method: "POST",
       headers: {
