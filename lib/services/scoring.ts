@@ -16,7 +16,7 @@ export const calibrationScore = (
   useLogScoring: boolean = false
 ) => {
   const SMAX = 10;
-  const SMIN = (-10 * Math.log(99 / 50)) / Math.log(50);
+  const SMIN = -57.2689368388;
   const DELTA = 0.4;
   const C = 100;
   const B = confidenceInterval / 100;
@@ -31,6 +31,8 @@ export const calibrationScore = (
   console.log("DELTA: " + DELTA);
   console.log("C: " + C);
   console.log("B: " + B);
+  lowerBound -= DELTA;
+  upperBound += DELTA;
   if (!useLogScoring) {
     const r = (lowerBound - answer) / C;
     const s = (upperBound - lowerBound) / C;

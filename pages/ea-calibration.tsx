@@ -75,8 +75,6 @@ const EaCalibration = ({
   const onSubmit = async (data: any) => {
     setIsLoading(true);
     const { lowerBound, upperBound } = data;
-    console.log("data", data);
-    console.log("watchAllFields", watchAllFields);
     setErrors([]);
     if (lowerBound === "" || upperBound === "") {
       setErrors(["Please fill in both fields"]);
@@ -92,7 +90,6 @@ const EaCalibration = ({
     }
     if (lowerBoundNumber > upperBoundNumber) {
       setErrors(["Lower bound must be less than upper bound"]);
-      console.log(lowerBound, upperBound);
       setIsLoading(false);
       return;
     }
@@ -110,7 +107,6 @@ const EaCalibration = ({
     }).then(async (res) => {
       if (res.status === 201) {
         const json = await res.json();
-        console.log(json);
         setPointsEarned(json.score);
         setSessionScore(sessionScore + json.score);
       }
@@ -123,6 +119,7 @@ const EaCalibration = ({
     setIsLoading(false);
     setErrors([]);
     setPointsEarned(null);
+    setCountdown(60);
   }, [calibrationQuestion]);
   useEffect(() => {
     let links = document.links;
@@ -277,7 +274,7 @@ const EaCalibration = ({
                             if (isNaN(number)) {
                               e.target.value = "";
                             } else {
-                              if (calibrationQuestion.answer >= 10000) {
+                              if (number >= 10000) {
                                 e.target.value = number.toLocaleString();
                               }
                             }
@@ -331,7 +328,7 @@ const EaCalibration = ({
                             if (isNaN(number)) {
                               e.target.value = "";
                             } else {
-                              if (calibrationQuestion.answer >= 10000) {
+                              if (number >= 10000) {
                                 e.target.value = number.toLocaleString();
                               }
                             }
