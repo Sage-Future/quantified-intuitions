@@ -53,7 +53,7 @@ const EaCalibration = ({
   calibrationQuestion: CalibrationQuestion;
 }) => {
   const { register, watch, handleSubmit, setValue } = useForm();
-  const [confidenceInterval, setConfidenceInterval] = useState<string>("50%");
+  const [confidenceInterval, setConfidenceInterval] = useState<string>("80%");
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
