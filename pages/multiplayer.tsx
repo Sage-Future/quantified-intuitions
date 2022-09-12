@@ -10,6 +10,7 @@ import { Footer } from "../components/Footer";
 import { Navbar } from "../components/Navbar";
 import { Rooms } from "../components/Rooms";
 import { Prisma } from "../lib/prisma";
+import { MULTIPLAYER_EXPIRATION } from "../lib/services/magicNumbers";
 
 type MultiplayerProps = {
   session: Session;
@@ -29,10 +30,14 @@ export const getServerSideProps: GetServerSideProps<
     },
   });
 
+  const filteredRooms = rooms.filter((room) => {
+    return room.createdAt > new Date(Date.now() - MULTIPLAYER_EXPIRATION);
+  });
+
   return {
     props: {
       session,
-      rooms,
+      rooms: filteredRooms,
     },
   };
 };

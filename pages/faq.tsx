@@ -49,7 +49,7 @@ const Faq = () => {
     {
       question: "When will feature X be available?",
       answer:
-        "We're currently guaging whether pastcasting is a useful addition to the forecasting ecosystem (mostly by usage). If it is, we'll commit to spending more time improving the website and adding more features.",
+        "We're currently gauging whether pastcasting is a useful addition to the forecasting ecosystem (mostly by usage). If it is, we'll commit to spending more time improving the website and adding more features.",
     },
     {
       question: "How can I submit feedback about the site?",

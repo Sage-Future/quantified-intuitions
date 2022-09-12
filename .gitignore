@@ -41,3 +41,4 @@ yarn-error.log*
 *importQuestionsGJO.ts
 *importCalibrationQuestions.ts
 *.json
+*test.tsx
