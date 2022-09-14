@@ -1,7 +1,7 @@
 import clsx from "clsx";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { CalibrationQuestion } from "@prisma/client";
 
@@ -52,17 +52,15 @@ const EaCalibration = ({
   const addToSessionScore = (score: number) => {
     setSessionScore(sessionScore + score);
   };
-  const [countdown, setCountdown] = useState<number>(60);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setCountdown((countdown) => countdown - 1);
-    }, 1000);
-    return () => clearInterval(interval);
-  }, []);
+  const [countdown, setCountdown] = useState<number>(180);
 
   const nextQuestion = () => {
     router.replace(router.asPath);
-    setCountdown(60);
+    setCountdown(180);
+  };
+  const reduceCountdown = () => {
+    setCountdown(countdown - 1);
+    if (countdown < -10) nextQuestion();
   };
 
   return (
@@ -162,6 +160,7 @@ const EaCalibration = ({
           <CalibrationForm
             calibrationQuestion={calibrationQuestion}
             confidenceInterval={confidenceInterval}
+            reduceCountdown={reduceCountdown}
             nextQuestion={nextQuestion}
             addToSessionScore={addToSessionScore}
             key={calibrationQuestion.id}

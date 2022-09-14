@@ -39,12 +39,49 @@ export const valueToString = (
   }
   return value.toFixed(0);
 };
-
-export const formatLargeNumber = (value: number) => {
-  if (value < 1000 && value > 0.001) {
-    return value;
+export const convertNumber = (value: number, isExponential: boolean) => {
+  if (isExponential) {
+    return 10 ** value;
   }
-  return value.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  return value;
+};
+export const numberToHumanReadableString = (value: number) => {
+  console.log(value);
+  if (value < 0.001) {
+    return value.toExponential();
+  }
+  if (value < 1e15) {
+    console.log("here");
+    // return value with commas
+    return value.toLocaleString("en-US");
+  }
+  //value is not infinity
+  if (value < Infinity) {
+    return value.toExponential();
+  }
+  return "Infinity";
+};
+
+export const formatInput = (value: number, prefix: string, postfix: string) => {
+  if (postfix.match(/(AD|BCE|BC|CE)/)) {
+    return `${prefix}${value} ${postfix}`;
+  }
+  return `${prefix.includes("$") ? "$" : ""}${numberToHumanReadableString(
+    convertNumber(value, prefix.includes("10^"))
+  )}${postfix === "%" ? postfix : " " + postfix}`;
+};
+
+export const formatResult = (
+  value: number,
+  prefix: string,
+  postfix: string
+) => {
+  if (postfix.match(/(AD|BCE|BC|CE)/)) {
+    return `${prefix}${value} ${postfix}`;
+  }
+  return `${prefix.includes("$") ? "$" : ""}${numberToHumanReadableString(
+    convertNumber(value, false)
+  )}${postfix === "%" ? postfix : " " + postfix}`;
 };
 
 export const truncateError = (error: number, median: number) => {

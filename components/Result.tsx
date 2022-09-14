@@ -1,17 +1,17 @@
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
 
-import { formatLargeNumber, valueToString } from "../lib/services/format";
+import { valueToString } from "../lib/services/format";
 
 export const Result = ({
   pointsEarned,
   skipped,
   answer,
-  numericalAnswer,
+  stringAnswer,
 }: {
   pointsEarned: number;
   skipped: boolean;
   answer: boolean;
-  numericalAnswer: number | undefined;
+  stringAnswer: string | undefined;
 }) => {
   return (
     <div className="sm:col-span-6">
@@ -31,17 +31,17 @@ export const Result = ({
                 ) : (
                   <>
                     Answer:{" "}
-                    {numericalAnswer === undefined
+                    {stringAnswer === undefined
                       ? answer
                         ? "Yes"
                         : "No"
-                      : formatLargeNumber(numericalAnswer)}
+                      : stringAnswer}
                     <br />
                     You earned{" "}
                     {valueToString(
                       pointsEarned,
                       true,
-                      numericalAnswer !== undefined
+                      stringAnswer !== undefined
                     )}{" "}
                     points!
                   </>
@@ -66,17 +66,17 @@ export const Result = ({
                 ) : (
                   <>
                     Answer:{" "}
-                    {numericalAnswer === undefined
+                    {stringAnswer === undefined
                       ? answer
                         ? "Yes"
                         : "No"
-                      : formatLargeNumber(numericalAnswer)}
+                      : stringAnswer}
                     <br />
                     You lost{" "}
                     {valueToString(
                       -pointsEarned,
                       true,
-                      numericalAnswer !== undefined
+                      stringAnswer !== undefined
                     )}{" "}
                     points!
                   </>

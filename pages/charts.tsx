@@ -175,8 +175,14 @@ const Charts = ({
       <div className="py-10 grow bg-gray-100">
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Your Pastcasting Calibration Curve (Overconfidence:{" "}
-            {overConfidence.toFixed(3)})
+            <div className="flex flex-row justify-between">
+              <div>Your Pastcasting Calibration Curve</div>
+              <div>
+                {overConfidence >= 0
+                  ? "Overconfidence: " + overConfidence.toFixed(3)
+                  : "Underconfidence: " + (-overConfidence).toFixed(3)}
+              </div>
+            </div>
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart
@@ -256,9 +262,17 @@ const Charts = ({
         </div>
         <div className="max-w-7xl mx-auto bg-white md:rounded-lg shadow p-4 mt-10">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
-            Your EA-themed Calibration Curve (Overconfidence:{" "}
-            {overConfidence2.toFixed(3)}) (Cumulative Score:{" "}
-            {cumulativeScore.toFixed(2)})
+            <div className="flex flex-row justify-between">
+              <div>Your EA-themed Calibration Curve</div>
+              <span>
+                {(overConfidence2 >= 0
+                  ? "Overconfidence: " + overConfidence2.toFixed(3)
+                  : "Underconfidence: " + (-overConfidence2).toFixed(3)) +
+                  (cumulativeScore !== undefined
+                    ? ", Cumulative Score: " + cumulativeScore.toFixed(2)
+                    : "")}
+              </span>
+            </div>
           </h3>
           <ResponsiveContainer width="100%" height={400}>
             <ScatterChart

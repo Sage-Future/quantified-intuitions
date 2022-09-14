@@ -10,15 +10,18 @@ import { Errors } from "../components/Errors";
 import { NextQuestion } from "../components/NextQuestion";
 import { Result } from "../components/Result";
 import { SubmitForm } from "../components/SubmitForm";
+import { convertNumber, formatInput, formatResult } from "../lib/services/format";
 
 export const CalibrationForm = ({
   calibrationQuestion,
   confidenceInterval,
+  reduceCountdown,
   nextQuestion,
   addToSessionScore,
 }: {
   calibrationQuestion: CalibrationQuestion;
   confidenceInterval: string;
+  reduceCountdown: () => void;
   nextQuestion: () => void;
   addToSessionScore: (score: number) => void;
 }) => {
@@ -26,6 +29,7 @@ export const CalibrationForm = ({
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
+  const watchAllFields = watch();
 
   const onSubmit = async (data: any) => {
     setIsLoading(true);
@@ -36,13 +40,21 @@ export const CalibrationForm = ({
       setIsLoading(false);
       return;
     }
-    const lowerBoundNumber = Number(lowerBound.replace(/,/g, ""));
-    const upperBoundNumber = Number(upperBound.replace(/,/g, ""));
+    let lowerBoundNumber = Number(lowerBound);
+    let upperBoundNumber = Number(upperBound);
     if (isNaN(lowerBoundNumber) || isNaN(upperBoundNumber)) {
       setErrors(["Please enter a number"]);
       setIsLoading(false);
       return;
     }
+    lowerBoundNumber = convertNumber(
+      lowerBoundNumber,
+      calibrationQuestion.prefix.includes("10^")
+    );
+    upperBoundNumber = convertNumber(
+      upperBoundNumber,
+      calibrationQuestion.prefix.includes("10^")
+    );
     if (lowerBoundNumber > upperBoundNumber) {
       setErrors(["Lower bound must be less than upper bound"]);
       setIsLoading(false);
@@ -74,6 +86,16 @@ export const CalibrationForm = ({
     });
     setIsLoading(false);
   };
+  //call reduceCountdown every second
+  useEffect(() => {
+    const interval = setInterval(() => {
+      if (!isLoading && !pointsEarned) {
+        reduceCountdown();
+      }
+    }, 1000);
+    return () => clearInterval(interval);
+  }, [reduceCountdown]);
+
   useEffect(() => {
     setFocus("lowerBound");
   }, []);
@@ -118,26 +140,14 @@ export const CalibrationForm = ({
                   </span>
                 )}
                 <input
-                  type="text"
+                  type="number"
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
                     calibrationQuestion.postfix.length === 0 && "rounded-r-md"
                   )}
                   disabled={pointsEarned !== null || isLoading}
-                  {...register("lowerBound", {
-                    onChange: (e) => {
-                      const value = e.target.value;
-                      const number = Number(value.replace(/,/g, ""));
-                      if (isNaN(number)) {
-                        e.target.value = "";
-                      } else {
-                        if (number >= 10000) {
-                          e.target.value = number.toLocaleString();
-                        }
-                      }
-                    },
-                  })}
+                  {...register("lowerBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (
                   <span
@@ -150,6 +160,19 @@ export const CalibrationForm = ({
                   </span>
                 )}
               </div>
+              <p
+                className="mt-2 text-sm text-gray-500"
+                id="lowerBoundDescription"
+              >
+                {watchAllFields.lowerBound !== undefined &&
+                  watchAllFields.lowerBound !== "" &&
+                  !isNaN(Number(watchAllFields.lowerBound)) &&
+                  formatInput(
+                    Number(watchAllFields.lowerBound),
+                    calibrationQuestion.prefix,
+                    calibrationQuestion.postfix
+                  )}
+              </p>
             </div>
             <div className="sm:col-span-3">
               <label
@@ -170,26 +193,14 @@ export const CalibrationForm = ({
                   </span>
                 )}
                 <input
-                  type="text"
+                  type="number"
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
                     calibrationQuestion.postfix.length === 0 && "rounded-r-md"
                   )}
                   disabled={pointsEarned !== null || isLoading}
-                  {...register("upperBound", {
-                    onChange: (e) => {
-                      const value = e.target.value;
-                      const number = Number(value.replace(/,/g, ""));
-                      if (isNaN(number)) {
-                        e.target.value = "";
-                      } else {
-                        if (number >= 10000) {
-                          e.target.value = number.toLocaleString();
-                        }
-                      }
-                    },
-                  })}
+                  {...register("upperBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (
                   <span
@@ -202,6 +213,19 @@ export const CalibrationForm = ({
                   </span>
                 )}
               </div>
+              <p
+                className="mt-2 text-sm text-gray-500"
+                id="upperBoundDescription"
+              >
+                {watchAllFields.upperBound !== undefined &&
+                  watchAllFields.upperBound !== "" &&
+                  !isNaN(Number(watchAllFields.upperBound)) &&
+                  formatInput(
+                    Number(watchAllFields.upperBound),
+                    calibrationQuestion.prefix,
+                    calibrationQuestion.postfix
+                  )}
+              </p>
             </div>
             {errors.length > 0 && (
               <div className="sm:col-span-6">
@@ -219,7 +243,11 @@ export const CalibrationForm = ({
                 pointsEarned={pointsEarned}
                 skipped={false}
                 answer={false}
-                numericalAnswer={calibrationQuestion.answer}
+                stringAnswer={formatResult(
+                  calibrationQuestion.answer,
+                  calibrationQuestion.prefix,
+                  calibrationQuestion.postfix
+                )}
               />
               <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>
