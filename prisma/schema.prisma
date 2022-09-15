@@ -168,6 +168,7 @@ model CalibrationQuestion {
   prefix             String              @default("")
   postfix            String              @default("")
   useLogScoring      Boolean             @default(false)
+  C                  Float               @default(100)
   source             String              @default("")
   calibrationAnswers CalibrationAnswer[]
 }

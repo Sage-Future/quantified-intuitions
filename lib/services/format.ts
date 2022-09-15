@@ -81,7 +81,13 @@ export const formatResult = (
   if (postfix.match(/(AD|BCE|BC|CE)/)) {
     return `${prefix}${value} ${postfix}`;
   }
-  return `${prefix.includes("$") ? "$" : ""}${numberToHumanReadableString(
+  return `${
+    prefix.includes("10^")
+      ? `${prefix}${Math.log10(value).toFixed(3)}${
+          postfix === "%" ? postfix : " " + postfix
+        } or `
+      : ""
+  }${prefix.includes("$") ? "$" : ""}${numberToHumanReadableString(
     convertNumber(value, false)
   )}${postfix === "%" ? postfix : " " + postfix}`;
 };
