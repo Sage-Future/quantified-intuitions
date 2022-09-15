@@ -45,13 +45,15 @@ export const convertNumber = (value: number, isExponential: boolean) => {
   }
   return value;
 };
-export const numberToHumanReadableString = (value: number) => {
-  console.log(value);
+//returns string
+export const numberToHumanReadableString = (value: number): string => {
+  if (value < 0) {
+    return "-" + numberToHumanReadableString(-value);
+  }
   if (value < 0.001) {
     return value.toExponential();
   }
   if (value < 1e15) {
-    console.log("here");
     // return value with commas
     return value.toLocaleString("en-US");
   }

@@ -31,9 +31,9 @@ export const calibrationScore = (
   console.log("DELTA: " + DELTA);
   console.log("C: " + C);
   console.log("B: " + B);
-  lowerBound -= DELTA;
-  upperBound += DELTA;
   if (!useLogScoring) {
+    lowerBound -= DELTA;
+    upperBound += DELTA;
     const r = (lowerBound - answer) / C;
     const s = (upperBound - lowerBound) / C;
     const t = (answer - upperBound) / C;
@@ -47,9 +47,17 @@ export const calibrationScore = (
     }
     return ((4 * SMAX * r * t) / (s * s)) * (1 - s / (1 + s));
   } else {
+    lowerBound /= 10 ** DELTA;
+    upperBound *= 10 ** DELTA;
     const r = Math.log(lowerBound / answer) / Math.log(C);
     const s = Math.log(upperBound / lowerBound) / Math.log(C);
     const t = Math.log(answer / upperBound) / Math.log(C);
+    console.log("r: " + r);
+    console.log(lowerBound / answer);
+    console.log("s: " + s);
+    console.log(upperBound / lowerBound);
+    console.log("t: " + t);
+    console.log(answer / upperBound);
     if (answer < lowerBound) {
       return Math.max(SMIN, (-2 / (1 - B)) * r - (r / (1 + r)) * s);
     } else if (answer > upperBound) {

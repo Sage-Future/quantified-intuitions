@@ -60,7 +60,7 @@ export const CalibrationForm = ({
       setIsLoading(false);
       return;
     }
-    if (lowerBoundNumber < 0 && calibrationQuestion.useLogScoring) {
+    if (lowerBoundNumber <= 0 && calibrationQuestion.useLogScoring) {
       setErrors(["Lower bound must be greater than 0"]);
       setIsLoading(false);
       return;
@@ -140,7 +140,7 @@ export const CalibrationForm = ({
                   </span>
                 )}
                 <input
-                  type="number"
+                  type="text"
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
@@ -166,12 +166,13 @@ export const CalibrationForm = ({
               >
                 {watchAllFields.lowerBound !== undefined &&
                   watchAllFields.lowerBound !== "" &&
-                  !isNaN(Number(watchAllFields.lowerBound)) &&
-                  formatInput(
-                    Number(watchAllFields.lowerBound),
-                    calibrationQuestion.prefix,
-                    calibrationQuestion.postfix
-                  )}
+                  (!isNaN(Number(watchAllFields.lowerBound))
+                    ? formatInput(
+                        Number(watchAllFields.lowerBound),
+                        calibrationQuestion.prefix,
+                        calibrationQuestion.postfix
+                      )
+                    : "Invalid Input")}
               </p>
             </div>
             <div className="sm:col-span-3">
@@ -193,7 +194,7 @@ export const CalibrationForm = ({
                   </span>
                 )}
                 <input
-                  type="number"
+                  type="text"
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
@@ -219,12 +220,13 @@ export const CalibrationForm = ({
               >
                 {watchAllFields.upperBound !== undefined &&
                   watchAllFields.upperBound !== "" &&
-                  !isNaN(Number(watchAllFields.upperBound)) &&
-                  formatInput(
-                    Number(watchAllFields.upperBound),
-                    calibrationQuestion.prefix,
-                    calibrationQuestion.postfix
-                  )}
+                  (!isNaN(Number(watchAllFields.upperBound))
+                    ? formatInput(
+                        Number(watchAllFields.upperBound),
+                        calibrationQuestion.prefix,
+                        calibrationQuestion.postfix
+                      )
+                    : "Invalid Input")}
               </p>
             </div>
             {errors.length > 0 && (
