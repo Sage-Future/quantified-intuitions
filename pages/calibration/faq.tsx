@@ -20,8 +20,9 @@ const Faq = () => {
     },
     {
       question: "How does the scoring system work?",
-      answer: "Interval scoring uses the formula developed by [this paper](https://arxiv.org/abs/1808.07501)."
-    }
+      answer:
+        "Interval scoring uses the formula developed by [this paper](https://arxiv.org/abs/1808.07501).",
+    },
     {
       question: "I found an issue with one of the questions!",
       answer:
