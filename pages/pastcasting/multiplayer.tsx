@@ -3,14 +3,14 @@ import { Session } from "next-auth";
 import { getSession, useSession } from "next-auth/react";
 import Link from "next/link";
 
-import { PlusIcon } from "@heroicons/react/solid";
+import { PlusIcon } from "@heroicons/react/24/solid";
 import { Room, User } from "@prisma/client";
 
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { Rooms } from "../components/Rooms";
-import { Prisma } from "../lib/prisma";
-import { MULTIPLAYER_EXPIRATION } from "../lib/services/magicNumbers";
+import { Footer } from "../../components/Footer";
+import { NavbarPastcasting } from "../../components/NavbarPastcasting";
+import { Rooms } from "../../components/Rooms";
+import { Prisma } from "../../lib/prisma";
+import { MULTIPLAYER_EXPIRATION } from "../../lib/services/magicNumbers";
 
 type MultiplayerProps = {
   session: Session;
@@ -53,7 +53,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
   );
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarPastcasting />
       <div className="py-10 grow bg-gray-100">
         <main>
           <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -87,7 +87,7 @@ const Multiplayer: NextPage<MultiplayerProps> = ({ rooms }) => {
                     )}
                   </div>
                   <div className="ml-4 mt-2 flex-shrink-0">
-                    <Link href="/multiplayer/create" passHref>
+                    <Link href="/pastcasting/multiplayer/create" passHref>
                       <a
                         type="button"
                         className="relative inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"

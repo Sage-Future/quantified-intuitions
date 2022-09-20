@@ -4,10 +4,10 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 
-import { Errors } from "../../components/Errors";
-import { Footer } from "../../components/Footer";
-import { Navbar } from "../../components/Navbar";
-import { Success } from "../../components/Success";
+import { Errors } from "../../../components/Errors";
+import { Footer } from "../../../components/Footer";
+import { NavbarPastcasting } from "../../../components/NavbarPastcasting";
+import { Success } from "../../../components/Success";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
@@ -79,7 +79,7 @@ const MultiplayerCreate = () => {
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarPastcasting />
       <div className="py-10 grow bg-gray-100">
         <main>
           <div className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
@@ -166,7 +166,7 @@ const MultiplayerCreate = () => {
                       // eslint-disable-next-line @next/next/no-html-link-for-pages
                       <a
                         type="button"
-                        href="/multiplayer"
+                        href="/pastcasting/multiplayer"
                         className="bg-white py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                       >
                         Back

@@ -6,7 +6,7 @@ import { useForm } from "react-hook-form";
 import useSWR from "swr";
 
 import { Transition } from "@headlessui/react";
-import { SearchIcon } from "@heroicons/react/solid";
+import { MagnifyingGlassIcon } from "@heroicons/react/24/outline";
 import { Question } from "@prisma/client";
 
 import { fetcher } from "../lib/services/data";
@@ -105,7 +105,7 @@ export const VantageSearch = ({ question }: { question: Question }) => {
 
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <SearchIcon
+                <MagnifyingGlassIcon
                   className="h-5 w-5 text-gray-400"
                   aria-hidden="true"
                 />

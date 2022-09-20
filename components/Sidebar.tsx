@@ -2,8 +2,8 @@ import clsx from "clsx";
 import { Dispatch, SetStateAction } from "react";
 
 import {
-    ChartBarIcon, DocumentTextIcon, SearchIcon, UserGroupIcon
-} from "@heroicons/react/outline";
+    ChartBarIcon, DocumentTextIcon, MagnifyingGlassIcon, TrophyIcon
+} from "@heroicons/react/24/outline";
 
 import { CalibrationOptions } from "../types/additional";
 
@@ -33,7 +33,7 @@ export const Sidebar = ({
     },
     {
       name: "Vantage Search",
-      icon: SearchIcon,
+      icon: MagnifyingGlassIcon,
       onClick: () => setSelected("VantageSearch"),
       current: selected === "VantageSearch",
     },
@@ -41,13 +41,13 @@ export const Sidebar = ({
   if (showScores) {
     navigation.push({
       name: "Scores",
-      icon: UserGroupIcon,
+      icon: ChartBarIcon,
       onClick: () => setSelected("Scores"),
       current: selected === "Scores",
     });
     navigation.push({
       name: "Room Leaderboard",
-      icon: ChartBarIcon,
+      icon: TrophyIcon,
       onClick: () => setSelected("Leaderboard"),
       current: selected === "Leaderboard",
     });

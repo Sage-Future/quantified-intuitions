@@ -1,7 +1,9 @@
 import { GetStaticProps } from "next";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
+import { Footer } from "../../components/Footer";
+import { NavbarPastcasting } from "../../components/NavbarPastcasting";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   return {
@@ -58,7 +60,7 @@ const Faq = () => {
   ];
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarPastcasting />
       <div className="bg-gray-50">
         <div className="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:py-16 lg:px-8">
           <h2 className="text-3xl font-extrabold text-gray-900">
@@ -75,7 +77,11 @@ const Faq = () => {
                     {faq.question}
                   </dt>
                   <dd className="mt-2 md:mt-0 md:col-span-7">
-                    <p className="text-base text-gray-500">{faq.answer}</p>
+                    <div className="text-base text-gray-500 prose">
+                      <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                        {faq.answer}
+                      </ReactMarkdown>
+                    </div>
                   </dd>
                 </div>
               ))}

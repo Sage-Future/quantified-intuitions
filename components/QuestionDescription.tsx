@@ -4,7 +4,7 @@ import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 
 import { Transition } from "@headlessui/react";
-import { EyeOffIcon } from "@heroicons/react/solid";
+import { EyeSlashIcon } from "@heroicons/react/24/outline";
 
 import { dateMed, floatToPercent } from "../lib/services/format";
 import { QuestionWithComments } from "../types/additional";
@@ -58,7 +58,7 @@ export const QuestionDescription = ({
                   className="inline-flex items-center px-3 py-2 border border-transparent shadow-sm text-base font-medium rounded-md text-sky-700 bg-sky-100
                 hover:bg-sky-200 absolute -translate-x-12 -translate-y-10"
                 >
-                  <EyeOffIcon
+                  <EyeSlashIcon
                     className="-ml-0.5 mr-2 h-4 w-4"
                     aria-hidden="true"
                   />

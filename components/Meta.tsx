@@ -3,19 +3,20 @@ import { NextSeo } from "next-seo";
 export const Meta = () => {
   return (
     <NextSeo
-      title="Pastcasting"
-      description="Pastcasting is a tool for practicing forecasting."
-      canonical="https://www.pastcasting.com/"
+      title="Quantified Intuitions"
+      description="Quantified Intuitions helps users practice the process of assigning credences to outcomes with a quick feedback loop."
+      canonical="https://www.quantifiedintuitions.com/"
       openGraph={{
         type: "website",
         locale: "en_US",
-        url: "https://www.pastcasting.com/",
-        title: "Pastcasting",
-        description: "Pastcasting is a tool for practicing forecasting.",
-        site_name: "Pastcasting",
+        url: "https://www.quantifiedintuitions.com/",
+        title: "Quantified Intuitions",
+        description:
+          "Quantified Intuitions helps users practice the process of assigning credences to outcomes with a quick feedback loop.",
+        site_name: "Quantified Intuitions",
         images: [
           {
-            url: "https://www.pastcasting.com/og.png",
+            url: "https://www.quantifiedintuitions.com/og.png",
             width: 1024,
             height: 1024,
           },
@@ -24,7 +25,7 @@ export const Meta = () => {
       additionalLinkTags={[
         {
           rel: "icon",
-          href: "/favicon.ico",
+          href: "/scale.svg",
         },
       ]}
     />

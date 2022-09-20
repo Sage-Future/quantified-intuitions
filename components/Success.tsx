@@ -1,4 +1,5 @@
-import { CheckCircleIcon, XIcon } from "@heroicons/react/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { CheckCircleIcon } from "@heroicons/react/24/solid";
 
 export const Success = ({
   message,
@@ -27,7 +28,7 @@ export const Success = ({
               onClick={onClose}
             >
               <span className="sr-only">Dismiss</span>
-              <XIcon className="h-5 w-5" aria-hidden="true" />
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>

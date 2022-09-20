@@ -8,14 +8,14 @@ import useSWR from "swr";
 
 import { Room, User } from "@prisma/client";
 
-import { Footer } from "../../components/Footer";
-import { ForecastForm } from "../../components/ForecastForm";
-import { Navbar } from "../../components/Navbar";
-import { RoomLeaderboard } from "../../components/RoomLeaderboard";
-import { RoomLobby } from "../../components/RoomLobby";
-import { ThreeColumnLayout } from "../../components/ThreeColumnLayout";
-import { Prisma } from "../../lib/prisma";
-import { QuestionWithCommentsAndPastcasts } from "../../types/additional";
+import { Footer } from "../../../components/Footer";
+import { ForecastForm } from "../../../components/ForecastForm";
+import { NavbarPastcasting } from "../../../components/NavbarPastcasting";
+import { RoomLeaderboard } from "../../../components/RoomLeaderboard";
+import { RoomLobby } from "../../../components/RoomLobby";
+import { ThreeColumnLayout } from "../../../components/ThreeColumnLayout";
+import { Prisma } from "../../../lib/prisma";
+import { QuestionWithCommentsAndPastcasts } from "../../../types/additional";
 
 export type RoomProps = {
   room: Room & {
@@ -114,7 +114,7 @@ const RoomPage: NextPage<RoomProps> = ({ room }) => {
   const realQuestion = deserializedQuestion || currentQuestion;
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarPastcasting />
       <div className="py-0 grow ">
         <main>
           {/*

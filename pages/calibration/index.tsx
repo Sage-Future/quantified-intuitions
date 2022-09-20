@@ -5,11 +5,11 @@ import { useState } from "react";
 
 import { CalibrationQuestion } from "@prisma/client";
 
-import { CalibrationForm } from "../components/CalibrationForm";
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { Sorry } from "../components/Sorry";
-import { Prisma } from "../lib/prisma";
+import { CalibrationForm } from "../../components/CalibrationForm";
+import { Footer } from "../../components/Footer";
+import { NavbarCalibration } from "../../components/NavbarCalibration";
+import { Sorry } from "../../components/Sorry";
+import { Prisma } from "../../lib/prisma";
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -41,7 +41,7 @@ export const getServerSideProps = async (ctx: any) => {
   };
 };
 
-const EaCalibration = ({
+const Calibration = ({
   calibrationQuestion,
 }: {
   calibrationQuestion: CalibrationQuestion;
@@ -65,7 +65,7 @@ const EaCalibration = ({
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarCalibration />
       <div className="py-6 grow">
         <div className="max-w-prose mx-auto flex justify-between ">
           <div className="prose">
@@ -172,4 +172,4 @@ const EaCalibration = ({
   );
 };
 
-export default EaCalibration;
+export default Calibration;

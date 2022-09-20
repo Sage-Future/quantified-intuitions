@@ -1,4 +1,5 @@
-import { ExclamationIcon, XIcon } from "@heroicons/react/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
+import { ExclamationTriangleIcon } from "@heroicons/react/24/solid";
 
 export const Warning = ({
   message,
@@ -11,7 +12,7 @@ export const Warning = ({
     <div className="rounded-md bg-yellow-50 p-4">
       <div className="flex">
         <div className="flex-shrink-0">
-          <ExclamationIcon
+          <ExclamationTriangleIcon
             className="h-5 w-5 text-yellow-400"
             aria-hidden="true"
           />
@@ -27,7 +28,7 @@ export const Warning = ({
               onClick={onClose}
             >
               <span className="sr-only">Dismiss</span>
-              <XIcon className="h-5 w-5" aria-hidden="true" />
+              <XMarkIcon className="h-5 w-5" aria-hidden="true" />
             </button>
           </div>
         </div>

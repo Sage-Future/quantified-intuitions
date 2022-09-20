@@ -1,14 +1,14 @@
 import { GetStaticProps } from "next";
 import { useEffect, useState } from "react";
 
-import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/solid";
+import { ChevronDownIcon, ChevronUpIcon } from "@heroicons/react/24/solid";
 
-import { Footer } from "../components/Footer";
-import { Navbar } from "../components/Navbar";
-import { Prisma } from "../lib/prisma";
-import { valueToString } from "../lib/services/format";
-import { HIDDEN_USERS } from "../lib/services/magicNumbers";
-import { UserWithPastcasts } from "../types/additional";
+import { Footer } from "../../components/Footer";
+import { NavbarPastcasting } from "../../components/NavbarPastcasting";
+import { Prisma } from "../../lib/prisma";
+import { valueToString } from "../../lib/services/format";
+import { HIDDEN_USERS } from "../../lib/services/magicNumbers";
+import { UserWithPastcasts } from "../../types/additional";
 
 export const getStaticProps: GetStaticProps = async (ctx) => {
   const users = await Prisma.user.findMany({
@@ -77,7 +77,7 @@ const Leaderboard = ({ users }: { users: UserWithPastcasts[] }) => {
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
-      <Navbar />
+      <NavbarPastcasting />
       <div className="py-10 grow bg-gray-100">
         <main>
           <div className="px-4 sm:px-6 lg:px-8">

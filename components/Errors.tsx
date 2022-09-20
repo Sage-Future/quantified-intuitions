@@ -1,4 +1,4 @@
-import { XCircleIcon } from "@heroicons/react/solid";
+import { XCircleIcon } from "@heroicons/react/24/solid";
 
 export const Errors = ({ errors }: { errors: string[] }) => {
   return (

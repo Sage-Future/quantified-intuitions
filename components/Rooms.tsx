@@ -1,4 +1,4 @@
-import { ChevronRightIcon, ClockIcon, QuestionMarkCircleIcon } from "@heroicons/react/solid";
+import { ChevronRightIcon, ClockIcon, QuestionMarkCircleIcon } from "@heroicons/react/24/outline";
 import { Room, User } from "@prisma/client";
 
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";

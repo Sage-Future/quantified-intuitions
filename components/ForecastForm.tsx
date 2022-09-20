@@ -5,7 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { useSWRConfig } from "swr";
 
-import { XIcon } from "@heroicons/react/solid";
+import { XMarkIcon } from "@heroicons/react/24/outline";
 
 import { secondsToTime } from "../lib/services/format";
 import { isValidBinaryForecast } from "../lib/services/validation";
@@ -272,7 +272,7 @@ export const ForecastForm = ({
                       }}
                     >
                       <span className="sr-only">Close</span>
-                      <XIcon className="w-5 h-5" aria-hidden="true" />
+                      <XMarkIcon className="w-5 h-5" aria-hidden="true" />
                     </button>
                   )}
                   <div className="block text-sm font-medium text-gray-700 ">

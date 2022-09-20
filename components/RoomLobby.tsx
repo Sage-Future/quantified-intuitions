@@ -4,7 +4,7 @@ import { useState } from "react";
 
 import {
     ChevronLeftIcon, ClockIcon, PlayIcon, QuestionMarkCircleIcon
-} from "@heroicons/react/solid";
+} from "@heroicons/react/24/outline";
 import { Room, User } from "@prisma/client";
 
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";

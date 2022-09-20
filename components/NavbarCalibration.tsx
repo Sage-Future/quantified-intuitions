@@ -5,11 +5,13 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { ClockIcon, MenuIcon, XIcon } from "@heroicons/react/outline";
+import {
+    ArrowLeftOnRectangleIcon, Bars3Icon, ScaleIcon, XMarkIcon
+} from "@heroicons/react/24/outline";
 
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
-export const Navbar = () => {
+export const NavbarCalibration = () => {
   const { data: session, status } = useSession();
 
   const user = {
@@ -19,22 +21,20 @@ export const Navbar = () => {
   };
   const { pathname } = useRouter();
   const navigation = [
-    { name: "Home", href: "/", current: pathname === "/" },
     {
-      name: "Multiplayer",
-      href: "/multiplayer",
-      current: pathname.startsWith("/multiplayer"),
+      name: "Calibration",
+      href: "/calibration",
+      current: pathname === "/calibration",
     },
     {
-      name: "Leaderboard",
-      href: "/leaderboard",
-      current: pathname === "/leaderboard",
+      name: "Charts",
+      href: "/calibration/charts",
+      current: pathname === "/calibration/charts",
     },
-
     {
       name: "FAQ",
-      href: "/faq",
-      current: pathname === "/faq",
+      href: "/calibration/faq",
+      current: pathname === "/calibration/faq",
     },
     {
       name: "Discord",
@@ -53,14 +53,8 @@ export const Navbar = () => {
     */
     session
       ? {
-          name: "Charts",
-          href: "/charts",
-        }
-      : null,
-    session
-      ? {
           name: "Settings",
-          href: "/settings",
+          href: "/calibration/settings",
         }
       : null,
     {
@@ -74,12 +68,23 @@ export const Navbar = () => {
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex justify-between h-16">
               <div className="flex">
+                <div className="-ml-2 mr-2 flex items-center lg:hidden">
+                  {/* Mobile menu button */}
+                  <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <span className="sr-only">Open main menu</span>
+                    {open ? (
+                      <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                    ) : (
+                      <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                    )}
+                  </Disclosure.Button>
+                </div>
                 <div className="flex-shrink-0 flex items-center">
-                  <Link href="/">
+                  <Link href="/calibration">
                     <a className="prose">
                       <div className="flex items-center">
-                        <ClockIcon className="w-8 h-8 text-indigo-600" />
-                        <h3 className="m-0 ml-2">Pastcasting</h3>
+                        <ScaleIcon className="w-8 h-8 text-indigo-600" />
+                        <h3 className="m-0 ml-2">Quantified Intuitions</h3>
                       </div>
                     </a>
                   </Link>
@@ -100,7 +105,7 @@ export const Navbar = () => {
                   />
                 </div>
                 */}
-                <div className="hidden sm:-my-px sm:ml-6 sm:flex sm:space-x-8">
+                <div className="hidden lg:-my-px lg:ml-6 lg:flex lg:space-x-8">
                   {navigation.map((item) => (
                     <a
                       key={item.name}
@@ -118,8 +123,24 @@ export const Navbar = () => {
                   ))}
                 </div>
               </div>
-              <div className="hidden sm:ml-6 sm:flex sm:items-center">
-                {/*
+              <div className="flex items-center">
+                <div className="flex-shrink-0">
+                  <Link href="/pastcasting" passHref>
+                    <a
+                      type="button"
+                      className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    >
+                      <ArrowLeftOnRectangleIcon
+                        className="-ml-1 mr-2 h-5 w-5"
+                        aria-hidden="true"
+                      />
+                      <span>Pastcasting</span>
+                    </a>
+                  </Link>
+                </div>
+
+                <div className="hidden lg:ml-6 lg:flex lg:items-center">
+                  {/*
                 <button
                   type="button"
                   className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
@@ -129,70 +150,60 @@ export const Navbar = () => {
                 </button>
                   */}
 
-                {/* Profile dropdown */}
-                <Menu as="div" className="ml-3 relative">
-                  <div>
-                    <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                      <span className="sr-only">Open user menu</span>
-                      <img
-                        className="h-8 w-8 rounded-full"
-                        src={user.imageUrl}
-                        alt=""
-                      />
-                    </Menu.Button>
-                  </div>
-                  <Transition
-                    as={Fragment}
-                    enter="transition ease-out duration-200"
-                    enterFrom="transform opacity-0 scale-95"
-                    enterTo="transform opacity-100 scale-100"
-                    leave="transition ease-in duration-75"
-                    leaveFrom="transform opacity-100 scale-100"
-                    leaveTo="transform opacity-0 scale-95"
-                  >
-                    <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
-                      {userNavigation.map(
-                        (item) =>
-                          item !== null && (
-                            <Menu.Item key={item.name}>
-                              {({ active }) => (
-                                <a
-                                  href={item.href}
-                                  className={clsx(
-                                    active ? "bg-gray-100" : "",
-                                    "block px-4 py-2 text-sm text-gray-700"
-                                  )}
-                                  onClick={
-                                    item.href === undefined
-                                      ? () => (session ? signOut() : signIn())
-                                      : undefined
-                                  }
-                                >
-                                  {item.name}
-                                </a>
-                              )}
-                            </Menu.Item>
-                          )
-                      )}
-                    </Menu.Items>
-                  </Transition>
-                </Menu>
-              </div>
-              <div className="-mr-2 flex items-center sm:hidden">
-                {/* Mobile menu button */}
-                <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                  <span className="sr-only">Open main menu</span>
-                  {open ? (
-                    <XIcon className="block h-6 w-6" aria-hidden="true" />
-                  ) : (
-                    <MenuIcon className="block h-6 w-6" aria-hidden="true" />
-                  )}
-                </Disclosure.Button>
+                  {/* Profile dropdown */}
+                  <Menu as="div" className="ml-3 relative">
+                    <div>
+                      <Menu.Button className="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                        <span className="sr-only">Open user menu</span>
+                        <img
+                          className="h-8 w-8 rounded-full"
+                          src={user.imageUrl}
+                          alt=""
+                        />
+                      </Menu.Button>
+                    </div>
+                    <Transition
+                      as={Fragment}
+                      enter="transition ease-out duration-200"
+                      enterFrom="transform opacity-0 scale-95"
+                      enterTo="transform opacity-100 scale-100"
+                      leave="transition ease-in duration-75"
+                      leaveFrom="transform opacity-100 scale-100"
+                      leaveTo="transform opacity-0 scale-95"
+                    >
+                      <Menu.Items className="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none z-50">
+                        {userNavigation.map(
+                          (item) =>
+                            item !== null && (
+                              <Menu.Item key={item.name}>
+                                {({ active }) => (
+                                  <a
+                                    href={item.href}
+                                    className={clsx(
+                                      active ? "bg-gray-100" : "",
+                                      "block px-4 py-2 text-sm text-gray-700"
+                                    )}
+                                    onClick={
+                                      item.href === undefined
+                                        ? () => (session ? signOut() : signIn())
+                                        : undefined
+                                    }
+                                  >
+                                    {item.name}
+                                  </a>
+                                )}
+                              </Menu.Item>
+                            )
+                        )}
+                      </Menu.Items>
+                    </Transition>
+                  </Menu>
+                </div>
               </div>
             </div>
           </div>
 
-          <Disclosure.Panel className="sm:hidden">
+          <Disclosure.Panel className="lg:hidden">
             <div className="pt-2 pb-3 space-y-1">
               {navigation.map((item) => (
                 <Disclosure.Button

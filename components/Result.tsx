@@ -1,4 +1,4 @@
-import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/solid";
+import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 import { valueToString } from "../lib/services/format";
 
