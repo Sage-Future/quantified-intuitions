@@ -143,7 +143,7 @@ export const NavbarPastcasting = () => {
                       if (session === null) {
                         signIn();
                       } else {
-                        router.push("/pastcasting");
+                        router.push("/calibration");
                       }
                     }}
                   >
