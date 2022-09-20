@@ -25,7 +25,7 @@ const Faq = () => {
     {
       question: "I found an issue with one of the questions!",
       answer:
-        "Please leave a comment at our [airtable](https://airtable.com/invite/l?inviteId=inv38Ivl9dVyg6i5H&inviteToken=9e9063ebbeabecfce042fa8960cad2906272c887ade48f469ae05d3cdaf63969&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts) or email us at aaron@sage-future.org",
+        "Please leave a comment at our [Airtable](https://airtable.com/invite/l?inviteId=inv38Ivl9dVyg6i5H&inviteToken=9e9063ebbeabecfce042fa8960cad2906272c887ade48f469ae05d3cdaf63969&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts) or email us at aaron@sage-future.org",
     },
     {
       question: "When will feature X be available?",
