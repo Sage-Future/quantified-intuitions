@@ -144,7 +144,11 @@ export const CalibrationForm = ({
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
-                    calibrationQuestion.postfix.length === 0 && "rounded-r-md"
+                    calibrationQuestion.postfix.length === 0 && "rounded-r-md",
+                    calibrationQuestion.prefix.length > 0 &&
+                      calibrationQuestion.postfix.length === 0
+                      ? ""
+                      : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
                   {...register("lowerBound")}
@@ -198,7 +202,11 @@ export const CalibrationForm = ({
                   className={clsx(
                     "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 rounded-none sm:text-sm border-gray-300 disabled:opacity-50",
                     calibrationQuestion.prefix.length === 0 && "rounded-l-md",
-                    calibrationQuestion.postfix.length === 0 && "rounded-r-md"
+                    calibrationQuestion.postfix.length === 0 && "rounded-r-md",
+                    calibrationQuestion.prefix.length > 0 &&
+                      calibrationQuestion.postfix.length === 0
+                      ? ""
+                      : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
                   {...register("upperBound")}
