@@ -71,6 +71,7 @@ export const NavbarPastcasting = () => {
       name: session ? "Sign out" : "Sign in",
     },
   ].filter(Boolean);
+  const router = useRouter();
   return (
     <Disclosure as="nav" className="bg-white border-b border-gray-200">
       {({ open }) => (
@@ -135,18 +136,23 @@ export const NavbarPastcasting = () => {
               </div>
               <div className="flex items-center">
                 <div className="flex-shrink-0">
-                  <Link href="/calibration" passHref>
-                    <a
-                      type="button"
-                      className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                    >
-                      <ArrowLeftOnRectangleIcon
-                        className="-ml-1 mr-2 h-5 w-5"
-                        aria-hidden="true"
-                      />
-                      <span>Calibration</span>
-                    </a>
-                  </Link>
+                  <button
+                    type="button"
+                    className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                    onClick={() => {
+                      if (session === null) {
+                        signIn();
+                      } else {
+                        router.push("/pastcasting");
+                      }
+                    }}
+                  >
+                    <ArrowLeftOnRectangleIcon
+                      className="-ml-1 mr-2 h-5 w-5"
+                      aria-hidden="true"
+                    />
+                    <span>Calibration</span>
+                  </button>
                 </div>
 
                 <div className="hidden lg:ml-6 lg:flex lg:items-center">
