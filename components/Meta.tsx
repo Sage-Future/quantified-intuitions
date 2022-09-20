@@ -5,18 +5,18 @@ export const Meta = () => {
     <NextSeo
       title="Quantified Intuitions"
       description="Quantified Intuitions helps users practice the process of assigning credences to outcomes with a quick feedback loop."
-      canonical="https://www.quantifiedintuitions.com/"
+      canonical="https://www.quantifiedintuitions.org/"
       openGraph={{
         type: "website",
         locale: "en_US",
-        url: "https://www.quantifiedintuitions.com/",
+        url: "https://www.quantifiedintuitions.org/",
         title: "Quantified Intuitions",
         description:
           "Quantified Intuitions helps users practice the process of assigning credences to outcomes with a quick feedback loop.",
         site_name: "Quantified Intuitions",
         images: [
           {
-            url: "https://www.quantifiedintuitions.com/og.png",
+            url: "https://www.quantifiedintuitions.org/og.png",
             width: 1024,
             height: 1024,
           },
