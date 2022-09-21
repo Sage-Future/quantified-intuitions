@@ -21,7 +21,12 @@ const Faq = () => {
     {
       question: "How does the scoring system work?",
       answer:
-        "Interval scoring uses the formula developed by [this paper](https://arxiv.org/abs/1808.07501).",
+        "Interval scoring uses the formula developed by [this paper](https://arxiv.org/abs/1808.07501). The numbers are chosen such that your expected score per question is roughly maximized when you give your true beliefs.",
+    },
+    {
+      question: "How do I know if I'm calibrated?",
+      answer:
+        "You can look at our [charts](/calibration/charts) to check your calibration curve. If you're well calibrated, the error bars should be overlapping with the red line and your overconfidence/underconfidence should be close to zero.",
     },
     {
       question: "I found an issue with one of the questions!",
