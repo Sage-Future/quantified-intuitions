@@ -68,7 +68,7 @@ const MultiplayerCreate = () => {
     }).then(async (res) => {
       if (res.status === 200) {
         const roomId = await res.json();
-        router.push(`/multiplayer/${roomId}`);
+        router.push(`/pastcasting/multiplayer/${roomId}`);
       } else {
         setErrors(["Error creating room."]);
         setIsLoading(false);

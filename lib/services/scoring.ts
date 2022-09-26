@@ -58,6 +58,9 @@ export const calibrationScore = (
     let r = Math.log(lowerBound / answer) / Math.log(C);
     let s = Math.log(upperBound / lowerBound) / Math.log(C);
     let t = Math.log(answer / upperBound) / Math.log(C);
+    console.log("r: " + r);
+    console.log("s: " + s);
+    console.log("t: " + t);
     if (answer < lowerBound) {
       return Math.max(SMIN, (-2 / (1 - B)) * r - (r / (1 + r)) * s);
     } else if (answer > upperBound) {

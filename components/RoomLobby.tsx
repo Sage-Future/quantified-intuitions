@@ -31,7 +31,7 @@ export const RoomLobby = ({
         roomId: room.id,
       }),
     });
-    router.push("/multiplayer");
+    router.push("/pastcasting/multiplayer");
   };
   const { data: session } = useSession();
   const userId = session?.user?.id;
