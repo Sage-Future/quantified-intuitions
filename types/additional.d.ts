@@ -26,4 +26,5 @@ export type CalibrationOptions =
   | "QuestionDescription"
   | "VantageSearch"
   | "Scores"
-  | "Leaderboard";
+  | "Leaderboard"
+  | "WikiSearch";

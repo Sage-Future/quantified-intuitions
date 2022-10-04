@@ -10,6 +10,7 @@ import { QuestionScores } from "./QuestionScores";
 import { RoomLeaderboard } from "./RoomLeaderboard";
 import { Sidebar } from "./Sidebar";
 import { VantageSearch } from "./VantageSearch";
+import { WikiSearch } from "./WikiSearch";
 
 export const ThreeColumnLayout = ({
   question,
@@ -83,6 +84,11 @@ export const ThreeColumnLayout = ({
                   )}
                 >
                   <VantageSearch question={question} />
+                </div>
+                <div
+                  className={clsx(sidebarSelected !== "WikiSearch" && "hidden")}
+                >
+                  <WikiSearch question={question} />
                 </div>
                 <div className={clsx(sidebarSelected !== "Scores" && "hidden")}>
                   <QuestionScores question={question} members={members} />

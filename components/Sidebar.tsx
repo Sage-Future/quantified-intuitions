@@ -37,6 +37,12 @@ export const Sidebar = ({
       onClick: () => setSelected("VantageSearch"),
       current: selected === "VantageSearch",
     },
+    {
+      name: "Wiki Search (Beta)",
+      icon: MagnifyingGlassIcon,
+      onClick: () => setSelected("WikiSearch"),
+      current: selected === "WikiSearch",
+    },
   ];
   if (showScores) {
     navigation.push({

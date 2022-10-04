@@ -16,5 +16,7 @@ export const isValidBinaryProbability = (probability: number) =>
 
 export const isWaybackUrl = (url: string) => {
   const regex = /^https?:\/\/web\.archive\.org\/web\/[0-9]{14}\/.*$/;
-  return regex.test(url);
+  // url is wikipedia oldid url
+  const regex2 = /^https?:\/\/en\.wikipedia\.org\/.*\?oldid=[0-9]+$/;
+  return regex.test(url) || regex2.test(url);
 };
