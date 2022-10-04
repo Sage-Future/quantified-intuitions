@@ -28,6 +28,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
     "?" +
     Object.keys(params)
       .map(function (k) {
+        // @ts-ignore
         return encodeURIComponent(k) + "=" + encodeURIComponent(params[k]);
       })
       .join("&");
@@ -59,6 +60,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
       "?" +
       Object.keys(params2)
         .map(function (k) {
+          // @ts-ignore
           return encodeURIComponent(k) + "=" + encodeURIComponent(params2[k]);
         })
         .join("&");
