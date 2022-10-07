@@ -67,7 +67,7 @@ export const WikiSearch = ({ question }: { question: Question }) => {
         <div className="grow">
           <div className="prose">
             <h3 className="text-center mb-6">
-              <span className="text-gray-500">{`Search the web as of `}</span>
+              <span className="text-gray-500">{`Search the Wikipedia as of `}</span>
               <span className="">{dateMed(question.vantageDate)}</span>
             </h3>
           </div>
