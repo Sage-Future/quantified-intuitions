@@ -1,10 +1,10 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
-import { Charts } from "../../components/Charts";
-import { Footer } from "../../components/Footer";
-import { NavbarCalibration } from "../../components/NavbarCalibration";
-import { Prisma } from "../../lib/prisma";
-import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from "../../types/additional";
+import { Charts } from '../../components/Charts';
+import { Footer } from '../../components/Footer';
+import { NavbarCalibration } from '../../components/NavbarCalibration';
+import { Prisma } from '../../lib/prisma';
+import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from '../../types/additional';
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -23,9 +23,17 @@ export const getServerSideProps = async (ctx: any) => {
           question: true,
         },
       },
-      CalibrationAnswer: true,
+      CalibrationAnswer: {
+        include: {
+          question: true,
+        },
+      },
     },
   });
+  user?.pastcasts.filter((pastcast) => pastcast.question.isDeleted === false);
+  user?.CalibrationAnswer.filter(
+    (answer) => answer.question.isDeleted === false
+  );
   return {
     props: {
       session,
