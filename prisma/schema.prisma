@@ -50,6 +50,7 @@ model User {
   commentInteractions UserCommentInteraction[]
   rooms               Room[]
   CalibrationAnswer   CalibrationAnswer[]
+  teams               Team[]
 }
 
 model VerificationToken {
@@ -171,6 +172,8 @@ model CalibrationQuestion {
   C                  Float               @default(100)
   source             String              @default("")
   calibrationAnswers CalibrationAnswer[]
+  challenges         Challenge[]
+  teamAnswers        TeamFermiAnswer[]
 }
 
 model CalibrationAnswer {
@@ -186,5 +189,39 @@ model CalibrationAnswer {
   correct    Boolean
   createdAt  DateTime            @default(now())
   user       User                @relation(fields: [userId], references: [id], onDelete: Cascade)
+  question   CalibrationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model Challenge {
+  id             String                @id @default(cuid())
+  isDeleted      Boolean               @default(false)
+  name           String
+  startDate      DateTime
+  endDate        DateTime
+  fermiQuestions CalibrationQuestion[]
+  teams          Team[]
+}
+
+model Team {
+  id           String            @id @default(cuid())
+  name         String
+  challengeId  String
+  challenge    Challenge         @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  users        User[]
+  fermiAnswers TeamFermiAnswer[]
+}
+
+model TeamFermiAnswer {
+  id         String              @id @default(cuid())
+  teamId     String
+  questionId String
+  skipped    Boolean             @default(false)
+  lowerBound Float?
+  upperBound Float?
+  score      Float
+  timeSpent  Int?                @default(0)
+  correct    Boolean
+  createdAt  DateTime            @default(now())
+  team       Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
   question   CalibrationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

@@ -74,3 +74,13 @@ export const calibrationScore = (
     return ((4 * SMAX * r * t) / (s * s)) * (1 - s / (1 + s));
   }
 };
+
+
+export const challengeScore = (
+  lowerBound: number,
+  upperBound: number,
+  answer: number,
+) => {
+  // todo
+  return answer >= lowerBound && answer <= upperBound ? 1 : -1;
+}
