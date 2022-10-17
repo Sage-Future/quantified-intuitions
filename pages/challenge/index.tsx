@@ -94,15 +94,20 @@ const ChallengePage = ({
     }
   }, [userChallenges]);
 
+  const challenge = currentChallenge && userChallenges.find(c => c.id === currentChallenge.challengeId)
+
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarChallenge />
       {
         currentChallenge ?
+          challenge ?
           <Challenge 
-            challenge={userChallenges.find(c => c.id === currentChallenge.challengeId)}
+            challenge={challenge}
             teamId={currentChallenge.teamId}
           />
+          :
+          <p>Error: challenge not found.</p>
           :
           <JoinChallenge
             activeChallenges={activeChallenges}

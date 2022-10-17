@@ -7,12 +7,9 @@ export const Challenge = ({
   challenge,
   teamId,
 }: {
-  challenge: ChallengeWithTeamsWithUsersAndQuestions | undefined;
+  challenge: ChallengeWithTeamsWithUsersAndQuestions;
   teamId: string,
 }) => {
-  if (!challenge) {
-    return <div>Challenge not found</div>;
-  }
   const [questionNum, setQuestionNum] = useState(challenge.fermiQuestions.findIndex(
     question => !question.teamAnswers.some(answer => answer.teamId === teamId)
   ));
