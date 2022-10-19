@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional";
+import { ChallengeCountdown } from "./ChallengeCountdown";
 import { ChallengeLeaderboard } from "./ChallengeLeaderboard";
 import { FermiForm } from "./FermiForm";
 
@@ -28,10 +29,11 @@ export const Challenge = ({
         <div className="max-w-prose mx-auto flex justify-between ">
           <div className="prose">
             <h4 className="my-0 text-gray-600  text-md">{challenge.name}</h4>
-            <h4 className="my-0 text-gray-400  text-sm">{challenge.teams.find(t => t.id === teamId)?.name}</h4>
+            <ChallengeCountdown challenge={challenge} />
           </div>
           <div className="prose">
-            <h4 className="my-0 text-gray-500">Score:</h4>
+            <h4 className="my-0 text-gray-500">{challenge.teams.find(t => t.id === teamId)?.name}</h4>
+            <h4 className="my-0 text-gray-400 text-sm">Score:</h4>
             <h2 className="my-0">
               {score.toFixed(2)}
               <span className="text-gray-500 text-[16px]"> points</span>

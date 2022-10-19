@@ -18,7 +18,7 @@ export const ChallengeLeaderboard = ({
 }) => {
   const { data, error } = useSWR<SuperJSONValue>(challengeId && `/api/v0/getChallengeLeaderboard?challengeId=${challengeId}`,
     fetcher,
-    { refreshInterval: 5000 }
+    { refreshInterval: 1000 }
   );
   if (error) {
     console.log(error)

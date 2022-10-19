@@ -3,6 +3,7 @@ import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ChallengeWithTeamsWithUsers } from "../types/additional";
+import { ChallengeCountdown } from "./ChallengeCountdown";
 import { Errors } from "./Errors";
 import { Success } from "./Success";
 
@@ -68,8 +69,8 @@ export const JoinChallenge = ({
             key={challenge.id}
           >
             {challenge.teams.some((team) => team.users.some((u) => u.id === user.id)) ?
-              <div>
-                Rejoin (todo)
+              <div className="text-gray-500">
+                Resuming challenge...
               </div>
               :
               <form
@@ -82,7 +83,8 @@ export const JoinChallenge = ({
                       <h3 className="text-lg leading-6 font-medium text-gray-900">
                         {challenge.name}
                       </h3>
-                      <p className="mt-1 text-sm text-gray-500">
+                      <ChallengeCountdown challenge={challenge} />
+                      <p className="pt-4 text-sm text-gray-500">
                         Assemble your friends to train your estimation skills!
                       </p>
                     </div>
