@@ -18,12 +18,14 @@ export const FermiForm = ({
   nextQuestion,
   addToSessionScore,
   teamId,
+  setQuestionComplete,
 }: {
   calibrationQuestion: CalibrationQuestion;
   reduceCountdown: () => void;
   nextQuestion: () => void;
   addToSessionScore: (score: number) => void;
   teamId: string;
+  setQuestionComplete: (isComplete: boolean) => void;
 }) => {
   const { register, watch, handleSubmit, setValue, setFocus } = useForm();
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
@@ -80,6 +82,7 @@ export const FermiForm = ({
     }).then(async (res) => {
       if (res.status === 201) {
         const json = await res.json();
+        setQuestionComplete(true);
         setPointsEarned(json.score);
         addToSessionScore(json.score);
       }
@@ -98,6 +101,7 @@ export const FermiForm = ({
 
   useEffect(() => {
     setFocus("lowerBound");
+    setQuestionComplete(false);
   }, []);
   useEffect(() => {
     let links = document.links;
@@ -110,7 +114,7 @@ export const FermiForm = ({
 
   return (
     <>
-      <div className="prose break-words text-2xl">
+      <div className="prose break-words text-2xl pt-8">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {calibrationQuestion.content}
         </ReactMarkdown>

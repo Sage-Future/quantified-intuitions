@@ -37,9 +37,6 @@ export const getServerSideProps = async (ctx: any) => {
       },
     },
   });
-  // const activeChallenges = challenges.filter((challenge) =>
-  //   challenge.startDate < new Date() && challenge.endDate > new Date()
-  // );
   const participatingInChallenges = activeChallenges.filter(
     challenge => challenge.teams.some(team => team.users.some(user => user.id === userId))
   );
@@ -89,12 +86,12 @@ const ChallengePage = ({
     if (userChallenges.length === 1) {
       setCurrentChallenge({
         challengeId: userChallenges[0].id,
-        teamId: userChallenges[0].teams.find(team => team.users.some(user => user.id === user.id))?.id || ""
+        teamId: userChallenges[0].teams.find(team => team.users.some(u => u.id === user.id))?.id || ""
       })
     }
-  }, [userChallenges]);
+  }, [userChallenges, user.id]);
 
-  const challenge = currentChallenge && userChallenges.find(c => c.id === currentChallenge.challengeId)
+  const challenge = currentChallenge && userChallenges && userChallenges.find(c => c.id === currentChallenge.challengeId)
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
@@ -102,12 +99,12 @@ const ChallengePage = ({
       {
         currentChallenge ?
           challenge ?
-          <Challenge 
-            challenge={challenge}
-            teamId={currentChallenge.teamId}
-          />
-          :
-          <p>Error: challenge not found.</p>
+            <Challenge
+              challenge={challenge}
+              teamId={currentChallenge.teamId}
+            />
+            :
+            <p>Error: challenge not found.</p>
           :
           <JoinChallenge
             activeChallenges={activeChallenges}

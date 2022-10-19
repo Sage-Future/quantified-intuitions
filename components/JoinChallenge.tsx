@@ -1,4 +1,5 @@
 import { User } from "@prisma/client";
+import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { ChallengeWithTeamsWithUsers } from "../types/additional";
@@ -18,6 +19,7 @@ export const JoinChallenge = ({
   const { register, handleSubmit } = useForm();
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState<string>("");
+  const router = useRouter();
   const createTeam = async (data: any, challengeId: string) => {
     console.log(data);
     setErrors([]);
@@ -45,7 +47,7 @@ export const JoinChallenge = ({
     }).then(async (res) => {
       if (res.status === 200) {
         const teamId = await res.json();
-        setCurrentChallenge({ challengeId, teamId });
+        router.replace(router.asPath);
       } else {
         setErrors(["There was an error creating your team"]);
       }

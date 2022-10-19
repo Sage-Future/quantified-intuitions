@@ -81,6 +81,6 @@ export const challengeScore = (
   upperBound: number,
   answer: number,
 ) => {
-  // todo
+  // todo - estimathon scoring rule from https://estimathon.com/how-to-play
   return answer >= lowerBound && answer <= upperBound ? 1 : -1;
 }

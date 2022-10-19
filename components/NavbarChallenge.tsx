@@ -44,7 +44,7 @@ export const NavbarChallenge = () => {
     session
       ? {
           name: "Settings",
-          href: "/calibration/settings",
+          href: "/challenge/settings",
         }
       : null,
     {
@@ -70,7 +70,7 @@ export const NavbarChallenge = () => {
                   </Disclosure.Button>
                 </div>
                 <div className="flex-shrink-0 flex items-center">
-                  <Link href="/calibration">
+                  <Link href="/challenge">
                     <a className="prose">
                       <div className="flex items-center">
                         <ScaleIcon className="w-8 h-8 text-indigo-600" />
