@@ -76,11 +76,34 @@ export const calibrationScore = (
 };
 
 
-export const challengeScore = (
-  lowerBound: number,
-  upperBound: number,
-  answer: number,
+export const estimathonScore = (
+  questions: {
+    lowerBound: number,
+    upperBound: number,
+    answer: number,
+  }[],
 ) => {
-  // todo - estimathon scoring rule from https://estimathon.com/how-to-play
-  return answer >= lowerBound && answer <= upperBound ? 1 : -1;
+  if (questions.length === 0) {
+    return 0
+  }
+
+  // estimathon scoring rule from https://estimathon.com/how-to-play
+  let score = 10;
+  let incorrectCount = 0;
+  questions.forEach(q => {
+    const correct = q.answer >= q.lowerBound && q.answer <= q.upperBound;
+    if (correct) {
+      // sum for each good interval of max/min
+      score += q.upperBound / q.lowerBound;
+    } else {
+      incorrectCount++;
+    }
+  })
+
+  // multiply by 2^[incorrectCount]
+  score *= Math.pow(2, incorrectCount);
+
+  console.log({score, incorrectCount, questions});
+
+  return score;
 }

@@ -8,27 +8,30 @@ import { CalibrationQuestion } from "@prisma/client";
 
 import { Errors } from "../components/Errors";
 import { NextQuestion } from "../components/NextQuestion";
-import { Result } from "../components/Result";
 import { SubmitForm } from "../components/SubmitForm";
 import { convertNumber, formatInput, formatResult } from "../lib/services/format";
+import { EstimathonResult } from "./EstimathonResult";
 
 export const FermiForm = ({
   calibrationQuestion,
   reduceCountdown,
   nextQuestion,
-  addToSessionScore,
+  setScore,
   teamId,
   setQuestionComplete,
+  showScoringHint,
 }: {
   calibrationQuestion: CalibrationQuestion;
   reduceCountdown: () => void;
   nextQuestion: () => void;
-  addToSessionScore: (score: number) => void;
+  setScore: (score: number) => void;
   teamId: string;
   setQuestionComplete: (isComplete: boolean) => void;
+  showScoringHint: boolean;
 }) => {
   const { register, watch, handleSubmit, setValue, setFocus } = useForm();
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
+  const [correct, setCorrect] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [errors, setErrors] = useState<string[]>([]);
   const watchAllFields = watch();
@@ -62,7 +65,7 @@ export const FermiForm = ({
       setIsLoading(false);
       return;
     }
-    if (lowerBoundNumber <= 0 && calibrationQuestion.useLogScoring) {
+    if (lowerBoundNumber <= 0) {
       setErrors(["Lower bound must be greater than 0"]);
       setIsLoading(false);
       return;
@@ -83,8 +86,9 @@ export const FermiForm = ({
       if (res.status === 201) {
         const json = await res.json();
         setQuestionComplete(true);
-        setPointsEarned(json.score);
-        addToSessionScore(json.score);
+        setPointsEarned(json.changeInScore);
+        setCorrect(json.correct);
+        setScore(json.score);
       }
     });
     setIsLoading(false);
@@ -114,7 +118,7 @@ export const FermiForm = ({
 
   return (
     <>
-      <div className="prose break-words text-2xl pt-8">
+      <div className="prose break-words text-2xl pt-2">
         <ReactMarkdown remarkPlugins={[remarkGfm]}>
           {calibrationQuestion.content}
         </ReactMarkdown>
@@ -246,12 +250,13 @@ export const FermiForm = ({
           </div>
         </div>
         <div className="pt-6">
-          {pointsEarned === null ? (
+          {pointsEarned === null || correct === null ? (
             <SubmitForm disabled={isLoading} isLoading={isLoading} />
           ) : (
             <div className="grid gap-y-6">
-              <Result
-                pointsEarned={pointsEarned}
+              <EstimathonResult
+                pointsGained={pointsEarned}
+                correct={correct}
                 skipped={false}
                 answer={false}
                 stringAnswer={formatResult(
@@ -259,6 +264,7 @@ export const FermiForm = ({
                   calibrationQuestion.prefix,
                   calibrationQuestion.postfix
                 )}
+                showScoringHint={showScoringHint}
               />
               <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>

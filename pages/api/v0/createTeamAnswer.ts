@@ -2,7 +2,7 @@ import { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/react";
 
 import { Prisma } from "../../../lib/prisma";
-import { challengeScore } from "../../../lib/services/scoring";
+import { estimathonScore } from "../../../lib/services/scoring";
 
 interface Request extends NextApiRequest {
   body: {
@@ -44,25 +44,58 @@ const createTeamAnswer = async (req: Request, res: NextApiResponse) => {
     });
     return;
   }
-  const score = challengeScore(
-    lowerBound,
-    upperBound,
-    calibrationQuestion.answer
+  // get the lower bound, upper bound and answer for other calibrationQuestions answered by the team
+  const answers = await Prisma.teamFermiAnswer.findMany({
+    where: {
+      teamId: teamId,
+    },
+    select: {
+      lowerBound: true,
+      upperBound: true,
+      question: {
+        select: {
+          answer: true,
+        }
+      }
+    },
+  });
+
+  const prevAnswers = answers
+    .filter(answer => answer.lowerBound !== null && answer.upperBound !== null)
+    .map((answer) => ({
+      lowerBound: answer.lowerBound as number,
+      upperBound: answer.upperBound as number,
+      answer: answer.question.answer,
+    }));
+  const score = estimathonScore(
+    [
+      {
+        lowerBound,
+        upperBound,
+        answer: calibrationQuestion.answer,
+      },
+      ...prevAnswers
+    ]
   );
-  console.log(score);
+  const prevScore = estimathonScore(prevAnswers);
+  
   const teamFermiAnswer = await Prisma.teamFermiAnswer.create({
     data: {
       teamId,
       questionId,
       lowerBound,
       upperBound,
-      score,
+      score: score - prevScore,
       correct:
         calibrationQuestion.answer >= lowerBound &&
         calibrationQuestion.answer <= upperBound,
     },
   });
-  res.status(201).json(teamFermiAnswer);
+  res.status(201).json({
+    ...teamFermiAnswer,
+    changeInScore: score - prevScore,
+    score,
+  });
 };
 
 export default createTeamAnswer;
