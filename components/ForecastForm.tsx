@@ -13,7 +13,7 @@ import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { BinaryForecast } from "./BinaryForecast";
 import { CommentForm } from "./CommentForm";
 import { Errors } from "./Errors";
-import { NextQuestion } from "./NextQuestion";
+import { LoadingButton } from "./NextQuestion";
 import { OriginalPlatform } from "./OriginalPlatform";
 import { Result } from "./Result";
 import { SubmitForm } from "./SubmitForm";
@@ -231,9 +231,9 @@ export const ForecastForm = ({
                     <OriginalPlatform question={question} />
                   </>
                 )}
-                <NextQuestion
-                  nextQuestion={loadNextQuestion}
-                  nextText={
+                <LoadingButton
+                  onClick={loadNextQuestion}
+                  buttonText={
                     isHost
                       ? "Move EVERYONE in room to next question"
                       : "Next Question"
@@ -331,9 +331,9 @@ export const ForecastForm = ({
                     stringAnswer={undefined}
                   />
                   <OriginalPlatform question={question} />
-                  <NextQuestion
-                    nextQuestion={loadNextQuestion}
-                    nextText={
+                  <LoadingButton
+                    onClick={loadNextQuestion}
+                    buttonText={
                       isHost
                         ? "Move EVERYONE in room to next question"
                         : "Next Question"

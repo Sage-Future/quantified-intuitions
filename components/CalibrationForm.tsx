@@ -7,7 +7,7 @@ import remarkGfm from "remark-gfm";
 import { CalibrationQuestion } from "@prisma/client";
 
 import { Errors } from "../components/Errors";
-import { NextQuestion } from "../components/NextQuestion";
+import { LoadingButton } from "../components/NextQuestion";
 import { Result } from "../components/Result";
 import { SubmitForm } from "../components/SubmitForm";
 import { convertNumber, formatInput, formatResult } from "../lib/services/format";
@@ -264,9 +264,9 @@ export const CalibrationForm = ({
                   {"Source: " + calibrationQuestion.source}
                 </ReactMarkdown>
               </div>
-              <NextQuestion
-                nextQuestion={nextQuestion}
-                nextText="Next Question"
+              <LoadingButton
+                onClick={nextQuestion}
+                buttonText="Next Question"
                 isLoading={isLoading}
                 loadingText="Loading next question"
               />

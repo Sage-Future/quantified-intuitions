@@ -5,6 +5,7 @@ import { useForm } from "react-hook-form";
 import { ChallengeWithTeamsWithUsers } from "../types/additional";
 import { ChallengeCountdown } from "./ChallengeCountdown";
 import { Errors } from "./Errors";
+import { LoadingButton } from "./NextQuestion";
 import { Success } from "./Success";
 
 
@@ -20,6 +21,7 @@ export const JoinChallenge = ({
   const { register, handleSubmit } = useForm();
   const [errors, setErrors] = useState<string[]>([]);
   const [success, setSuccess] = useState<string>("");
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const router = useRouter();
   const createTeam = async (data: any, challengeId: string) => {
     console.log(data);
@@ -36,6 +38,7 @@ export const JoinChallenge = ({
       ]);
       return;
     }
+    setIsLoading(true);
     await fetch("/api/v0/createTeam", {
       method: "POST",
       headers: {
@@ -121,12 +124,13 @@ export const JoinChallenge = ({
                   )}
                   <div className="pt-5">
                     <div className="flex justify-end">
-                      <button
-                        type="submit"
-                        className="ml-3 inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                      >
-                        Join challenge
-                      </button>
+                      <LoadingButton
+                        isLoading={isLoading}
+                        buttonText="Join challenge"
+                        loadingText="Joining challenge..."
+                        submit={true}
+                        onClick={() => { }}
+                      />
                     </div>
                   </div>
                 </div>
