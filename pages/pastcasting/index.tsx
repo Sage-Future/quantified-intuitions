@@ -26,6 +26,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
   const userId = session?.user?.id || "";
+  //const userId = "cl9cllx3s000609lbaeilxhpd";
   const questions = await Prisma.question.findMany({
     where: {
       isDeleted: false,
@@ -108,7 +109,7 @@ const Home = ({
             <div>
               <div className="flex flex-col items-center justify-center">
                 <h1 className="text-4xl font-bold text-center">
-                  You've answered all the questions!
+                  {"You've answered all the questions!"}
                 </h1>
                 <p className="text-center">
                   Check back later for more questions to answer.
