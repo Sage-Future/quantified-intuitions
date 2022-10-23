@@ -1,4 +1,6 @@
-import { CalibrationAnswer, CalibrationQuestion, Challenge, Comment, Pastcast, Question, Team, User } from "@prisma/client";
+import {
+    CalibrationAnswer, CalibrationQuestion, Challenge, Comment, Pastcast, Question, Team, User
+} from '@prisma/client';
 
 export type PastcastWithQuestion = Pastcast & {
   question: Question;
