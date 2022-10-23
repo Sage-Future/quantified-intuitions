@@ -1,10 +1,10 @@
-import { getSession } from "next-auth/react";
+import { getSession } from 'next-auth/react';
 
-import { Footer } from "../../components/Footer";
-import { NavbarPastcasting } from "../../components/NavbarPastcasting";
-import { QuestionRoulette } from "../../components/QuestionRoulette";
-import { Prisma } from "../../lib/prisma";
-import { QuestionWithCommentsAndPastcasts } from "../../types/additional";
+import { Footer } from '../../components/Footer';
+import { NavbarPastcasting } from '../../components/NavbarPastcasting';
+import { QuestionRoulette } from '../../components/QuestionRoulette';
+import { Prisma } from '../../lib/prisma';
+import { QuestionWithCommentsAndPastcasts } from '../../types/additional';
 
 import type { GetServerSideProps, NextPage } from "next";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
@@ -38,6 +38,14 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     (question) =>
       !question.pastcasts.some((pastcast) => pastcast.userId === userId)
   );
+  if (uniqueQuestions.length === 0) {
+    return {
+      props: {
+        session,
+        question: null,
+      },
+    };
+  }
   const minSkipped = uniqueQuestions.reduce(
     (acc, question) =>
       Math.min(
@@ -86,7 +94,33 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   };
 };
 
-const Home = ({ question }: { question: QuestionWithCommentsAndPastcasts }) => {
+const Home = ({
+  question,
+}: {
+  question: QuestionWithCommentsAndPastcasts | null;
+}) => {
+  if (question === null) {
+    return (
+      <div className="flex flex-col min-h-screen justify-between">
+        <NavbarPastcasting />
+        <div className="py-10 grow">
+          <main>
+            <div>
+              <div className="flex flex-col items-center justify-center">
+                <h1 className="text-4xl font-bold text-center">
+                  You've answered all the questions!
+                </h1>
+                <p className="text-center">
+                  Check back later for more questions to answer.
+                </p>
+              </div>
+            </div>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarPastcasting />
