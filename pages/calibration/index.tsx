@@ -8,6 +8,7 @@ import { CalibrationQuestion } from '@prisma/client';
 import { CalibrationForm } from '../../components/CalibrationForm';
 import { Footer } from '../../components/Footer';
 import { NavbarCalibration } from '../../components/NavbarCalibration';
+import { NavbarPastcasting } from '../../components/NavbarPastcasting';
 import { Sorry } from '../../components/Sorry';
 import { Prisma } from '../../lib/prisma';
 
