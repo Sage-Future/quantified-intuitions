@@ -39,15 +39,6 @@ export const Challenge = ({
   const fermiQuestion = fermiComplete ? undefined : challenge.fermiQuestions[fermiQuestionNum];
   const aboveBelowQuestion = ((fermiComplete && !challengeComplete) || !challenge.aboveBelowQuestions) && challenge.aboveBelowQuestions[aboveBelowQuestionNum];
 
-  console.log({
-    fermiQuestionNum,
-    fermiComplete,
-    aboveBelowQuestionNum,
-    aboveBelowComplete,
-    aboveBelowQuestion,
-    qs: challenge.aboveBelowQuestions
-  })
-
   return (
     <div className="px-4 py-6 grow">
       <div className="py-8 max-w-prose mx-auto">
@@ -58,7 +49,6 @@ export const Challenge = ({
             {!challengeComplete &&
               <h4 className="pt-8 text-gray-500">Question {
                 (fermiQuestionNum === -1 ? challenge.fermiQuestions.length : fermiQuestionNum)
-                 + (challenge.fermiQuestions ? 1 : 0)
                  + aboveBelowQuestionNum 
                  + (fermiComplete ? 1 : 0)
               }/{
@@ -123,13 +113,13 @@ export const Challenge = ({
                 <div className="prose bg-indigo-100 rounded-md p-4 my-6">
                   <h3 className="my-0">{"Round 2: Above or Below"}</h3>
                   <p className="my-0">{"Estimate if the real quantity is above or below the amount below."}</p>
-                  <p className="my-0">{"In this round, the goal is get the biggest score you can!"}</p>
+                  <p className="my-0">{"In this round, the goal is to get the biggest score you can!"}</p>
                   <p className="my-0">{"Higher confidence gets you more points, if you're right."}</p>
                   <p className="my-0">{"But if you're wrong, higher confidence loses you more points!"}</p>
                   <div className="pt-2">
                     <button
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
-                      onClick={() => setIntrosShown({ ...introsShown, fermi: true })}
+                      onClick={() => setIntrosShown({ ...introsShown, aboveBelow: true })}
                     >
                       {"Let's go"}
                     </button>
