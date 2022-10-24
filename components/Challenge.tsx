@@ -11,11 +11,10 @@ export const Challenge = ({
   challenge: ChallengeWithTeamsWithUsersAndQuestions;
   teamId: string,
 }) => {
-  const [fermiQuestionNum, setFermiQuestionNum] = useState(challenge.fermiQuestions &&
-    challenge.fermiQuestions.findIndex(
-      question => !question.teamAnswers.some(answer => answer.teamId === teamId)
-    )
-  );
+  const initialFermiScore = challenge.fermiQuestions && challenge.fermiQuestions.findIndex(
+    question => !question.teamAnswers.some(answer => answer.teamId === teamId)
+  )
+  const [fermiQuestionNum, setFermiQuestionNum] = useState(initialFermiScore === 0 ? 10 : initialFermiScore);
   const [aboveBelowQuestionNum, setAboveBelowQuestionNum] = useState(challenge.aboveBelowQuestions &&
     challenge.aboveBelowQuestions.findIndex(
       question => !question.teamAnswers.some(answer => answer.teamId === teamId)
