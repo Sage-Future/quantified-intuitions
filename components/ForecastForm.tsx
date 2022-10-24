@@ -13,7 +13,7 @@ import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { BinaryForecast } from "./BinaryForecast";
 import { CommentForm } from "./CommentForm";
 import { Errors } from "./Errors";
-import { LoadingButton } from "./NextQuestion";
+import { LoadingButton } from "./LoadingButton";
 import { OriginalPlatform } from "./OriginalPlatform";
 import { Result } from "./Result";
 import { SubmitForm } from "./SubmitForm";

@@ -7,10 +7,10 @@ import remarkGfm from "remark-gfm";
 import { CalibrationQuestion } from "@prisma/client";
 
 import { Errors } from "../components/Errors";
-import { LoadingButton } from "../components/NextQuestion";
 import { Result } from "../components/Result";
 import { SubmitForm } from "../components/SubmitForm";
 import { convertNumber, formatInput, formatResult } from "../lib/services/format";
+import { LoadingButton } from "./LoadingButton";
 
 export const CalibrationForm = ({
   calibrationQuestion,

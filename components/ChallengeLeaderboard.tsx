@@ -19,7 +19,7 @@ export const ChallengeLeaderboard = ({
 }) => {
   const { data } = useSWR<SuperJSONValue>(challengeId && `/api/v0/getChallengeLeaderboard?challengeId=${challengeId}`,
     fetcher,
-    { refreshInterval: 2000, revalidateOnMount: true }
+    { refreshInterval: 5000, revalidateOnMount: true }
   );
   const challenge = deserialize({
     json: data?.json,

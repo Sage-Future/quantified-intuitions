@@ -5,7 +5,7 @@ import { useForm } from "react-hook-form";
 import { ChallengeWithTeamsWithUsers } from "../types/additional";
 import { ChallengeCountdown } from "./ChallengeCountdown";
 import { Errors } from "./Errors";
-import { LoadingButton } from "./NextQuestion";
+import { LoadingButton } from "./LoadingButton";
 import { Success } from "./Success";
 
 

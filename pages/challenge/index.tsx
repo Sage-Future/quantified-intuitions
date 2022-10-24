@@ -53,6 +53,11 @@ export const getServerSideProps = async (ctx: any) => {
           teamAnswers: true
         }
       },
+      aboveBelowQuestions: {
+        include: {
+          teamAnswers: true
+        }
+      },
       teams: {
         include: {
           users: true

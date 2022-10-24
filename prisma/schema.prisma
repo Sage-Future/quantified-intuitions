@@ -171,6 +171,7 @@ model CalibrationQuestion {
   useLogScoring      Boolean             @default(false)
   C                  Float               @default(100)
   source             String              @default("")
+  challengeOnly      Boolean             @default(false)
   calibrationAnswers CalibrationAnswer[]
   challenges         Challenge[]
   teamAnswers        TeamFermiAnswer[]
@@ -193,22 +194,24 @@ model CalibrationAnswer {
 }
 
 model Challenge {
-  id             String                @id @default(cuid())
-  isDeleted      Boolean               @default(false)
-  name           String
-  startDate      DateTime
-  endDate        DateTime
-  fermiQuestions CalibrationQuestion[]
-  teams          Team[]
+  id                  String                @id @default(cuid())
+  isDeleted           Boolean               @default(false)
+  name                String
+  startDate           DateTime
+  endDate             DateTime
+  fermiQuestions      CalibrationQuestion[]
+  aboveBelowQuestions AboveBelowQuestion[]
+  teams               Team[]
 }
 
 model Team {
-  id           String            @id @default(cuid())
-  name         String
-  challengeId  String
-  challenge    Challenge         @relation(fields: [challengeId], references: [id], onDelete: Cascade)
-  users        User[]
-  fermiAnswers TeamFermiAnswer[]
+  id                   String                 @id @default(cuid())
+  name                 String
+  challengeId          String
+  challenge            Challenge              @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  users                User[]
+  fermiAnswers         TeamFermiAnswer[]
+  TeamAboveBelowAnswer TeamAboveBelowAnswer[]
 }
 
 model TeamFermiAnswer {
@@ -224,4 +227,30 @@ model TeamFermiAnswer {
   createdAt  DateTime            @default(now())
   team       Team                @relation(fields: [teamId], references: [id], onDelete: Cascade)
   question   CalibrationQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
+}
+
+model AboveBelowQuestion {
+  id            String                 @id @default(cuid())
+  isDeleted     Boolean                @default(false)
+  content       String
+  quantity      String
+  answerIsAbove Boolean
+  preciseAnswer String
+  source        String                 @default("")
+  challenges    Challenge[]
+  teamAnswers   TeamAboveBelowAnswer[]
+}
+
+model TeamAboveBelowAnswer {
+  id         String             @id @default(cuid())
+  teamId     String
+  questionId String
+  skipped    Boolean            @default(false)
+  score      Float
+  timeSpent  Int?               @default(0)
+  correct    Boolean
+  confidence Float
+  createdAt  DateTime           @default(now())
+  team       Team               @relation(fields: [teamId], references: [id], onDelete: Cascade)
+  question   AboveBelowQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }

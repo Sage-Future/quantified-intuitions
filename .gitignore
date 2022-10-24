@@ -36,10 +36,11 @@ yarn-error.log*
 *.tsbuildinfo
 
 # large files
-*importData.ts
+*importData.ts*
 *importComments.ts
 *importQuestions.ts
 *importQuestionsGJO.ts
 *importCalibrationQuestions.ts
+*importAboveBelowQuestions.ts
 *.json
 *test.tsx

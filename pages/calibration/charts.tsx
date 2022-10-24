@@ -32,7 +32,7 @@ export const getServerSideProps = async (ctx: any) => {
   });
   user?.pastcasts.filter((pastcast) => pastcast.question.isDeleted === false);
   user?.CalibrationAnswer.filter(
-    (answer) => answer.question.isDeleted === false
+    (answer) => answer.question.isDeleted === false && answer.question.challengeOnly === false
   );
   return {
     props: {

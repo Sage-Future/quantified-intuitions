@@ -76,6 +76,15 @@ export const calibrationScore = (
 };
 
 
+export const logBinaryScore = (
+  estimate: number,
+  resolution: boolean,
+) => {
+  const likelihoodAssignedToOutcome = resolution ? estimate : 1 - estimate;
+  return (Math.log(likelihoodAssignedToOutcome) - Math.log(0.5)) * 100;
+};
+
+
 export const estimathonScore = (
   questions: {
     lowerBound: number,
@@ -84,7 +93,7 @@ export const estimathonScore = (
   }[],
 ) => {
   if (questions.length === 0) {
-    return 0
+    return 0;
   }
 
   // estimathon scoring rule from https://estimathon.com/how-to-play
@@ -93,7 +102,7 @@ export const estimathonScore = (
   questions.forEach(q => {
     const correct = q.answer >= q.lowerBound && q.answer <= q.upperBound;
     if (correct) {
-      // sum for each good interval of max/min
+      // sum max/min for each good interval
       score += q.upperBound / q.lowerBound;
     } else {
       incorrectCount++;
@@ -106,4 +115,4 @@ export const estimathonScore = (
   console.log({score, incorrectCount, questions});
 
   return score;
-}
+};

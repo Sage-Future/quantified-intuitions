@@ -1,10 +1,10 @@
-import clsx from "clsx";
 import { getSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 
 import { CalibrationQuestion } from "@prisma/client";
 
+import { ButtonArray } from "../../components/ButtonArray";
 import { CalibrationForm } from "../../components/CalibrationForm";
 import { Footer } from "../../components/Footer";
 import { NavbarCalibration } from "../../components/NavbarCalibration";
@@ -22,6 +22,7 @@ export const getServerSideProps = async (ctx: any) => {
   const calibrationQuestions = await Prisma.calibrationQuestion.findMany({
     where: {
       isDeleted: false,
+      challengeOnly: false,
     },
     include: {
       calibrationAnswers: true,
@@ -77,73 +78,12 @@ const Calibration = ({
               )}
             </h2>
           </div>
-          <div>
-            <label className="block text-sm font-medium text-gray-700">
-              Confidence Interval
-            </label>
-            <span className="mt-1 relative z-0 inline-flex shadow-sm rounded-md">
-              <button
-                type="button"
-                onClick={() => setConfidenceInterval("50%")}
-                className={clsx(
-                  "relative inline-flex items-center px-4 py-2 rounded-l-md border border-gray-300 text-sm font-medium focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  confidenceInterval === "50%"
-                    ? "text-white bg-indigo-700 "
-                    : "text-gray-700 bg-white hover:bg-gray-50"
-                )}
-              >
-                50%
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfidenceInterval("60%")}
-                className={clsx(
-                  "-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300  text-sm font-medium   focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  confidenceInterval === "60%"
-                    ? "text-white bg-indigo-700 "
-                    : "text-gray-700 bg-white hover:bg-gray-50"
-                )}
-              >
-                60%
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfidenceInterval("70%")}
-                className={clsx(
-                  "-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300  text-sm font-medium  focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  confidenceInterval === "70%"
-                    ? "text-white bg-indigo-700 "
-                    : "text-gray-700 bg-white hover:bg-gray-50"
-                )}
-              >
-                70%
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfidenceInterval("80%")}
-                className={clsx(
-                  "-ml-px relative inline-flex items-center px-4 py-2 border border-gray-300  text-sm font-medium  focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  confidenceInterval === "80%"
-                    ? "text-white bg-indigo-700 "
-                    : "text-gray-700 bg-white hover:bg-gray-50"
-                )}
-              >
-                80%
-              </button>
-              <button
-                type="button"
-                onClick={() => setConfidenceInterval("90%")}
-                className={clsx(
-                  "-ml-px relative inline-flex items-center px-4 py-2 rounded-r-md border border-gray-300  text-sm font-medium  focus:z-10 focus:outline-none focus:ring-1 focus:ring-indigo-500 focus:border-indigo-500",
-                  confidenceInterval === "90%"
-                    ? "text-white bg-indigo-700"
-                    : "text-gray-700 bg-white"
-                )}
-              >
-                90%
-              </button>
-            </span>
-          </div>
+          <ButtonArray 
+            selected={confidenceInterval}
+            setSelected={setConfidenceInterval}
+            options={["50%", "60%", "70%", "80%", "90%"]}
+            label={"Confidence interval"}
+          />
           <div className="prose">
             <h4 className="my-0 text-gray-500">Score:</h4>
             <h2 className="my-0">

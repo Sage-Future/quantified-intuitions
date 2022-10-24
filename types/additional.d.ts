@@ -1,4 +1,4 @@
-import { CalibrationAnswer, CalibrationQuestion, Challenge, Comment, Pastcast, Question, Team, User } from "@prisma/client";
+import { AboveBelowQuestion, CalibrationAnswer, CalibrationQuestion, Challenge, Comment, Pastcast, Question, Team, TeamAboveBelowAnswer, User } from "@prisma/client";
 
 export type PastcastWithQuestion = Pastcast & {
   question: Question;
@@ -26,6 +26,9 @@ export type ChallengeWithTeamsWithUsersAndQuestions = Challenge & {
   teams: TeamWithUsers[];
   fermiQuestions: (CalibrationQuestion & {
     teamAnswers: TeamFermiAnswer[];
+  })[];
+  aboveBelowQuestions: (AboveBelowQuestion & {
+    teamAnswers: TeamAboveBelowAnswer[];
   })[];
 };
 
