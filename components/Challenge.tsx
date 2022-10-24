@@ -11,10 +11,9 @@ export const Challenge = ({
   challenge: ChallengeWithTeamsWithUsersAndQuestions;
   teamId: string,
 }) => {
-  const initialFermiScore = challenge.fermiQuestions && challenge.fermiQuestions.findIndex(
+  const [fermiQuestionNum, setFermiQuestionNum] = useState(challenge.fermiQuestions && challenge.fermiQuestions.findIndex(
     question => !question.teamAnswers.some(answer => answer.teamId === teamId)
-  )
-  const [fermiQuestionNum, setFermiQuestionNum] = useState(initialFermiScore === 0 ? 10 : initialFermiScore);
+  ));
   const [aboveBelowQuestionNum, setAboveBelowQuestionNum] = useState(challenge.aboveBelowQuestions &&
     challenge.aboveBelowQuestions.findIndex(
       question => !question.teamAnswers.some(answer => answer.teamId === teamId)
@@ -25,7 +24,8 @@ export const Challenge = ({
     const teamAnswer = question.teamAnswers.find(answer => answer.teamId === teamId);
     return teamAnswer ? acc + teamAnswer.score : acc;
   }
-  const [fermiScore, setFermiScore] = useState(challenge.fermiQuestions.reduce(accumulatePoints, 0));
+  const fermiInitialPoints = challenge.fermiQuestions.reduce(accumulatePoints, 0)
+  const [fermiScore, setFermiScore] = useState(fermiInitialPoints === 0 ? 10 : fermiInitialPoints);
   const [aboveBelowScore, setAboveBelowScore] = useState(challenge.aboveBelowQuestions.reduce(accumulatePoints, 0));
 
   const [questionComplete, setQuestionComplete] = useState(false);
@@ -84,7 +84,7 @@ export const Challenge = ({
                   <p className="my-0">{"Estimate a lower and upper bound for the question below."}</p>
                   <p className="my-0">{"In this round, the goal is to keep your score as low as possible!"}</p>
                   <p className="my-0">{"A narrower interval keeps your score lower, if you're right."}</p>
-                  <p className="my-0">{"But if you're wrong, your score doubles!"}</p>
+                  <p className="my-0">{"But each time you're wrong, your final score doubles!"}</p>
                   <div className="pt-2">
                     <button
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
