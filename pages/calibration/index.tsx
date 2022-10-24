@@ -1,15 +1,17 @@
-import { getSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { useState } from "react";
+import clsx from 'clsx';
+import { getSession } from 'next-auth/react';
+import { useRouter } from 'next/router';
+import { useState } from 'react';
 
-import { CalibrationQuestion } from "@prisma/client";
+import { CalibrationQuestion } from '@prisma/client';
 
 import { ButtonArray } from "../../components/ButtonArray";
-import { CalibrationForm } from "../../components/CalibrationForm";
-import { Footer } from "../../components/Footer";
-import { NavbarCalibration } from "../../components/NavbarCalibration";
-import { Sorry } from "../../components/Sorry";
-import { Prisma } from "../../lib/prisma";
+import { CalibrationForm } from '../../components/CalibrationForm';
+import { Footer } from '../../components/Footer';
+import { NavbarCalibration } from '../../components/NavbarCalibration';
+import { NavbarPastcasting } from '../../components/NavbarPastcasting';
+import { Sorry } from '../../components/Sorry';
+import { Prisma } from '../../lib/prisma';
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -32,6 +34,14 @@ export const getServerSideProps = async (ctx: any) => {
     (question) =>
       !question.calibrationAnswers.some((answer) => answer.userId === userId)
   );
+  if (uniqueQuestions.length === 0) {
+    return {
+      props: {
+        session,
+        question: null,
+      },
+    };
+  }
   const randomQuestion =
     uniqueQuestions[Math.floor(Math.random() * uniqueQuestions.length)];
   return {
@@ -45,7 +55,7 @@ export const getServerSideProps = async (ctx: any) => {
 const Calibration = ({
   calibrationQuestion,
 }: {
-  calibrationQuestion: CalibrationQuestion;
+  calibrationQuestion: CalibrationQuestion | null;
 }) => {
   const [confidenceInterval, setConfidenceInterval] = useState<string>("80%");
   const router = useRouter();
@@ -63,6 +73,29 @@ const Calibration = ({
     setCountdown(countdown - 1);
     if (countdown < -10) nextQuestion();
   };
+
+  if (!calibrationQuestion) {
+    return (
+      <div className="flex flex-col min-h-screen justify-between">
+        <NavbarPastcasting />
+        <div className="py-10 grow">
+          <main>
+            <div>
+              <div className="flex flex-col items-center justify-center">
+                <h1 className="text-4xl font-bold text-center">
+                  {"You've answered all the questions!"}
+                </h1>
+                <p className="text-center">
+                  Check back later for more questions to answer.
+                </p>
+              </div>
+            </div>
+          </main>
+        </div>
+        <Footer />
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
