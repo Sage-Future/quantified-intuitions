@@ -27,6 +27,11 @@ const getChallengeLeaderboard = async (req: Request, res: NextApiResponse) => {
         include: {
             teamAnswers: true,
         },
+      },
+      aboveBelowQuestions: {
+        include: {
+            teamAnswers: true,
+        },
       }
     },
   });

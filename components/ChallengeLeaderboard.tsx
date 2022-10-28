@@ -1,5 +1,6 @@
 
 import { CheckCircleIcon, EllipsisHorizontalCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
+import { AboveBelowQuestion, CalibrationQuestion, Team } from "@prisma/client";
 import clsx from "clsx";
 import { deserialize } from "superjson";
 import { SuperJSONValue } from "superjson/dist/types";
@@ -11,11 +12,14 @@ import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional";
 export const ChallengeLeaderboard = ({
   challengeId,
   teamId,
-  latestQuestionIndex,
+  latestQuestion,
 }: {
   challengeId: string;
   teamId: string;
-  latestQuestionIndex: number | undefined;
+  latestQuestion: {
+    indexWithinType: number;
+    type: "fermi" | "aboveBelow";
+  } | null;
 }) => {
   const { data } = useSWR<SuperJSONValue>(challengeId && `/api/v0/getChallengeLeaderboard?challengeId=${challengeId}`,
     fetcher,
@@ -30,40 +34,50 @@ export const ChallengeLeaderboard = ({
     return <div>Loading...</div>;
   }
 
-  const { fermiQuestions, teams } = challenge;
-  const upToQuestionIndex = latestQuestionIndex === undefined
-    ? fermiQuestions.length - 1
-    :
-    latestQuestionIndex;
-  const getAnswer = (questionIndex: number, teamId: string) => {
-    const answers = fermiQuestions[questionIndex].teamAnswers
-    return answers && answers.find(answer => answer.teamId === teamId)
+  const getAnswer = (questionIndex: number, teamId: string, type: "fermi" | "aboveBelow") => {
+    const questions = type === "fermi" ? challenge.fermiQuestions : challenge.aboveBelowQuestions;
+    const answers = questions[questionIndex].teamAnswers;
+    // @ts-ignore
+    return answers && answers.find((answer: { teamId: string }) => answer.teamId === teamId);
   }
 
-  const formattedTeams = teams
+  const countPointsSoFar = (team: Team, questions: CalibrationQuestion[] | AboveBelowQuestion[], type: "fermi" | "aboveBelow") => (
+    // @ts-ignore
+    questions.reduce((acc, question, index) => {
+      if (latestQuestion && latestQuestion?.type === type && latestQuestion?.indexWithinType < index) {
+        return acc;
+      }
+
+      const answer = getAnswer(index, team.id, type);
+      return acc + (answer?.score || 0);
+    }, 0)
+  );
+
+  const formattedTeams = challenge.teams
     .map((team) => {
-      const answer = getAnswer(upToQuestionIndex, team.id);
-      return {
+      const fermiPointsSoFar = countPointsSoFar(team, challenge.fermiQuestions, "fermi");
+      const aboveBelowPointsSoFar = countPointsSoFar(team, challenge.aboveBelowQuestions, "aboveBelow");
+      const latestAnswer = latestQuestion && getAnswer(latestQuestion.indexWithinType, team.id, latestQuestion.type);
+      return ({
         id: team.id,
         name: team.name,
-        questionPoints: answer === undefined ? "Still estimating..." : answer.score,
-        correct: answer?.correct,
-        pointsSoFar: fermiQuestions.reduce((acc, question, index) => (
-          index <= upToQuestionIndex ?
-            acc + (getAnswer(index, team.id)?.score || 0)
-            : acc)
-          , 0),
-      }
+        questionPoints: latestAnswer ? latestAnswer.score : "",
+        correct: latestAnswer && latestAnswer.score > 0,
+        fermiPointsSoFar,
+        aboveBelowPointsSoFar,
+        totalPoints: fermiPointsSoFar + aboveBelowPointsSoFar,
+      });
     })
     .sort((a, b) => {
-      // sort ascending, (lower scores are better with estimathon)
-      return a.pointsSoFar - b.pointsSoFar;
+      // sort descending
+      return b.totalPoints - a.totalPoints;
     });
 
   const columns = {
-    "Team": "name",
-    ...(latestQuestionIndex === undefined ? {} : { "Points on this question": "questionPoints" }),
-    "Points so far": "pointsSoFar",
+    ...(latestQuestion === null ? {} : { "This question": "questionPoints" }),
+    "Round 1": "fermiPointsSoFar",
+    "Round 2": "aboveBelowPointsSoFar",
+    "Total": "totalPoints",
   }
   return (
     <div className="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -73,13 +87,33 @@ export const ChallengeLeaderboard = ({
             <table className="min-w-full divide-y divide-gray-300">
               <thead className="bg-gray-50">
                 <tr>
-                  {["", ...Object.keys(columns)].map((header) => (
+                  <th
+                    key={"team"}
+                    scope="col"
+                    rowSpan={2}
+                    colSpan={2}
+                    className="
+            px-3 pt-3.5 first:pl-4 first:pr-3 text-left text-sm font-semibold text-gray-900 first:sm:pl-6"
+                  >
+                  </th>
+
+                  <th
+                    key={"points"}
+                    scope="col"
+                    colSpan={Object.keys(columns).length}
+                    className="px-3 py-3.5 text-center text-sm font-semibold text-gray-900 border-b-2 border-gray-200"
+                  >
+                    Points so far
+                  </th>
+                </tr>
+                <tr>
+                  {Object.keys(columns).map((header) => (
                     //header is valid sort type
                     <th
                       key={header}
                       scope="col"
                       className="
-            px-3 py-3.5 first:py-3.5 first:pl-4 first:pr-3 text-left text-sm font-semibold text-gray-900 first:sm:pl-6"
+            px-3 py-3.5 pt-3.5 first:pl-4 first:pr-3 text-left text-sm font-semibold text-gray-500 first:sm:pl-6"
                     >
                       {header}
                     </th>
@@ -93,7 +127,16 @@ export const ChallengeLeaderboard = ({
                       key={"place"}
                       className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
                     >
-                      {teamIndex + 1}
+                      <div className={clsx((teamIndex + 1) <= 3 && ["bg-amber-200", "bg-slate-200", "bg-orange-200"][teamIndex],
+                        "w-5 h-5 text-xs flex items-center justify-center rounded-full")}>
+                        {teamIndex + 1}
+                      </div>
+                    </td>
+                    <td
+                      key={"team"}
+                      className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
+                    >
+                      {team.name}
                     </td>
                     {Object.values(columns).map((key) => (
                       <td
@@ -102,7 +145,7 @@ export const ChallengeLeaderboard = ({
                       >
                         {
                           key === "questionPoints" && (
-                            team[key] === "Still estimating..." ?
+                            team[key] === "" ?
                               <EllipsisHorizontalCircleIcon className="mr-2 h-5 w-5 text-gray-400 inline" aria-hidden="true" />
                               :
                               (team.correct ?
@@ -114,7 +157,7 @@ export const ChallengeLeaderboard = ({
                         }
                         {
                           //@ts-ignore
-                          valueToString(team[key], ["pointsSoFar", "questionPoints"].includes(key), true)
+                          team[key] && valueToString(team[key], key.includes("Points"), true)
                         }
                       </td>
                     ))}

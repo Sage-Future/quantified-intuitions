@@ -9,14 +9,14 @@ import { CalibrationQuestion } from "@prisma/client";
 import { Errors } from "../components/Errors";
 import { SubmitForm } from "../components/SubmitForm";
 import { convertNumber, formatInput, formatResult } from "../lib/services/format";
-import { EstimathonResult } from "./EstimathonResult";
 import { LoadingButton } from "./LoadingButton";
+import { Result } from "./Result";
 
 export const FermiForm = ({
   calibrationQuestion,
   reduceCountdown,
   nextQuestion,
-  setScore,
+  addToScore,
   teamId,
   setQuestionComplete,
   showScoringHint,
@@ -24,12 +24,12 @@ export const FermiForm = ({
   calibrationQuestion: CalibrationQuestion;
   reduceCountdown: () => void;
   nextQuestion: () => void;
-  setScore: (score: number) => void;
+  addToScore: (score: number) => void;
   teamId: string;
   setQuestionComplete: (isComplete: boolean) => void;
   showScoringHint: boolean;
 }) => {
-  const { register, watch, handleSubmit, setValue, setFocus } = useForm();
+  const { register, watch, handleSubmit, setFocus } = useForm();
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
   const [correct, setCorrect] = useState<boolean | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -86,9 +86,9 @@ export const FermiForm = ({
       if (res.status === 201) {
         const json = await res.json();
         setQuestionComplete(true);
-        setPointsEarned(json.changeInScore);
+        setPointsEarned(json.score);
+        addToScore(json.score);
         setCorrect(json.correct);
-        setScore(json.score);
       }
     });
     setIsLoading(false);
@@ -254,9 +254,8 @@ export const FermiForm = ({
             <SubmitForm disabled={isLoading} isLoading={isLoading} />
           ) : (
             <div className="grid gap-y-6">
-              <EstimathonResult
-                pointsGained={pointsEarned}
-                correct={correct}
+              <Result
+                pointsEarned={pointsEarned}
                 skipped={false}
                 answer={false}
                 stringAnswer={formatResult(
@@ -264,7 +263,6 @@ export const FermiForm = ({
                   calibrationQuestion.prefix,
                   calibrationQuestion.postfix
                 )}
-                showScoringHint={showScoringHint}
               />
               <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>

@@ -13,7 +13,9 @@ export const ChallengeCountdown = ({
                 <h4 className="text-red-500 text-sm">Challenge is finished!</h4>
                 :
                 <h4 className="text-gray-400 text-sm" suppressHydrationWarning={true}>
-                    {days > 0 ? `${days} day,`: ""} {hours}:{minutes}:{seconds} remaining
+                    {days > 0 ? (
+                        `${days} day${days > 1 ? "s" : ""},`
+                    ): ""} {hours}:{minutes}:{seconds} remaining
                 </h4>
             }
         </>
