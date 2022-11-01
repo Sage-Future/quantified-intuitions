@@ -1,4 +1,6 @@
+import { InformationCircleIcon } from "@heroicons/react/24/solid";
 import { useState } from "react";
+import { CHALLENGE_CONFIDENCE_INTERVAL } from "../lib/services/magicNumbers";
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional";
 import { AboveBelowForm } from "./AboveBelowForm";
 import { ChallengeCountdown } from "./ChallengeCountdown";
@@ -24,9 +26,8 @@ export const Challenge = ({
   const accumulatePoints = (acc: number, question: { teamAnswers: { teamId: string, score: number }[] }) => {
     const teamAnswer = question.teamAnswers.find(answer => answer.teamId === teamId);
     return teamAnswer ? acc + teamAnswer.score : acc;
-  }
-  const fermiInitialPoints = challenge.fermiQuestions.reduce(accumulatePoints, 0)
-  const [fermiScore, setFermiScore] = useState(fermiInitialPoints === 0 ? 10 : fermiInitialPoints);
+  };
+  const [fermiScore, setFermiScore] = useState(challenge.fermiQuestions.reduce(accumulatePoints, 0));
   const [aboveBelowScore, setAboveBelowScore] = useState(challenge.aboveBelowQuestions.reduce(accumulatePoints, 0));
 
   const [questionComplete, setQuestionComplete] = useState(false);
@@ -38,8 +39,6 @@ export const Challenge = ({
 
   const fermiQuestion = fermiComplete ? undefined : challenge.fermiQuestions[fermiQuestionNum];
   const aboveBelowQuestion = ((fermiComplete && !challengeComplete) || !challenge.aboveBelowQuestions) && challenge.aboveBelowQuestions[aboveBelowQuestionNum];
-
-  console.log({fermiQuestionNum, aboveBelowQuestionNum, fermiComplete, aboveBelowComplete, challengeComplete, fqs: challenge.fermiQuestions.length});
 
   return (
     <div className="px-4 py-6 grow">
@@ -90,6 +89,14 @@ export const Challenge = ({
                   <p className="my-0">{"Estimate a lower and upper bound for the question below."}</p>
                   <p className="my-0">{"A narrower interval gets you more points, if you're right."}</p>
                   <p className="my-0">{"But if you're wrong, a narrower interval loses you more points!"}</p>
+
+                  <div className="mt-4 mb-2 text-sm flex flex-row">
+                    <InformationCircleIcon className="mr-2 basis-10 text-indigo-500 inline-block" />
+                    <p className="my-0">
+                      {`To maximise your score, enter your ${CHALLENGE_CONFIDENCE_INTERVAL}% confidence interval: a range narrow enough that you think there's a ${
+                        CHALLENGE_CONFIDENCE_INTERVAL}% chance the right answer is inside it.`}
+                    </p>
+                  </div>
                   <div className="pt-2">
                     <button
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
