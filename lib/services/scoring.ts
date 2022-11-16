@@ -81,7 +81,7 @@ export const logBinaryScore = (
   resolution: boolean,
 ) => {
   const likelihoodAssignedToOutcome = resolution ? estimate : 1 - estimate;
-  return (Math.log(likelihoodAssignedToOutcome) - Math.log(0.5)) * 100;
+  return (Math.log(likelihoodAssignedToOutcome) - Math.log(0.5)) * 10;
 };
 
 
