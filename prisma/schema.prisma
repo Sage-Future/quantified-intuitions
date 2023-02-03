@@ -202,6 +202,7 @@ model Challenge {
   fermiQuestions      CalibrationQuestion[]
   aboveBelowQuestions AboveBelowQuestion[]
   teams               Team[]
+  unlisted            Boolean               @default(false)
 }
 
 model Team {
