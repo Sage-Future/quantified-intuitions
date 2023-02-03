@@ -254,3 +254,10 @@ model TeamAboveBelowAnswer {
   team       Team               @relation(fields: [teamId], references: [id], onDelete: Cascade)
   question   AboveBelowQuestion @relation(fields: [questionId], references: [id], onDelete: Cascade)
 }
+
+model MailingListSubscriber {
+  id        String   @id @default(cuid())
+  email     String
+  createdAt DateTime @default(now())
+  tags      String[] 
+}

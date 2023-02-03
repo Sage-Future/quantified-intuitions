@@ -22,15 +22,20 @@ export const NavbarChallenge = () => {
   const { pathname } = useRouter();
   const navigation = [
     {
-      name: "Challenge",
-      href: "/challenge",
-      current: pathname === "/challenge",
+      name: "The Estimation Game",
+      href: "/estimation-game",
+      current: pathname === "/estimation-game",
     },
     {
       name: "Discord",
       href: "https://discord.gg/mt9YVB8VDE",
       current: false,
     },
+    {
+      name: "Info for organisers",
+      href: "/estimation-game/for-organisers",
+      current: pathname === "/estimation-game/for-organisers",
+    }
     /*
     { name: "Projects", href: "#", current: false },
     { name: "Calendar", href: "#", current: false },
@@ -44,7 +49,7 @@ export const NavbarChallenge = () => {
     session
       ? {
           name: "Settings",
-          href: "/challenge/settings",
+          href: "/estimation-game/settings",
         }
       : null,
     {
@@ -70,7 +75,7 @@ export const NavbarChallenge = () => {
                   </Disclosure.Button>
                 </div>
                 <div className="flex-shrink-0 flex items-center">
-                  <Link href="/challenge">
+                  <Link href="/estimation-game">
                     <a className="prose">
                       <div className="flex items-center">
                         <ScaleIcon className="w-8 h-8 text-indigo-600" />

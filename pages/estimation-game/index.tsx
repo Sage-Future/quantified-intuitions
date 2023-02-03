@@ -19,12 +19,9 @@ export const getServerSideProps = async (ctx: any) => {
   }
   const userId = session?.user?.id || "";
 
-  const activeChallenges = await Prisma.challenge.findMany({
+  const activeAndUpcomingChallenges = await Prisma.challenge.findMany({
     where: {
       isDeleted: false,
-      startDate: {
-        lte: new Date()
-      },
       endDate: {
         gte: new Date()
       },
@@ -37,7 +34,7 @@ export const getServerSideProps = async (ctx: any) => {
       },
     },
   });
-  const participatingInChallenges = activeChallenges.filter(
+  const participatingInChallenges = activeAndUpcomingChallenges.filter(
     challenge => challenge.teams.some(team => team.users.some(user => user.id === userId))
   );
 
@@ -69,7 +66,7 @@ export const getServerSideProps = async (ctx: any) => {
   return {
     props: {
       session,
-      activeChallenges,
+      activeAndUpcomingChallenges,
       userChallenges,
       user: session.user,
     },
@@ -77,11 +74,11 @@ export const getServerSideProps = async (ctx: any) => {
 };
 
 const ChallengePage = ({
-  activeChallenges,
+  activeAndUpcomingChallenges,
   userChallenges,
   user,
 }: {
-  activeChallenges: ChallengeWithTeamsWithUsers[];
+  activeAndUpcomingChallenges: ChallengeWithTeamsWithUsers[];
   userChallenges: ChallengeWithTeamsWithUsersAndQuestions[];
   user: User;
 }) => {
@@ -112,7 +109,7 @@ const ChallengePage = ({
             <p>Error: challenge not found.</p>
           :
           <JoinChallenge
-            activeChallenges={activeChallenges}
+            activeAndUpcomingChallenges={activeAndUpcomingChallenges}
             user={user}
             setCurrentChallenge={setCurrentChallenge}
           />
