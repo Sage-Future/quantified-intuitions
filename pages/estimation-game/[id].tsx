@@ -7,6 +7,7 @@ import { Challenge } from "../../components/Challenge"
 import { Footer } from "../../components/Footer"
 import { JoinChallenge } from "../../components/JoinChallenge"
 import { NavbarChallenge } from "../../components/NavbarChallenge"
+import { Prisma } from "../../lib/prisma"
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../../types/additional"
 
 export type ChallengeProps = {
@@ -25,7 +26,7 @@ export const getServerSideProps: GetServerSideProps<ChallengeProps | {}> = async
   }
   const challengeId = ctx.query.id as string
 
-  const challenge = await Prisma?.challenge.findUnique({
+  const challenge = await Prisma.challenge.findUnique({
     where: { id: challengeId },
     include: {
       fermiQuestions: {
