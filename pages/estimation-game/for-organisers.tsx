@@ -19,7 +19,7 @@ const Faq = () => {
     {
       question: "When?",
       answer:
-        "Thursday 16th or Friday 17th Feb, any time.",
+        "The first game is live Monday 20th until Sunday 26th Feb. You can host an event at any time during that week.",
     },
     {
       question: "How long?",
@@ -85,13 +85,13 @@ const Faq = () => {
             <ul className="list-none space-y-4 pl-0">
               <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /> <span>{'Players answer two rounds of Fermi estimation questions, like "How many piano tuners are in New York?"'}</span></li>
               <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Form teams and see how your scores compare to other EA groups and orgs around the world"}</span></li>
-              <li className="flex items-center space-x-3"><RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Designed to be super easy for you to organise the event"}</span></li>
+              <li className="flex items-center space-x-3"><RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Designed to be super easy for you to organise an event"}</span></li>
             </ul>
           </div>
 
           <p className="">All you need to do is get bring some people together and point them to <Link href="/estimation-game">The Estimation Game</Link>{"'s website."}</p>
 
-          <MailingListSignup buttonText="Remind me about the event" tags={["estimation-game-organiser"]}/>
+          <MailingListSignup buttonText="Send me email reminders about the event" tags={["estimation-game-organiser"]}/>
         </div>
 
         <div className="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:px-8">
