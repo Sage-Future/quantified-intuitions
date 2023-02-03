@@ -69,6 +69,7 @@ const ChallengePage = ({
             .map((challenge) => (
               <JoinChallenge
                 challenge={challenge}
+                key={challenge.id}
                 user={user}
                 onJoin={() => router.replace(`estimation-game/${challenge.id}`)}
               />
