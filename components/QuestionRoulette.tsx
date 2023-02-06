@@ -1,4 +1,5 @@
 import Router, { useRouter } from "next/router";
+import { event } from "nextjs-google-analytics";
 
 import { QuestionWithCommentsAndPastcasts } from "../types/additional";
 import { ForecastForm } from "./ForecastForm";
@@ -12,6 +13,10 @@ export const QuestionRoulette = ({
   const router = useRouter();
   const nextQuestion = () => {
     router.replace(router.asPath);
+    event("pastcasting_next_question", {
+      app: "pastcasting",
+      question_id: question.id,
+    });
   };
   return (
     <ThreeColumnLayout

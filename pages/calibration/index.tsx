@@ -1,10 +1,10 @@
-import clsx from 'clsx';
 import { getSession } from 'next-auth/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 
 import { CalibrationQuestion } from '@prisma/client';
 
+import { event } from 'nextjs-google-analytics';
 import { ButtonArray } from "../../components/ButtonArray";
 import { CalibrationForm } from '../../components/CalibrationForm';
 import { Footer } from '../../components/Footer';
@@ -68,6 +68,10 @@ const Calibration = ({
   const nextQuestion = () => {
     router.replace(router.asPath);
     setCountdown(180);
+    event("calibration_next_question", {
+      app: "calibration",
+      question_id: calibrationQuestion?.id,
+    });
   };
   const reduceCountdown = () => {
     setCountdown(countdown - 1);

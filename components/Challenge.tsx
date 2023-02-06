@@ -1,4 +1,5 @@
 import { InformationCircleIcon } from "@heroicons/react/24/solid";
+import { event } from "nextjs-google-analytics";
 import { useState } from "react";
 import { CHALLENGE_CONFIDENCE_INTERVAL } from "../lib/services/magicNumbers";
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional";
@@ -39,6 +40,12 @@ export const Challenge = ({
 
   const fermiQuestion = fermiComplete ? undefined : challenge.fermiQuestions[fermiQuestionNum];
   const aboveBelowQuestion = ((fermiComplete && !challengeComplete) || !challenge.aboveBelowQuestions) && challenge.aboveBelowQuestions[aboveBelowQuestionNum];
+
+  const nextQuestionEvent = () => event("estimation_game_next_question", {
+    app: "estimation_game",
+    challenge_id: challenge.id,
+    team_id: teamId,
+  });
 
   return (
     <div className="px-4 py-6 grow">
@@ -93,8 +100,7 @@ export const Challenge = ({
                   <div className="mt-4 mb-2 text-sm flex flex-row">
                     <InformationCircleIcon className="mr-2 basis-10 text-indigo-500 inline-block" />
                     <p className="my-0">
-                      {`To maximise your score, enter your ${CHALLENGE_CONFIDENCE_INTERVAL}% confidence interval: a range narrow enough that you think there's a ${
-                        CHALLENGE_CONFIDENCE_INTERVAL}% chance the right answer is inside it.`}
+                      {`To maximise your score, enter your ${CHALLENGE_CONFIDENCE_INTERVAL}% confidence interval: a range narrow enough that you think there's a ${CHALLENGE_CONFIDENCE_INTERVAL}% chance the right answer is inside it.`}
                     </p>
                   </div>
                   <div className="pt-2">
@@ -111,7 +117,10 @@ export const Challenge = ({
                 key={fermiQuestion.id}
                 teamId={teamId}
                 addToScore={(score) => setFermiScore(fermiScore + score)}
-                nextQuestion={() => setFermiQuestionNum(fermiQuestionNum + 1)}
+                nextQuestion={() => {
+                  setFermiQuestionNum(fermiQuestionNum + 1)
+                  nextQuestionEvent()
+                }}
                 reduceCountdown={() => { }}
                 setQuestionComplete={setQuestionComplete}
                 showScoringHint={fermiQuestionNum === 0}
@@ -142,7 +151,10 @@ export const Challenge = ({
                 teamId={teamId}
                 addToScore={(newPoints) => setAboveBelowScore(aboveBelowScore + newPoints)}
                 setQuestionComplete={setQuestionComplete}
-                nextQuestion={() => setAboveBelowQuestionNum(aboveBelowQuestionNum + 1)}
+                nextQuestion={() => {
+                  setAboveBelowQuestionNum(aboveBelowQuestionNum + 1)
+                  nextQuestionEvent()
+                }}
                 showScoringHint={false}
               />
             </>

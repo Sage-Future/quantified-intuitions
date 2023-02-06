@@ -1,4 +1,5 @@
 import clsx from "clsx"
+import { event } from "nextjs-google-analytics"
 import { useState } from "react"
 import { Errors } from "./Errors"
 
@@ -32,6 +33,12 @@ export const MailingListSignup = ({
     }).then(async (res) => {
       if (res.status === 200) {
         setSubmissionState("success")
+
+        event("mailing_list_join", {
+          category: "mailing_list",
+          email,
+          tags,
+        })
       } else {
         setErrors(["There was an error joining the mailing list"])
         setSubmissionState("idle")
