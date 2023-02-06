@@ -7,6 +7,7 @@ import Head from "next/head";
 import { Meta } from "../components/Meta";
 
 import type { AppProps } from "next/app";
+import { GoogleAnalytics } from "nextjs-google-analytics";
 function MyApp({
   Component,
   pageProps,
@@ -19,6 +20,7 @@ function MyApp({
         <title>Pastcasting</title>
       </Head>
       <Meta />
+      <GoogleAnalytics trackPageViews />
       <Component {...pageProps} />
     </SessionProvider>
   );
