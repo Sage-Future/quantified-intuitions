@@ -63,8 +63,6 @@ const RoomPage: NextPage<ChallengeProps> = ({ challenge }) => {
     team.users.some((theUser) => theUser.id === user?.id)
   )
 
-  console.log(challenge)
-
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarChallenge />

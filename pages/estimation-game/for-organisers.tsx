@@ -1,4 +1,5 @@
-import { RocketLaunchIcon, TrophyIcon, UsersIcon } from "@heroicons/react/24/solid"
+import { LightBulbIcon } from "@heroicons/react/24/outline"
+import { GlobeAltIcon, GlobeAsiaAustraliaIcon, GlobeEuropeAfricaIcon, RocketLaunchIcon, TrophyIcon, UsersIcon } from "@heroicons/react/24/solid"
 import { GetStaticProps } from "next"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
@@ -24,16 +25,16 @@ const Faq = () => {
     {
       question: "How long?",
       answer:
-        "Around 40 mins. If you want a longer event, you could do some [pastcasting](https://quantifiedintuitions.org/pastcasting) questions afterwards, or just hang out.",
+        "Around 40 mins. If you want a longer event, you could do some [pastcasting](https://quantifiedintuitions.org/pastcasting) questions together afterwards, or just hang out.",
     },
     {
       question: "What does The Estimation Game look like?",
-      answer: "Check out this sample challenge [coming soon]. (No spoilers here! The questions will be different for the real thing)"
+      answer: "Check out [this spoiler-free demo game](https://quantifiedintuitions.org/estimation-game/demo)."
     },
     {
       question: "How easy is it to organise this event?",
       answer:
-        "Super easy! To save you time, you can use [this sample event title and description](https://docs.google.com/document/d/1y5eROqXhcDf9qFmoFmR1-fQNQklqsSZi9bQRNFuydas/edit?usp=sharing) that you can tailor for your group. All you need to do is get some people together in a room and start playing.",
+        "Super easy! To save you time, you can use [this sample event title, description, and header image](https://docs.google.com/document/d/1y5eROqXhcDf9qFmoFmR1-fQNQklqsSZi9bQRNFuydas/edit?usp=sharing) that you can tailor for your group. All you need to do is get some people together in a room and start playing.",
     },
     {
       question: "Who should I invite?",
@@ -49,6 +50,11 @@ const Faq = () => {
       answer: "Each team will need a phone or laptop to play. We'd recommend teams of 2-3, or at most 5 people. Players might want to use pen and paper to make notes, or they can use a notetaking app or [Guesstimate](https://getguesstimate.com).",
     },
     {
+      question: "In detail, how does the event work?",
+      answer:
+        "Form your group into teams of 2-5 people. One person from each team opens [The Estimation Game](https://quantifiedintuitions.org/estimation-game) on their phone or laptop and signs in with their Google account. Teams can go at their own pace through ~10 questions in two rounds. They'll win points for good estimates, and see how their score compares to other teams in your group and around the world on the leaderboard. The team with the highest score wins! See it in action with the [demo game](https://quantifiedintuitions.org/estimation-game/demo).",
+    },
+    {
       question: "This is the 'first monthly' Estimation Game?",
       answer: "This is the first ever! A new challenge will drop each month, if you sign up above we'll email you about it.",
     },
@@ -58,7 +64,7 @@ const Faq = () => {
     },
     {
       question: "Can my team play remotely?",
-      answer: "Yes - just have one person use the website and screenshare the questions.",
+      answer: "Yes - just have one player use the website and screenshare the questions.",
     },
     {
       question: "How can I submit feedback about the site?",
@@ -66,7 +72,7 @@ const Faq = () => {
     },
     {
       question: "Who made this?",
-      answer: "We're [Sage](https://forum.effectivealtruism.org/users/sage). We previously made [Pastcasting](https://www.quantifiedintuitions.org/pastcasting) - predict past events to rapidly practise forecasting - and [Calibration](https://www.quantifiedintuitions.org/calibration) - answer EA trivia questions to calibrate your uncertainty.",
+      answer: "We're [Sage](https://forum.effectivealtruism.org/users/sage). We made [Pastcasting](https://www.quantifiedintuitions.org/pastcasting) - predict past events to rapidly practise forecasting - and [Calibration](https://www.quantifiedintuitions.org/calibration) - answer EA trivia questions to calibrate your uncertainty.",
     },
   ]
   return (
@@ -85,11 +91,12 @@ const Faq = () => {
             <ul className="list-none space-y-4 pl-0">
               <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /> <span>{'Players answer two rounds of Fermi estimation questions, like "How many piano tuners are in New York?"'}</span></li>
               <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Form teams and see how your scores compare to other EA groups and orgs around the world"}</span></li>
+              <li className="flex items-center space-x-3"><GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Build community, train your epistemics, and get comfortable putting numbers on things"}</span></li>
               <li className="flex items-center space-x-3"><RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Designed to be super easy for you to organise an event"}</span></li>
             </ul>
           </div>
 
-          <p className="">All you need to do is get bring some people together and point them to <Link href="/estimation-game">The Estimation Game</Link>{"'s website."}</p>
+          <p className="">All you need to do is bring some people together and point them to <Link href="/estimation-game">The Estimation Game</Link>{"'s website."}</p>
 
           <MailingListSignup buttonText="Send me email reminders about the event" tags={["estimation-game-organiser"]}/>
         </div>

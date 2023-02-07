@@ -44,6 +44,7 @@ export const Challenge = ({
   const nextQuestionEvent = () => event("estimation_game_next_question", {
     app: "estimation_game",
     challenge_id: challenge.id,
+    challenge_name: challenge.name,
     team_id: teamId,
   });
 
