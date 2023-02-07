@@ -67,6 +67,14 @@ const Faq = () => {
       answer: "Yes - just have one player use the website and screenshare the questions.",
     },
     {
+      question: "Can I run a game outside the dates listed?",
+      answer: "You can either wait until the next month's challenge drops, or use the [demo game](https://quantifiedintuitions.org/estimation-game/demo) any time. In the future, you'll be able to run games with past challenges.",
+    },
+    {
+      question: "I'm hosting a large event, conference or retreat, can I run a bespoke Estimation Game?",
+      answer: "We're interested! Get in touch at adam@sage-future.org.",
+    },
+    {
       question: "How can I submit feedback about the site?",
       answer: "You can email us at adam@sage-future.org or message us on our [Discord](https://discord.gg/mt9YVB8VDE).",
     },
