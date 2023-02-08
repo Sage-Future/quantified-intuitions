@@ -9,8 +9,6 @@ import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from "../../types
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
     return { props: {} };
   }
   const user = await Prisma.user.findUnique({

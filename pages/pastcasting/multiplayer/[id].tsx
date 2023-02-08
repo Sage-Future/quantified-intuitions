@@ -30,8 +30,6 @@ export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
 ) => {
   const session = await getSession(ctx);
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
     return { props: {} };
   }
   const roomId = ctx.query.id as string;

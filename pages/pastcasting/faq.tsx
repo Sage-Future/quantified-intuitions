@@ -55,7 +55,7 @@ const Faq = () => {
     },
     {
       question: "How can I submit feedback about the site?",
-      answer: "You can email us at aaron@sage-future.org",
+      answer: "You can email us at hello@sage-future.org",
     },
   ];
   return (

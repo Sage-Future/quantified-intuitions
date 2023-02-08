@@ -20,8 +20,6 @@ export const getServerSideProps: GetServerSideProps<ChallengeProps | {}> = async
 ) => {
   const session = await getSession(ctx)
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" })
-    ctx.res.end()
     return { props: {} }
   }
   const challengeId = ctx.query.id as string

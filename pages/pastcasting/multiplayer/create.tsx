@@ -12,8 +12,6 @@ import { Success } from "../../../components/Success";
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await getSession(ctx);
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
     return { props: {} };
   }
   return {

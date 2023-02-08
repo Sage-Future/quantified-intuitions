@@ -1,3 +1,4 @@
+import { NextPageContext } from 'next';
 import { getSession } from 'next-auth/react';
 
 import { Charts } from '../../components/Charts';
@@ -6,11 +7,9 @@ import { NavbarCalibration } from '../../components/NavbarCalibration';
 import { Prisma } from '../../lib/prisma';
 import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from '../../types/additional';
 
-export const getServerSideProps = async (ctx: any) => {
+export const getServerSideProps = async (ctx: NextPageContext) => {
   const session = await getSession(ctx);
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" });
-    ctx.res.end();
     return { props: {} };
   }
   const user = await Prisma.user.findUnique({

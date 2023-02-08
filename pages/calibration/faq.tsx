@@ -21,7 +21,7 @@ const Faq = () => {
     {
       question: "How does the scoring system work?",
       answer:
-        "Interval scoring uses the formula developed by [this paper](https://arxiv.org/abs/1808.07501). The numbers are chosen such that your expected score per question is roughly maximized when you give your true beliefs.",
+        "Interval scoring uses the formula developed by [Greenberg, 2018](https://arxiv.org/abs/1808.07501). The numbers are chosen such that your expected score per question is roughly maximized when you give your true beliefs.",
     },
     {
       question: "How do I know if I'm calibrated?",
@@ -31,7 +31,7 @@ const Faq = () => {
     {
       question: "I found an issue with one of the questions!",
       answer:
-        "Please leave a comment at our [Airtable](https://airtable.com/invite/l?inviteId=invDBtdXf5X1JQ37j&inviteToken=1df3077d8260ccc0ec28f6a35dbd4fba53b0de2d97ae2c4ee884ed28c5c21f81&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts) or email us at aaron@sage-future.org. ",
+        "Please leave a comment at our [Airtable](https://airtable.com/invite/l?inviteId=invDBtdXf5X1JQ37j&inviteToken=1df3077d8260ccc0ec28f6a35dbd4fba53b0de2d97ae2c4ee884ed28c5c21f81&utm_medium=email&utm_source=product_team&utm_content=transactional-alerts) or email us at hello@sage-future.org. ",
     },
     {
       question: "When will feature X be available?",
@@ -40,7 +40,7 @@ const Faq = () => {
     },
     {
       question: "How can I submit feedback about the site?",
-      answer: "You can email us at aaron@sage-future.org.",
+      answer: "You can email us at hello@sage-future.org.",
     },
   ];
   return (

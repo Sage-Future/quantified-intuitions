@@ -12,8 +12,6 @@ import { ChallengeWithTeamsWithUsers } from "../../types/additional"
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx)
   if (!session) {
-    ctx.res.writeHead(302, { Location: "/api/auth/signin" })
-    ctx.res.end()
     return { props: {} }
   }
   const userId = session?.user?.id || ""

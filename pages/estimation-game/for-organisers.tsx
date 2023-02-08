@@ -1,5 +1,4 @@
-import { LightBulbIcon } from "@heroicons/react/24/outline"
-import { GlobeAltIcon, GlobeAsiaAustraliaIcon, GlobeEuropeAfricaIcon, RocketLaunchIcon, TrophyIcon, UsersIcon } from "@heroicons/react/24/solid"
+import { GlobeAsiaAustraliaIcon, RocketLaunchIcon, TrophyIcon, UsersIcon } from "@heroicons/react/24/solid"
 import { GetStaticProps } from "next"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
