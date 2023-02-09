@@ -5,14 +5,11 @@ import { useRouter } from "next/router";
 import { Fragment } from "react";
 
 import { Disclosure, Menu, Transition } from "@headlessui/react";
-import {
-  ArrowLeftOnRectangleIcon, Bars3Icon, ScaleIcon, XMarkIcon
-} from "@heroicons/react/24/outline";
+import { Bars3Icon, ScaleIcon, XMarkIcon } from "@heroicons/react/24/outline";
 
-import { NextSeo } from "next-seo";
 import { STOCK_PHOTO } from "../lib/services/magicNumbers";
 
-export const NavbarCalibration = () => {
+export const NavbarGeneric = () => {
   const { data: session, status } = useSession();
 
   const user = {
@@ -20,51 +17,21 @@ export const NavbarCalibration = () => {
     email: session?.user?.email ?? "",
     imageUrl: session?.user?.image ?? STOCK_PHOTO,
   };
-  const { pathname } = useRouter();
-  const navigation = [
-    {
-      name: "Calibration",
-      href: "/calibration",
-      current: pathname === "/calibration",
-    },
-    {
-      name: "Charts",
-      href: "/calibration/charts",
-      current: pathname === "/calibration/charts",
-    },
-    {
-      name: "FAQ",
-      href: "/calibration/faq",
-      current: pathname === "/calibration/faq",
-    },
-    {
-      name: "Discord",
-      href: "https://discord.gg/mt9YVB8VDE",
-      current: false,
-    },
-    /*
-    { name: "Projects", href: "#", current: false },
-    { name: "Calendar", href: "#", current: false },
-    */
+  const navigation: { name: string, href: string, current: boolean }[] = [
+    // {
+    //   name: "Discord",
+    //   href: "https://discord.gg/mt9YVB8VDE",
+    //   current: false,
+    // },
   ];
   const userNavigation = [
-    /*
-    { name: "Your Profile", href: "#" },
-    { name: "Settings", href: "#" },
-    */
-    session
-      ? {
-        name: "Settings",
-        href: "/calibration/settings",
-      }
-      : null,
     {
       name: session ? "Sign out" : "Sign in",
+      href: undefined,
     },
   ].filter(Boolean);
   return (
     <>
-      <NextSeo title="Calibration" />
       <Disclosure as="nav" className="bg-white border-b border-gray-200">
         {({ open }) => (
           <>
@@ -127,21 +94,6 @@ export const NavbarCalibration = () => {
                   </div>
                 </div>
                 <div className="flex items-center">
-                  <div className="flex-shrink-0 hidden md:block">
-                    <Link href="/" passHref>
-                      <a
-                        type="button"
-                        className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                      >
-                        <ArrowLeftOnRectangleIcon
-                          className="-ml-1 mr-2 h-5 w-5"
-                          aria-hidden="true"
-                        />
-                        <span>More games</span>
-                      </a>
-                    </Link>
-                  </div>
-
                   <div className="hidden lg:ml-6 lg:flex lg:items-center">
                     {/*
                 <button

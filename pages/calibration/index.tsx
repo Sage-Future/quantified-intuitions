@@ -12,6 +12,8 @@ import { NavbarCalibration } from '../../components/NavbarCalibration';
 import { NavbarPastcasting } from '../../components/NavbarPastcasting';
 import { Sorry } from '../../components/Sorry';
 import { Prisma } from '../../lib/prisma';
+import Head from 'next/head';
+import Link from 'next/link';
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx);
@@ -19,20 +21,20 @@ export const getServerSideProps = async (ctx: any) => {
     return { props: {} };
   }
   const userId = session?.user?.id || "";
-  const calibrationQuestions = await Prisma.calibrationQuestion.findMany({
+  const uniqueCalibrationQuestions = await Prisma.calibrationQuestion.findMany({
     where: {
       isDeleted: false,
       challengeOnly: false,
-    },
-    include: {
-      calibrationAnswers: true,
+      calibrationAnswers: {
+        none: {
+          userId: {
+            equals: userId,
+          }
+        },
+      },
     },
   });
-  const uniqueQuestions = calibrationQuestions.filter(
-    (question) =>
-      !question.calibrationAnswers.some((answer) => answer.userId === userId)
-  );
-  if (uniqueQuestions.length === 0) {
+  if (uniqueCalibrationQuestions.length === 0) {
     return {
       props: {
         session,
@@ -41,7 +43,7 @@ export const getServerSideProps = async (ctx: any) => {
     };
   }
   const randomQuestion =
-    uniqueQuestions[Math.floor(Math.random() * uniqueQuestions.length)];
+    uniqueCalibrationQuestions[Math.floor(Math.random() * uniqueCalibrationQuestions.length)];
   return {
     props: {
       session,
@@ -79,16 +81,16 @@ const Calibration = ({
   if (!calibrationQuestion) {
     return (
       <div className="flex flex-col min-h-screen justify-between">
-        <NavbarPastcasting />
+        <NavbarCalibration />
         <div className="py-10 grow">
           <main>
             <div>
-              <div className="flex flex-col items-center justify-center">
+              <div className="flex flex-col items-center justify-center prose">
                 <h1 className="text-4xl font-bold text-center">
                   {"You've answered all the questions!"}
                 </h1>
                 <p className="text-center">
-                  Check back later for more questions to answer.
+                  Check your calibration in <Link href="/calibration/charts">charts</Link>, or <Link href="/">try our other games</Link>.
                 </p>
               </div>
             </div>
@@ -102,8 +104,8 @@ const Calibration = ({
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarCalibration />
-      <div className="py-6 grow">
-        <div className="max-w-prose mx-auto flex justify-between ">
+      <div className="py-6 px-8 grow">
+        <div className="max-w-prose mx-auto flex justify-between flex-wrap gap-4">
           <div className="prose">
             <h4 className="my-0 text-gray-500">Time remaining:</h4>
             <h2 className="my-0">
@@ -113,7 +115,7 @@ const Calibration = ({
               )}
             </h2>
           </div>
-          <ButtonArray 
+          <ButtonArray
             selected={confidenceInterval}
             setSelected={setConfidenceInterval}
             options={["50%", "60%", "70%", "80%", "90%"]}

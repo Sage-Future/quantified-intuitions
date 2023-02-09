@@ -1,9 +1,10 @@
-import { NextSeo } from "next-seo";
+import { DefaultSeo, NextSeo } from "next-seo";
 
 export const Meta = () => {
   return (
-    <NextSeo
-      title="Quantified Intuitions"
+    <DefaultSeo
+      titleTemplate="%s - Quantified Intuitions"
+      defaultTitle="Quantified Intuitions"
       description="Quantified Intuitions helps you practice assigning credences to outcomes with a quick feedback loop."
       canonical="https://www.quantifiedintuitions.org/"
       openGraph={{

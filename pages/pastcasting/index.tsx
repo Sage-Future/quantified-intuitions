@@ -7,6 +7,7 @@ import { QuestionWithCommentsAndPastcasts } from '../../types/additional';
 import type { GetServerSideProps } from "next";
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
+import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);

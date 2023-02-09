@@ -83,6 +83,7 @@ const ChallengePage = ({
               {
                 activeAndUpcomingChallenges
                   .filter(challenge => challenge.startDate > new Date())
+                  .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
                   .map((challenge) => (
                     <div key={challenge.id} className="max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
