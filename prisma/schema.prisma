@@ -260,5 +260,5 @@ model MailingListSubscriber {
   id        String   @id @default(cuid())
   email     String
   createdAt DateTime @default(now())
-  tags      String[] 
+  tags      String[]
 }

@@ -1,14 +1,15 @@
-import { getSession } from 'next-auth/react';
-
 import { Footer } from '../../components/Footer';
 import { NavbarPastcasting } from '../../components/NavbarPastcasting';
 import { QuestionRoulette } from '../../components/QuestionRoulette';
 import { Prisma } from '../../lib/prisma';
 import { QuestionWithCommentsAndPastcasts } from '../../types/additional';
 
-import type { GetServerSideProps, NextPage } from "next";
+import type { GetServerSideProps } from "next";
+import { unstable_getServerSession } from 'next-auth';
+import { authOptions } from '../api/auth/[...nextauth]';
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
   if (!session) {
     const question = await Prisma.question.findUnique({
       where: {
@@ -26,19 +27,19 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     };
   }
   const userId = session?.user?.id || "";
-  //const userId = "cl9cllx3s000609lbaeilxhpd";
-  const questions = await Prisma.question.findMany({
+
+  const uniqueQuestions = await Prisma.question.findMany({
     where: {
       isDeleted: false,
-    },
-    include: {
-      pastcasts: true,
+      pastcasts: {
+        none: {
+          userId: {
+            equals: userId,
+          }
+        },
+      },
     },
   });
-  const uniqueQuestions = questions.filter(
-    (question) =>
-      !question.pastcasts.some((pastcast) => pastcast.userId === userId)
-  );
   if (uniqueQuestions.length === 0) {
     return {
       props: {
@@ -47,30 +48,37 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       },
     };
   }
-  const minSkipped = uniqueQuestions.reduce(
-    (acc, question) =>
-      Math.min(
-        question.pastcasts.reduce(
-          (acc2, pastcast) => (pastcast.skipped ? acc2 + 1 : acc2),
-          0
-        ),
-        acc
-      ),
+
+  const skippedByQuestion = await Prisma.pastcast.groupBy({
+    by: ["questionId"],
+    where: {
+      question: {
+        isDeleted: false,
+      },
+      skipped: true,
+    },
+    _count: {
+      skipped: true,
+    }
+  });
+  const minSkipped = skippedByQuestion.reduce(
+    (acc, question) => uniqueQuestions.some(q => q.id === question.questionId) ? 
+      Math.min(question._count.skipped, acc) : acc,
     Number.MAX_SAFE_INTEGER
   );
-  const filteredQuestions = uniqueQuestions.filter(
-    (question) =>
-      question.pastcasts.reduce(
-        (acc, pastcast) => (pastcast.skipped ? acc + 1 : acc),
-        0
-      ) === minSkipped
+
+  const filteredQuestions = uniqueQuestions.filter(question => 
+    // has never been skipped
+    !skippedByQuestion.some(q => q.questionId === question.id) ||
+    // or has been skipped the minimum number of times
+    skippedByQuestion.some(q => q.questionId === question.id && q._count.skipped === minSkipped)
   );
   const questionId = uniqueQuestions.some(
     (question) => question.id === "metaculus-395"
   )
     ? "metaculus-395"
     : filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)]
-        .id;
+      .id;
   const question = await Prisma.question.findUnique({
     where: {
       id: questionId,
@@ -89,8 +97,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   return {
     props: {
       session,
-      question: question,
-      //questions: shuffledQuestions,
+      question,
     },
   };
 };
