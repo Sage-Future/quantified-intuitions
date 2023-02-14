@@ -103,7 +103,7 @@ const ChallengePage = ({
                   ))
               }
             </div>
-            <div className="text-center pt-24 mx-auto text-gray-400 hover:underline">
+            <div className="text-center mt-24 mx-auto text-gray-400 hover:underline">
               <Link href="https://forms.gle/792QQAfqTrutAH9e6">Suggest a question for a future Estimation Game</Link>
             </div>
           </div>
