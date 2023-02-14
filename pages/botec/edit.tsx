@@ -28,10 +28,16 @@ const EditBotecPage: NextPage = () => {
     if (!botecName) {
       setBotecName(router.query.problemName)
     }
+    // TODO hook these up
+    if (!authorName) {
+      setAuthorName(router.query.author)
+    }
+    if (!versionName) {
+      setVersionName(router.query.version)
+    }
 
     if (squiggleCode === defaultSquiggleCode && canGenerateSquiggleCode(router.query)) {
       setSquiggleCode(generateSquiggleCode(router.query))
-      console.log(generateSquiggleCode(router.query))
     }
   }, [router.query])
 
