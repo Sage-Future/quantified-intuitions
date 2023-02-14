@@ -41,9 +41,8 @@ export const ChallengeLeaderboard = ({
     return answers && answers.find((answer: { teamId: string }) => answer.teamId === teamId);
   }
 
-  const countPointsSoFar = (team: Team, questions: CalibrationQuestion[] | AboveBelowQuestion[], type: "fermi" | "aboveBelow") => (
-    // @ts-ignore
-    questions.reduce((acc, question, index) => {
+  const countPointsSoFar = (team: Team, questions: (CalibrationQuestion | AboveBelowQuestion)[], type: "fermi" | "aboveBelow") => (
+    questions.reduce((acc: number, question: CalibrationQuestion | AboveBelowQuestion, index: number) => {
       if (latestQuestion && latestQuestion?.type === type && latestQuestion?.indexWithinType < index) {
         return acc;
       }
@@ -56,7 +55,8 @@ export const ChallengeLeaderboard = ({
   const formattedTeams = challenge.teams
     .map((team) => {
       const fermiPointsSoFar = countPointsSoFar(team, challenge.fermiQuestions, "fermi");
-      const aboveBelowPointsSoFar = countPointsSoFar(team, challenge.aboveBelowQuestions, "aboveBelow");
+      // NB: assumes that aboveBelowQuestions are always after fermiQuestions
+      const aboveBelowPointsSoFar = latestQuestion?.type === "fermi" ? 0 : countPointsSoFar(team, challenge.aboveBelowQuestions, "aboveBelow");
       const latestAnswer = latestQuestion && getAnswer(latestQuestion.indexWithinType, team.id, latestQuestion.type);
       return ({
         id: team.id,
@@ -76,8 +76,8 @@ export const ChallengeLeaderboard = ({
   const columns = {
     ...(latestQuestion === null ? {} : { "This question": "questionPoints" }),
     "Round 1": "fermiPointsSoFar",
-    "Round 2": "aboveBelowPointsSoFar",
-    "Total": "totalPoints",
+    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Round 2": "aboveBelowPointsSoFar"}),
+    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Total": "totalPoints"}),
   }
   return (
     <div className="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
@@ -113,7 +113,7 @@ export const ChallengeLeaderboard = ({
                       key={header}
                       scope="col"
                       className="
-            px-3 py-3.5 pt-3.5 first:pl-4 first:pr-3 text-left text-sm font-semibold text-gray-500 first:sm:pl-6"
+            px-3 py-3.5 pt-3.5 first:pl-4 first:pr-3 text-right text-sm font-semibold text-gray-500 first:sm:pl-6"
                     >
                       {header}
                     </th>
@@ -134,14 +134,14 @@ export const ChallengeLeaderboard = ({
                     </td>
                     <td
                       key={"team"}
-                      className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
+                      className="whitespace-nowrap overflow-x-scroll max-w-[12rem] px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
                     >
                       {team.name}
                     </td>
                     {Object.values(columns).map((key) => (
                       <td
                         key={key}
-                        className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
+                        className="whitespace-nowrap text-right px-3 mr-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
                       >
                         {
                           key === "questionPoints" && (

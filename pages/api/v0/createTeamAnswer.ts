@@ -3,7 +3,7 @@ import { getSession } from "next-auth/react";
 
 import { Prisma } from "../../../lib/prisma";
 import { CHALLENGE_CONFIDENCE_INTERVAL } from "../../../lib/services/magicNumbers";
-import { calibrationScore, estimathonScore } from "../../../lib/services/scoring";
+import { challengeScore } from "../../../lib/services/scoring";
 
 interface Request extends NextApiRequest {
   body: {
@@ -45,7 +45,7 @@ const createTeamAnswer = async (req: Request, res: NextApiResponse) => {
     });
     return;
   }
-  const score = calibrationScore(
+  const score = challengeScore(
     lowerBound,
     upperBound,
     calibrationQuestion.answer,

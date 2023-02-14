@@ -2,7 +2,7 @@ import { User } from "next-auth"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { ChallengeWithTeamsWithUsers } from "../types/additional"
-import { ChallengeCountdown } from "./ChallengeCountdown"
+import { Countdown } from "./Countdown"
 import { Errors } from "./Errors"
 import { LoadingButton } from "./LoadingButton"
 import { Success } from "./Success"
@@ -14,15 +14,14 @@ export const JoinChallenge = ({
   onJoin,
 }: {
   challenge: ChallengeWithTeamsWithUsers
-  user: User
-  onJoin: (teamId: string) => void
+  user: User | undefined
+  onJoin: (teamId: string | undefined) => void
 }) => {
   const { register, handleSubmit } = useForm()
   const [errors, setErrors] = useState<string[]>([])
   const [success, setSuccess] = useState<string>("")
   const [isLoading, setIsLoading] = useState<boolean>(false)
   const createTeam = async (data: any, challengeId: string) => {
-    console.log(data)
     setErrors([])
     setSuccess("")
     //team name must only contain letters, numbers, and spaces and cannot only be spaces
@@ -57,7 +56,7 @@ export const JoinChallenge = ({
   }
 
   const existingTeam = challenge.teams.find((team) =>
-    team.users.some((u) => u.id === user.id)
+    team.users.some((u) => u.id === user?.id)
   )
 
   return (
@@ -67,7 +66,6 @@ export const JoinChallenge = ({
         key={challenge.id}
       >
         <form
-          className="space-y-8 divide-y divide-gray-200"
           onSubmit={handleSubmit((data) => createTeam(data, challenge.id))}
         >
           <div className="space-y-8 divide-y divide-gray-200">
@@ -76,13 +74,17 @@ export const JoinChallenge = ({
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   {challenge.name}
                 </h3>
-                <ChallengeCountdown challenge={challenge} />
+                <Countdown
+                  countdownToDate={challenge.endDate}
+                  completeText={"Game finished!"}
+                  tickdownSuffix={"remaining"}
+                />
                 <p className="pt-4 text-sm text-gray-500">
                   Assemble your friends to train your estimation skills!
                 </p>
               </div>
-              <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-                {!existingTeam &&
+              {!existingTeam && user &&
+                <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
                       htmlFor="teamName"
@@ -99,8 +101,8 @@ export const JoinChallenge = ({
                       />
                     </div>
                   </div>
-                }
-              </div>
+                </div>
+              }
             </div>
           </div>
           <div>
@@ -116,22 +118,22 @@ export const JoinChallenge = ({
             )}
             <div className="pt-5">
               <div className="flex justify-end">
-                {existingTeam ?
-                    <LoadingButton
-                      isLoading={false}
-                      buttonText="Resume game"
-                      loadingText="Resuming game..."
-                      submit={false}
-                      onClick={() => onJoin(existingTeam.id)}
-                    />
+                {(existingTeam || !user) ?
+                  <LoadingButton
+                    isLoading={false}
+                    buttonText={existingTeam ? "Resume game" : "Join game"}
+                    loadingText={existingTeam ? "Resuming game..." : "Joining game..."}
+                    submit={false}
+                    onClick={() => onJoin(existingTeam?.id)}
+                  />
                   :
-                    <LoadingButton
-                      isLoading={isLoading}
-                      buttonText="Join game"
-                      loadingText="Joining game..."
-                      submit={true}
-                      onClick={() => { }}
-                    />
+                  <LoadingButton
+                    isLoading={isLoading}
+                    buttonText="Join game"
+                    loadingText="Joining game..."
+                    submit={true}
+                    onClick={() => { }}
+                  />
                 }
               </div>
             </div>

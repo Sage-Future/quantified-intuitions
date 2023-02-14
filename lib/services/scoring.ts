@@ -32,6 +32,60 @@ export const calibrationScore = (
   console.log("DELTA: " + DELTA);
   console.log("C: " + C);
   console.log("B: " + B);
+
+  return greenbergScoring(
+    lowerBound,
+    upperBound,
+    answer,
+    useLogScoring,
+    C,
+    SMAX,
+    SMIN,
+    DELTA,
+    EPSILON,
+    B,
+  )
+}
+
+export const challengeScore = (
+  lowerBound: number,
+  upperBound: number,
+  answer: number,
+  confidenceInterval: number,
+  useLogScoring: boolean = false,
+  C: number
+) => {
+  const SMAX = 10;
+  const SMIN = -10; // higher lower bound for challenge questions to be more forgiving
+  const DELTA = 0.4;
+  const EPSILON = 0.0000000001;
+  const B = confidenceInterval / 100;
+
+  return greenbergScoring(lowerBound,
+    upperBound,
+    answer,
+    useLogScoring,
+    C,
+    SMAX,
+    SMIN,
+    DELTA,
+    EPSILON,
+    B,
+  )
+}
+
+const greenbergScoring = (
+  lowerBound: number,
+  upperBound: number,
+  answer: number,
+  useLogScoring: boolean = false,
+  C: number,
+  SMAX: number,
+  SMIN: number,
+  DELTA: number,
+  EPSILON: number,
+  B: number
+) => {
   if (!useLogScoring) {
     lowerBound -= EPSILON;
     upperBound += EPSILON;
@@ -112,7 +166,7 @@ export const estimathonScore = (
   // multiply by 2^[incorrectCount]
   score *= Math.pow(2, incorrectCount);
 
-  console.log({score, incorrectCount, questions});
+  console.log({ score, incorrectCount, questions });
 
   return score;
 };

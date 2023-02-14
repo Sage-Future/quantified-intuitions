@@ -1,6 +1,8 @@
 import { User } from "@prisma/client"
 import { getSession } from "next-auth/react"
+import Link from "next/link"
 import { useRouter } from "next/router"
+import { Countdown } from "../../components/Countdown"
 
 import { Footer } from "../../components/Footer"
 import { JoinChallenge } from "../../components/JoinChallenge"
@@ -11,10 +13,6 @@ import { ChallengeWithTeamsWithUsers } from "../../types/additional"
 
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx)
-  if (!session) {
-    return { props: {} }
-  }
-  const userId = session?.user?.id || ""
 
   const activeAndUpcomingChallenges = await Prisma.challenge.findMany({
     where: {
@@ -37,7 +35,7 @@ export const getServerSideProps = async (ctx: any) => {
     props: {
       session,
       activeAndUpcomingChallenges,
-      user: session.user,
+      user: session?.user,
     },
   }
 }
@@ -56,14 +54,14 @@ const ChallengePage = ({
       <NavbarChallenge />
       <div className="py-10 bg-gray-100 grow">
         <main>
-          {activeAndUpcomingChallenges.length == 0 && (<div
+          {activeAndUpcomingChallenges?.length == 0 && (<div
             className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg"
           >
             <p>Check back soon for the next game</p>
           </div>)
           }
           {activeAndUpcomingChallenges
-            .filter(challenge => challenge.startDate <= new Date())
+            ?.filter(challenge => challenge.startDate <= new Date())
             .map((challenge) => (
               <JoinChallenge
                 challenge={challenge}
@@ -76,18 +74,26 @@ const ChallengePage = ({
             className="max-w-3xl mx-auto my-4"
             key="upcoming"
           >
-            <h3 className="text-lg font-medium text-gray-900 text-center p-2">
+            <h3 className="text-lg font-medium text-gray-900 text-center p-4">
               Upcoming
             </h3>
             <div className="flex flex-wrap gap-2">
               {
                 activeAndUpcomingChallenges
-                  .filter(challenge => challenge.startDate > new Date())
+                  ?.filter(challenge => challenge.startDate > new Date())
                   .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
                   .map((challenge) => (
-                    <div key={challenge.id} className="max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
+                    <div key={challenge.id} className="flex flex-col max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
-                      <p className="mb-2 text-gray-600">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
+                      <p className="text-gray-600">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
+                      <div className="mb-2">
+                        <Countdown
+                          countdownToDate={challenge.endDate}
+                          completeText={"The game begins! Refresh this page to join"}
+                          tickdownPrefix={"Starts in"}
+                          tickdownSuffix={""}
+                        />
+                      </div>
 
                       <MailingListSignup
                         buttonText="Remind me when it starts"
@@ -96,6 +102,9 @@ const ChallengePage = ({
                     </div>
                   ))
               }
+            </div>
+            <div className="text-center pt-24 mx-auto text-gray-400 hover:underline">
+              <Link href="https://forms.gle/792QQAfqTrutAH9e6">Suggest a question for a future Estimation Game</Link>
             </div>
           </div>
         </main>
