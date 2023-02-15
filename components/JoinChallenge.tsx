@@ -1,4 +1,6 @@
+import { GlobeAsiaAustraliaIcon, TrophyIcon, UsersIcon, WifiIcon } from "@heroicons/react/24/solid"
 import { User } from "next-auth"
+import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
 import { ChallengeWithTeamsWithUsers } from "../types/additional"
@@ -79,9 +81,16 @@ export const JoinChallenge = ({
                   completeText={"Game finished!"}
                   tickdownSuffix={"remaining"}
                 />
-                <p className="pt-4 text-sm text-gray-500">
-                  Assemble your friends to train your estimation skills!
-                </p>
+
+                <div className="mt-4 text-sm">
+                  <ul className="list-none space-y-4 pl-0">
+                    <li className="flex items-center space-x-3"><GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"Answer 10 questions to train your estimation skills"}</span></li>
+                    <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /> <span>{'Play solo or team up with friends'}</span></li>
+                    <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"See how your scores compare on the "} 
+                    <Link href={`/estimation-game/${challenge.id}/leaderboard`}><a className="underline">leaderboard</a></Link></span></li>
+                    <li className="flex items-center space-x-3"><WifiIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"Estimate based on your knowledge - don't look things up online"}</span></li>
+                  </ul>
+                </div>
               </div>
               {!existingTeam && user &&
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">

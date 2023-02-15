@@ -3,12 +3,11 @@ import { Session } from "next-auth"
 import { getSession, useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
-import { Challenge } from "../../components/Challenge"
-import { Footer } from "../../components/Footer"
-import { JoinChallenge } from "../../components/JoinChallenge"
-import { NavbarChallenge } from "../../components/NavbarChallenge"
-import { Prisma } from "../../lib/prisma"
-import { ChallengeWithTeamsWithUsersAndQuestions } from "../../types/additional"
+import { ChallengeLeaderboard } from "../../../components/ChallengeLeaderboard"
+import { Footer } from "../../../components/Footer"
+import { NavbarChallenge } from "../../../components/NavbarChallenge"
+import { Prisma } from "../../../lib/prisma"
+import { ChallengeWithTeamsWithUsersAndQuestions } from "../../../types/additional"
 
 export type ChallengeProps = {
   challenge: ChallengeWithTeamsWithUsersAndQuestions
@@ -52,7 +51,7 @@ export const getServerSideProps: GetServerSideProps<ChallengeProps | {}> = async
   }
 }
 
-const RoomPage: NextPage<ChallengeProps> = ({ challenge }) => {
+const Leaderboard: NextPage<ChallengeProps> = ({ challenge }) => {
   const { data: session } = useSession()
   const router = useRouter()
   const user = session?.user
@@ -68,15 +67,22 @@ const RoomPage: NextPage<ChallengeProps> = ({ challenge }) => {
       {
         challenge ?
           (
-            usersTeam ?
-              <Challenge teamId={usersTeam.id} challenge={challenge} />
-              :
-              user && <JoinChallenge challenge={challenge} user={user} onJoin={() => {router.replace(router.asPath)}} />
+            <div className="px-4 py-6 grow mx-auto">
+              <div className="py-8 mx-auto">
+                <h2 className="text-3xl mb-2 font-extrabold text-gray-900">
+                  {"Leaderboard"}
+                </h2>
+                <h3 className="text-gray-600 prose">
+                  <Link href={`/estimation-game/${challenge.id}`}>{challenge.name}</Link>
+                </h3>
+                <ChallengeLeaderboard challengeId={challenge.id} latestQuestion={null} teamId={usersTeam?.id} />
+              </div>
+            </div>
           )
           :
           (
             <div className="py-10 bg-gray-100 grow">
-              <p className="prose max-w-prose m-auto">{"That Estimation Game doesn't exist. "} 
+              <p className="prose max-w-prose m-auto">{"That Estimation Game doesn't exist. "}
                 <Link href="/estimation-game">{"See all public current and upcoming games."}</Link>
               </p>
             </div>
@@ -87,4 +93,4 @@ const RoomPage: NextPage<ChallengeProps> = ({ challenge }) => {
     </div>
   )
 }
-export default RoomPage
+export default Leaderboard

@@ -96,15 +96,15 @@ export const Challenge = ({
           (!fermiComplete && fermiQuestion ?
             <>
               {!introsShown.fermi &&
-                <div className="prose bg-indigo-100 rounded-md p-4 my-6">
+                <div className="prose bg-indigo-100 rounded-md p-8 my-6">
                   <h3 className="my-0">{"Round 1: Estimation Intervals"}</h3>
                   <p className="my-0">{"Estimate a lower and upper bound for the question below."}</p>
                   <p className="my-0">{"A narrower interval gets you more points, if you're right."}</p>
                   <p className="my-0">{"But if you're wrong, a narrower interval loses you more points!"}</p>
 
                   <div className="mt-4 mb-2 text-sm flex flex-row">
-                    <InformationCircleIcon className="mr-2 basis-10 text-indigo-500 inline-block" />
-                    <p className="my-0">
+                    <InformationCircleIcon className="mr-2 w-20 md:w-12 text-indigo-500 inline-block" />
+                    <p className="my-0 flex-shrink">
                       {`To maximise your score, enter your ${CHALLENGE_CONFIDENCE_INTERVAL}% confidence interval: a range narrow enough that you think there's a ${CHALLENGE_CONFIDENCE_INTERVAL}% chance the right answer is inside it.`}
                     </p>
                   </div>
@@ -135,7 +135,7 @@ export const Challenge = ({
             aboveBelowQuestion &&
             <>
               {!introsShown.aboveBelow &&
-                <div className="prose bg-indigo-100 rounded-md p-4 my-6">
+                <div className="prose bg-indigo-100 rounded-md p-8 my-6">
                   <h3 className="my-0">{"Round 2: Above or Below"}</h3>
                   <p className="my-0">{"Estimate if the real quantity is above or below the amount below."}</p>
                   <p className="my-0">{"In this round, the goal is to get the biggest score you can!"}</p>

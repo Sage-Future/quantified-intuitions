@@ -15,7 +15,7 @@ export const ChallengeLeaderboard = ({
   latestQuestion,
 }: {
   challengeId: string;
-  teamId: string;
+  teamId: string | undefined;
   latestQuestion: {
     indexWithinType: number;
     type: "fermi" | "aboveBelow";
@@ -122,7 +122,7 @@ export const ChallengeLeaderboard = ({
               </thead>
               <tbody className="divide-y divide-gray-200 bg-white">
                 {formattedTeams.map((team, teamIndex) => (
-                  <tr key={team.id} className={clsx((team.id === teamId) && "bg-indigo-200")}>
+                  <tr key={team.id} className={clsx((teamId && team.id === teamId) && "bg-indigo-200")}>
                     <td
                       key={"place"}
                       className="whitespace-nowrap px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
