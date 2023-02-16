@@ -4,6 +4,7 @@ import { useState } from "react";
 import { CHALLENGE_CONFIDENCE_INTERVAL } from "../lib/services/magicNumbers";
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional";
 import { AboveBelowForm } from "./AboveBelowForm";
+import { ChallengeComplete } from "./ChallengeComplete";
 import { ChallengeLeaderboard } from "./ChallengeLeaderboard";
 import { Countdown } from "./Countdown";
 import { FermiForm } from "./FermiForm";
@@ -165,10 +166,10 @@ export const Challenge = ({
             </>
           )
           :
-          <p>Challenge complete!</p>
+          <ChallengeComplete challenge={challenge} teamId={teamId} />
         }
 
-        {(questionComplete || challengeComplete) && <ChallengeLeaderboard
+        {questionComplete && <ChallengeLeaderboard
           challengeId={challenge.id}
           teamId={teamId}
           latestQuestion={challengeComplete ?
