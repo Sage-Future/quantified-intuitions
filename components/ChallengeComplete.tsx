@@ -33,7 +33,7 @@ export function ChallengeComplete({
         />
       </div>
 
-      <h3 className="text-lg font-semibold mt-12">More games</h3>
+      <h3 className="text-lg font-semibold mt-12">More tools</h3>
       <div className="flex flex-wrap gap-2 py-4">
         {apps.filter(app => app.name !== "The Estimation Game").map(app => <AppCard key={app.name} app={app} />)}
       </div>
