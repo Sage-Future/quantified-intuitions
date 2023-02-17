@@ -88,7 +88,7 @@ const ChallengePage = ({
                       <p className="text-gray-600">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
                       <div className="mb-2">
                         <Countdown
-                          countdownToDate={challenge.endDate}
+                          countdownToDate={challenge.startDate}
                           completeText={"The game begins! Refresh this page to join"}
                           tickdownPrefix={"Starts in"}
                           tickdownSuffix={""}
