@@ -31,7 +31,7 @@ const IndexPage = () => {
     <div className="flex flex-col min-h-screen ">
       <NavbarGeneric />
       <div className="bg-gray-50 grow">
-        <div className="px-4 pt-12 lg:pt-16 mx-auto max-w-7xl">
+        <div className="px-4 pt-12 lg:pt-16 mx-auto max-w-6xl">
           <div className="prose mx-auto">
             <h2 className="text-3xl mb-2 font-extrabold text-gray-900">
               Quantified Intuitions
