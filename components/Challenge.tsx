@@ -169,17 +169,13 @@ export const Challenge = ({
           <ChallengeComplete challenge={challenge} teamId={teamId} />
         }
 
-        {questionComplete && <ChallengeLeaderboard
+        {questionComplete && !challengeComplete && <ChallengeLeaderboard
           challengeId={challenge.id}
           teamId={teamId}
-          latestQuestion={challengeComplete ?
-            null
-            :
-            {
-              type: fermiComplete ? "aboveBelow" : "fermi",
-              indexWithinType: fermiComplete ? aboveBelowQuestionNum : fermiQuestionNum,
-            }
-          }
+          latestQuestion={{
+            type: fermiComplete ? "aboveBelow" : "fermi",
+            indexWithinType: fermiComplete ? aboveBelowQuestionNum : fermiQuestionNum,
+          }}
         />}
       </div>
     </div>
