@@ -19,7 +19,7 @@ const Faq = () => {
     {
       question: "When?",
       answer:
-        "The first game is live Monday 20th until Sunday 26th Feb. You can host an event at any time during that week.",
+        "Check the [upcoming events](https://quantifiedintuitions.org/estimation-game). You can host an event any time while this month's game is live, or play a previous month's game from the archives.",
     },
     {
       question: "How long?",
@@ -54,10 +54,6 @@ const Faq = () => {
         "Form your group into teams of 2-5 people. One person from each team opens [The Estimation Game](https://quantifiedintuitions.org/estimation-game) on their phone or laptop and signs in with their Google account. Teams can go at their own pace through ~10 questions in two rounds. They'll win points for good estimates, and see how their score compares to other teams in your group and around the world on the leaderboard. The team with the highest score wins! See it in action with the [demo game](https://quantifiedintuitions.org/estimation-game/demo).",
     },
     {
-      question: "This is the 'first monthly' Estimation Game?",
-      answer: "This is the first ever! A new challenge will drop each month, if you sign up above we'll email you about it.",
-    },
-    {
       question: "Can I play solo?",
       answer: "Absolutely! Be sure to mention it in your team name so your leaderboard position is even more impressive!",
     },
@@ -67,7 +63,7 @@ const Faq = () => {
     },
     {
       question: "Can I run a game outside the dates listed?",
-      answer: "You can either wait until the next month's challenge drops, or use the [demo game](https://quantifiedintuitions.org/estimation-game/demo) any time. In the future, you'll be able to run games with past challenges.",
+      answer: "You can either wait until the next month's challenge drops, or play a past month's game from the archives.",
     },
     {
       question: "I'm hosting a large event, conference or retreat, can I run a bespoke Estimation Game?",
@@ -105,7 +101,7 @@ const Faq = () => {
 
           <p className="">All you need to do is bring some people together and point them to <Link href="/estimation-game">The Estimation Game</Link>{"'s website."}</p>
 
-          <MailingListSignup buttonText="Send me email reminders about the event" tags={["estimation-game-organiser"]}/>
+          <MailingListSignup buttonText="Send me email reminders about the event" tags={["estimation-game-organiser"]} />
         </div>
 
         <div className="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:px-8">
