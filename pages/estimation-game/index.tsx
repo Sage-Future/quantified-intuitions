@@ -1,3 +1,4 @@
+import { PlayIcon, TrophyIcon } from "@heroicons/react/24/solid"
 import { User } from "@prisma/client"
 import { getSession } from "next-auth/react"
 import Link from "next/link"
@@ -14,13 +15,10 @@ import { ChallengeWithTeamsWithUsers } from "../../types/additional"
 export const getServerSideProps = async (ctx: any) => {
   const session = await getSession(ctx)
 
-  const activeAndUpcomingChallenges = await Prisma.challenge.findMany({
+  const activeChallenges = await Prisma.challenge.findMany({
     where: {
       isDeleted: false,
       unlisted: false,
-      endDate: {
-        gte: new Date()
-      },
     },
     include: {
       teams: {
@@ -34,17 +32,17 @@ export const getServerSideProps = async (ctx: any) => {
   return {
     props: {
       session,
-      activeAndUpcomingChallenges,
+      activeChallenges,
       user: session?.user,
     },
   }
 }
 
 const ChallengePage = ({
-  activeAndUpcomingChallenges,
+  activeChallenges,
   user,
 }: {
-  activeAndUpcomingChallenges: ChallengeWithTeamsWithUsers[]
+  activeChallenges: ChallengeWithTeamsWithUsers[]
   user: User
 }) => {
   const router = useRouter()
@@ -54,14 +52,14 @@ const ChallengePage = ({
       <NavbarChallenge />
       <div className="py-10 bg-gray-100 grow">
         <main>
-          {activeAndUpcomingChallenges?.length == 0 && (<div
+          {activeChallenges?.length == 0 && (<div
             className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg"
           >
             <p>Check back soon for the next game</p>
           </div>)
           }
-          {activeAndUpcomingChallenges
-            ?.filter(challenge => challenge.startDate <= new Date())
+          {activeChallenges
+            ?.filter(challenge => (challenge.startDate <= new Date() && challenge.endDate > new Date()))
             .map((challenge) => (
               <JoinChallenge
                 challenge={challenge}
@@ -72,14 +70,13 @@ const ChallengePage = ({
             ))}
           <div
             className="max-w-3xl mx-auto my-4"
-            key="upcoming"
           >
             <h3 className="text-lg font-medium text-gray-900 text-center p-4">
               Upcoming
             </h3>
             <div className="flex flex-wrap gap-2">
               {
-                activeAndUpcomingChallenges
+                activeChallenges
                   ?.filter(challenge => challenge.startDate > new Date())
                   .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
                   .map((challenge) => (
@@ -103,6 +100,50 @@ const ChallengePage = ({
                   ))
               }
             </div>
+
+            <h3 className="text-lg font-medium text-gray-900 text-center p-4 pt-12">
+              Archives
+            </h3>
+            <div className="flex flex-wrap gap-2">
+              {
+                activeChallenges
+                  ?.filter(challenge => challenge.endDate < new Date())
+                  .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
+                  .map((challenge) => (
+                    <div key={challenge.id} className="flex flex-col w-[18rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
+                      <p className="font-semibold">{challenge.name}</p>
+
+                      <div className="flex-shrink flex gap-2 py-2">
+                        <Link href={`/estimation-game/${challenge.id}`} passHref>
+                          <a
+                            type="button"
+                            className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            <PlayIcon
+                              className="-ml-1 mr-2 h-5 w-5"
+                              aria-hidden="true"
+                            />
+                            <span>Play</span>
+                          </a>
+                        </Link>
+                        <Link href={`/estimation-game/${challenge.id}/leaderboard`} passHref>
+                          <a
+                            type="button"
+                            className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                          >
+                            <TrophyIcon
+                              className="-ml-1 mr-2 h-5 w-5"
+                              aria-hidden="true"
+                            />
+                            <span>Leaderboard</span>
+                          </a>
+                        </Link>
+                      </div>
+                    </div>
+                  ))
+              }
+            </div>
+
             <div className="text-center mt-24 mx-auto text-gray-400 hover:underline">
               <Link href="https://forms.gle/792QQAfqTrutAH9e6">Suggest a question for a future Estimation Game</Link>
             </div>
