@@ -42,5 +42,6 @@ yarn-error.log*
 *importQuestionsGJO.ts
 *importCalibrationQuestions.ts
 *importAboveBelowQuestions.ts
+*exportContacts.ts
 *.json
 *test.tsx
