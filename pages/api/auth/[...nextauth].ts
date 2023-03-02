@@ -15,6 +15,11 @@ export const authOptions: NextAuthOptions = {
       clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
     }),
   ],
+  theme: {
+    colorScheme: "light",
+    brandColor: "#4338ca",
+    logo: "https://quantifiedintuitions.org/logo.png",
+  },
   secret: process.env.SECRET,
   session: {
     strategy: "jwt",
