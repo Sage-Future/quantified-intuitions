@@ -209,6 +209,7 @@ model Team {
   id                   String                 @id @default(cuid())
   name                 String
   challengeId          String
+  numPlayers           Int                    @default(1)
   challenge            Challenge              @relation(fields: [challengeId], references: [id], onDelete: Cascade)
   users                User[]
   fermiAnswers         TeamFermiAnswer[]

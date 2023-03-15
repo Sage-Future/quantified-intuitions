@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "Team" ADD COLUMN     "numPlayers" INTEGER NOT NULL DEFAULT 1;

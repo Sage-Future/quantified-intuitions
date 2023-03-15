@@ -7,14 +7,16 @@ interface Request extends NextApiRequest {
   body: {
     name: string;
     challengeId: string;
+    numPlayers: number;
   };
 }
 
 const createTeam = async (req: Request, res: NextApiResponse) => {
-  const { name, challengeId } = req.body;
+  const { name, challengeId, numPlayers } = req.body;
   if (
     typeof name !== "string" ||
-    typeof challengeId !== "string"
+    typeof challengeId !== "string" ||
+    typeof numPlayers !== "number"
   ) {
     res.status(400).json({
       error: `invalid request`,
@@ -32,6 +34,7 @@ const createTeam = async (req: Request, res: NextApiResponse) => {
     data: {
       name,
       challengeId,
+      numPlayers,
       users: {
         connect: {
           id: session.user.id,

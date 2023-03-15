@@ -37,6 +37,13 @@ export const JoinChallenge = ({
       ])
       return
     }
+    if (!data.numPlayers || data.numPlayers < 1) {
+      setErrors(["Number of players must be at least 1"])
+      return
+    }
+
+    console.log({num: data.numPlayers})
+
     setIsLoading(true)
     await fetch("/api/v0/createTeam", {
       method: "POST",
@@ -45,6 +52,7 @@ export const JoinChallenge = ({
       },
       body: JSON.stringify({
         name: data.teamName,
+        numPlayers: parseInt(data.numPlayers, 10),
         challengeId,
       }),
     }).then(async (res) => {
@@ -107,6 +115,20 @@ export const JoinChallenge = ({
                         className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
                         {...register("teamName")}
                         defaultValue={""}
+                      />
+                    </div>
+                    <label
+                      htmlFor="numPlayers"
+                      className="block text-sm font-medium text-gray-700 mt-4"
+                    >
+                      Number of players
+                    </label>
+                    <div className="mt-1">
+                      <input
+                        type="number"
+                        className="shadow-sm focus:ring-indigo-500 focus:border-indigo-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                        {...register("numPlayers")}
+                        defaultValue={1}
                       />
                     </div>
                   </div>

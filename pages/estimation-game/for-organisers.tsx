@@ -19,7 +19,7 @@ const Faq = () => {
     {
       question: "When?",
       answer:
-        "Check the [upcoming events](https://quantifiedintuitions.org/estimation-game). You can host an event any time while this month's game is live, or play a previous month's game from the archives.",
+        "Check the [upcoming events](https://quantifiedintuitions.org/estimation-game). Games run in the last 7 days of each month. You can host an event any time while this month's game is live, or play a previous month's game from the archives.",
     },
     {
       question: "How long?",
