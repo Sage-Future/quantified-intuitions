@@ -1,5 +1,6 @@
-import { PlayIcon, TrophyIcon } from "@heroicons/react/24/solid"
+import { CheckCircleIcon, CheckIcon, PlayIcon, TrophyIcon } from "@heroicons/react/24/solid"
 import { User } from "@prisma/client"
+import clsx from "clsx"
 import { getSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
@@ -109,21 +110,39 @@ const ChallengePage = ({
                 activeChallenges
                   ?.filter(challenge => challenge.endDate < new Date())
                   .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
-                  .map((challenge) => (
-                    <div key={challenge.id} className="flex flex-col w-[18rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
+                  .map((challenge) => {
+                    const challengeComplete = user && challenge.teams.some(team => team.users.some(u => u.id == user.id))
+
+                    return <div key={challenge.id} className="flex flex-col w-[18rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
 
                       <div className="flex-shrink flex gap-2 py-2">
                         <Link href={`/estimation-game/${challenge.id}`} passHref>
                           <a
                             type="button"
-                            className="relative inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                            className={clsx("relative inline-flex items-center rounded-md border border-transparent px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2",
+                              challengeComplete ? "bg-gray-400" : "bg-indigo-600"
+                            )}
                           >
-                            <PlayIcon
-                              className="-ml-1 mr-2 h-5 w-5"
-                              aria-hidden="true"
-                            />
-                            <span>Play</span>
+                            {
+                              challengeComplete ?
+                                <>
+                                  <CheckCircleIcon
+                                    className="-ml-1 mr-2 h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span>Played</span>
+                                </>
+                                :
+                                <>
+                                  <PlayIcon
+                                    className="-ml-1 mr-2 h-5 w-5"
+                                    aria-hidden="true"
+                                  />
+                                  <span>Play</span>
+                                </>
+                            }
+
                           </a>
                         </Link>
                         <Link href={`/estimation-game/${challenge.id}/leaderboard`} passHref>
@@ -140,7 +159,7 @@ const ChallengePage = ({
                         </Link>
                       </div>
                     </div>
-                  ))
+                  })
               }
             </div>
 

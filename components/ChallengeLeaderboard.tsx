@@ -31,7 +31,7 @@ export const ChallengeLeaderboard = ({
   }) as ChallengeWithTeamsWithUsersAndQuestions;
 
   if (!challenge) {
-    return <div>Loading...</div>;
+    return <div>Loading...</div>
   }
 
   const getAnswer = (questionIndex: number, teamId: string, type: "fermi" | "aboveBelow") => {
@@ -76,8 +76,8 @@ export const ChallengeLeaderboard = ({
   const columns = {
     ...(latestQuestion === null ? {} : { "This question": "questionPoints" }),
     "Round 1": "fermiPointsSoFar",
-    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Round 2": "aboveBelowPointsSoFar"}),
-    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Total": "totalPoints"}),
+    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Round 2": "aboveBelowPointsSoFar" }),
+    ...((latestQuestion && latestQuestion?.type === "fermi") ? {} : { "Total": "totalPoints" }),
   }
   return (
     <div className="my-2 -mx-4 overflow-x-auto sm:-mx-6 lg:-mx-8">
