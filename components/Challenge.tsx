@@ -139,7 +139,6 @@ export const Challenge = ({
                 <div className="prose bg-indigo-100 rounded-md p-8 my-6">
                   <h3 className="my-0">{"Round 2: Above or Below"}</h3>
                   <p className="my-0">{"Estimate if the real quantity is above or below the amount below."}</p>
-                  <p className="my-0">{"In this round, the goal is to get the biggest score you can!"}</p>
                   <p className="my-0">{"Higher confidence gets you more points, if you're right."}</p>
                   <p className="my-0">{"But if you're wrong, higher confidence loses you more points!"}</p>
                   <div className="pt-2">
