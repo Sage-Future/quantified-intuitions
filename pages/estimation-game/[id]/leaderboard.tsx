@@ -1,6 +1,7 @@
 import { GetServerSideProps, NextPage } from "next"
 import { Session } from "next-auth"
 import { getSession, useSession } from "next-auth/react"
+import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { ChallengeLeaderboard } from "../../../components/ChallengeLeaderboard"
@@ -76,6 +77,11 @@ const Leaderboard: NextPage<ChallengeProps> = ({ challenge }) => {
                   <Link href={`/estimation-game/${challenge.id}`}>{challenge.name}</Link>
                 </h3>
                 <ChallengeLeaderboard challengeId={challenge.id} latestQuestion={null} teamId={usersTeam?.id} />
+                {challenge.id === "eagxcambridge" && 
+                <div className="mx-auto text-center">
+                  <p className="prose">Join game: <Link href={`/estimation-game/${challenge.id}`}>{`quantifiedintuitions.org/estimation-game/${challenge.id}`}</Link></p>
+                  <Image src={"/cambridge_qr.png"} width={300} height={300} className="flex-grow mx-auto pt-8 aspect-square" />
+                </div>}
               </div>
             </div>
           )
