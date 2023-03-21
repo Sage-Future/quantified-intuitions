@@ -18,11 +18,11 @@ const IndexPage = () => {
             </h2>
             <h3 className="text-gray-600">Turn any flashcard deck into a calibration training tool</h3>
 
-            <Image src={"/anki_front.png"} width={700} height={595} />
+            <Image src={"/anki_front.png"} alt="An Anki card that lets you input a range" width={700} height={595} />
 
             <p>{"Instead of the exact answer, enter your 90% confidence interval - an interval that you're 90% confident the answer lies within."}</p>
 
-            <Image src={"/anki_back.png"} width={700} height={595} />
+            <Image src={"/anki_back.png"} alt="The back of the card shows your score" width={700} height={595} />
 
             <p>{"Earn more points for a narrower correct interval, lose more points for a narrower incorrect interval."}</p>
 
@@ -31,7 +31,7 @@ const IndexPage = () => {
             <p>{"Higher scores  = longer before you need to review the card again!"}</p>
 
             <div className="flex justify-center">
-              <Image src={"/anki_scores.png"} width={345} height={700} />
+              <Image src={"/anki_scores.png"} alt="See your Anki calibration scores" width={345} height={700} />
             </div>
 
             <p>{"Track your calibration: press Tools → Show calibration scores. Perfect calibration = your X% confidence interval is correct X% of the time."}</p>
@@ -45,12 +45,12 @@ const IndexPage = () => {
             <p>{"3. Add some Interval cards:"}</p>
 
             <div className="flex justify-center">
-              <Image src={"/anki_add_card.png"} width={345} height={440} />
+              <Image src={"/anki_add_card.png"} alt="How to add an Anki interval card" width={345} height={440} />
             </div>
 
             <p>You can rate this plugin on <Link href={"https://ankiweb.net/shared/info/694813595"}>AnkiWeb</Link>.</p>
             
-            <p> We'd love your feedback at <a href="mailto:hello@sage-future.org">hello@sage-future.org</a>.</p>
+            <p>{"We'd love your feedback at"} <a href="mailto:hello@sage-future.org">hello@sage-future.org</a>.</p>
 
             <h3 className="text-lg font-semibold mt-12">More tools from Quantified Intuitions</h3>
             <div className="flex flex-wrap gap-2 py-4">
