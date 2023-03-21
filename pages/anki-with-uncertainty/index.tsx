@@ -1,3 +1,4 @@
+import { NextSeo } from "next-seo"
 import Image from "next/image"
 import Link from "next/link"
 import { apps } from ".."
@@ -6,9 +7,10 @@ import { Footer } from "../../components/Footer"
 import { MailingListSignup } from "../../components/MailingListSignup"
 import { NavbarGeneric } from "../../components/NavbarGeneric"
 
-const IndexPage = () => {
+const AnkiPage = () => {
   return (
     <div className="flex flex-col min-h-screen ">
+      <NextSeo title="Anki with Uncertainty" />
       <NavbarGeneric />
       <div className="bg-gray-50 grow">
         <div className="px-4 pt-12 lg:pt-16 mx-auto max-w-6xl">
@@ -68,4 +70,4 @@ const IndexPage = () => {
   )
 }
 
-export default IndexPage
+export default AnkiPage
