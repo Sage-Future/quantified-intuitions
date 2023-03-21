@@ -1,4 +1,4 @@
-import { PlayIcon } from "@heroicons/react/24/solid"
+import { ArrowDownTrayIcon, PlayIcon } from "@heroicons/react/24/solid"
 import { AppCard } from "../components/AppCard"
 import { Footer } from "../components/Footer"
 import { MailingListSignup } from "../components/MailingListSignup"
@@ -22,6 +22,12 @@ export const apps = [
     description: "Team up with your friends to play our monthly estimation quiz",
     href: "/estimation-game",
     icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
+  },
+  {
+    name: "Anki with Uncertainty",
+    description: "Turn any flashcard deck into a calibration training tool",
+    href: "/anki-with-uncertainty",
+    icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
     banner: "New",
   },
 ]
@@ -39,7 +45,7 @@ const IndexPage = () => {
             <h3 className="text-gray-600">Practice assigning credences to outcomes with a quick feedback loop</h3>
           </div>
 
-          <div className="flex flex-wrap gap-2 py-8">
+          <div className="flex flex-wrap gap-2 py-8 gap-y-4 lg:gap-y-8">
             {apps.map(app => <AppCard key={app.name} app={app} />)}
           </div>
 
