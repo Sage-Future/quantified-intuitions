@@ -26,7 +26,7 @@ export const Meta = () => {
       additionalLinkTags={[
         {
           rel: "icon",
-          href: "/scale.svg",
+          href: "https://www.quantifiedintuitions.org/scale.svg",
         },
       ]}
     />
