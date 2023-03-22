@@ -51,8 +51,10 @@ const AnkiPage = () => {
             </div>
 
             <p>You can rate this plugin on <Link href={"https://ankiweb.net/shared/info/694813595"}>AnkiWeb</Link>.</p>
+
+            <p>The source code is on <Link href={"https://github.com/Sage-Future/anki-with-uncertainty"}>GitHub</Link>.</p>
             
-            <p>{"We'd love your feedback at"} <a href="mailto:hello@sage-future.org">hello@sage-future.org</a>.</p>
+            <p>{"We'd love your feedback at"} <a href="mailto:hello@sage-future.org">hello@sage-future.org</a> or on <Link href="https://discord.gg/mt9YVB8VDE">Discord</Link>.</p>
 
             <h3 className="text-lg font-semibold mt-12">More tools from Quantified Intuitions</h3>
             <div className="flex flex-wrap gap-2 py-4">
