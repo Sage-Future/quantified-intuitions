@@ -54,7 +54,7 @@ const IndexPage = () => {
           </div>
         </div>
       </div>
-      <Footer />
+      <Footer showReportProblem={false}/>
     </div >
   )
 }

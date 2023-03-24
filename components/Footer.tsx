@@ -1,8 +1,18 @@
-export const Footer = () => {
+export const Footer = ({
+  showReportProblem = true
+}: {
+  showReportProblem?: boolean
+}) => {
   return (
     <footer className="bg-white border-t border-gray-200 ">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
         <div className="flex justify-center space-x-6 md:order-2">
+          {showReportProblem && <a
+            key={"feedbackForm"}
+            href="https://forms.gle/Tcg9Gtgc1C2UBWKA8"
+            className="text-gray-400 text-xs my-auto hover:text-gray-500">
+            Report a problem
+          </a>}
           <a
             key={"eaforum"}
             href={"https://forum.effectivealtruism.org/users/sage"}
