@@ -1,4 +1,4 @@
-import { DefaultSeo, NextSeo } from "next-seo";
+import { DefaultSeo } from "next-seo";
 
 export const Meta = () => {
   return (
@@ -17,9 +17,9 @@ export const Meta = () => {
         site_name: "Quantified Intuitions",
         images: [
           {
-            url: "https://www.quantifiedintuitions.org/og.png",
-            width: 1024,
-            height: 1024,
+            url: "https://www.quantifiedintuitions.org/mclean.png",
+            width: 1344,
+            height: 896,
           },
         ],
       }}
