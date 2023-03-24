@@ -18,8 +18,8 @@ export const Meta = () => {
         images: [
           {
             url: "https://www.quantifiedintuitions.org/mclean.png",
-            width: 1344,
-            height: 896,
+            width: 800,
+            height: 533,
           },
         ],
       }}
