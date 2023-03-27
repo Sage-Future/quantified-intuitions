@@ -45,3 +45,4 @@ yarn-error.log*
 *exportContacts.ts
 *.json
 *test.tsx
+*quickstats.ts

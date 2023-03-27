@@ -54,7 +54,7 @@ const ChallengePage = ({
       <div className="py-10 bg-gray-100 grow">
         <main>
           {activeChallenges?.length == 0 && (<div
-            className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg"
+            className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow rounded-lg"
           >
             <p>Check back soon for the next game</p>
           </div>)
@@ -81,7 +81,7 @@ const ChallengePage = ({
                   ?.filter(challenge => challenge.startDate > new Date())
                   .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
                   .map((challenge) => (
-                    <div key={challenge.id} className="flex flex-col max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
+                    <div key={challenge.id} className="flex flex-col max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
                       <p className="text-gray-600">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
                       <div className="mb-2">
@@ -105,15 +105,15 @@ const ChallengePage = ({
             <h3 className="text-lg font-medium text-gray-900 text-center p-4 pt-12">
               Archives
             </h3>
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-2 gap-y-4">
               {
                 activeChallenges
                   ?.filter(challenge => challenge.endDate < new Date())
-                  .sort((a, b) => a.startDate.getTime() - b.startDate.getTime())
+                  .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
                   .map((challenge) => {
                     const challengeComplete = user && challenge.teams.some(team => team.users.some(u => u.id == user.id))
 
-                    return <div key={challenge.id} className="flex flex-col w-[18rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg">
+                    return <div key={challenge.id} className="flex flex-col w-[19 rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
 
                       <div className="flex-shrink flex gap-2 py-2">
@@ -139,7 +139,7 @@ const ChallengePage = ({
                                     className="-ml-1 mr-2 h-5 w-5"
                                     aria-hidden="true"
                                   />
-                                  <span>Play</span>
+                                  <span className="mr-3">Play</span>
                                 </>
                             }
 
