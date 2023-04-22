@@ -1,4 +1,4 @@
-import { ArrowDownTrayIcon, PlayIcon } from "@heroicons/react/24/solid"
+import { PlayIcon } from "@heroicons/react/24/solid"
 import { AppCard } from "../components/AppCard"
 import { Footer } from "../components/Footer"
 import { MailingListSignup } from "../components/MailingListSignup"

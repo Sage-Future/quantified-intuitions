@@ -77,10 +77,10 @@ const Leaderboard: NextPage<ChallengeProps> = ({ challenge }) => {
                   <Link href={`/estimation-game/${challenge.id}`}>{challenge.name}</Link>
                 </h3>
                 <ChallengeLeaderboard challengeId={challenge.id} latestQuestion={null} teamId={usersTeam?.id} />
-                {challenge.id === "eagxcambridge" && 
+                {challenge.id === "eagxnordics" && 
                 <div className="mx-auto text-center">
                   <p className="prose">Join game: <Link href={`/estimation-game/${challenge.id}`}>{`quantifiedintuitions.org/estimation-game/${challenge.id}`}</Link></p>
-                  <Image src={"/cambridge_qr.png"} width={300} height={300} className="flex-grow mx-auto pt-8 aspect-square" />
+                  <Image src={"/nordics_qr.png"} alt="qr code" width={300} height={300} className="flex-grow mx-auto pt-8 aspect-square" />
                 </div>}
               </div>
             </div>
