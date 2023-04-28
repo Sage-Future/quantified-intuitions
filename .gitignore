@@ -46,3 +46,4 @@ yarn-error.log*
 *.json
 *test.tsx
 *quickstats.ts
+*debugQuery.ts

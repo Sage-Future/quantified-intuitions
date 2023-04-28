@@ -1,4 +1,4 @@
-import { PlayIcon } from "@heroicons/react/24/solid"
+import { BoltIcon, PlayIcon } from "@heroicons/react/24/solid"
 import { AppCard } from "../components/AppCard"
 import { Footer } from "../components/Footer"
 import { MailingListSignup } from "../components/MailingListSignup"
@@ -29,6 +29,14 @@ export const apps = [
     href: "/anki-with-uncertainty",
     icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
     banner: "New",
+  },
+  {
+    name: "Fatebook for Slack",
+    description: "Track your predictions, right where your team works",
+    href: "https://forms.gle/fbRzEAoSvoNUDrrY7",
+    icon: <BoltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
+    banner: "Coming soon",
+    verb: "Join waitlist"
   },
 ]
 
