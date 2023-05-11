@@ -28,15 +28,14 @@ export const apps = [
     description: "Turn any flashcard deck into a calibration training tool",
     href: "/anki-with-uncertainty",
     icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
-    banner: "New",
   },
   {
     name: "Fatebook for Slack",
     description: "Track your predictions, right where your team works",
-    href: "https://forms.gle/fbRzEAoSvoNUDrrY7",
+    href: "fatebook.io/for-slack",
     icon: <BoltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
-    banner: "Coming soon",
-    verb: "Join waitlist"
+    banner: "New",
+    verb: "Add to Slack"
   },
 ]
 
