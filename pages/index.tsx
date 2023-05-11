@@ -35,7 +35,7 @@ export const apps = [
     href: "fatebook.io/for-slack",
     icon: <BoltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
     banner: "New",
-    verb: "Add to Slack"
+    verb: "Add to Slack" 
   },
 ]
 
