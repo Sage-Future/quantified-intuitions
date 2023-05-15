@@ -75,7 +75,7 @@ const Faq = () => {
     },
     {
       question: "Who made this?",
-      answer: "We're [Sage](https://forum.effectivealtruism.org/users/sage). We made [Pastcasting](https://www.quantifiedintuitions.org/pastcasting) - predict past events to rapidly practise forecasting - and [Calibration](https://www.quantifiedintuitions.org/calibration) - answer EA trivia questions to calibrate your uncertainty.",
+      answer: "The Estimation Game is built by [Sage](https://forum.effectivealtruism.org/users/sage). Special thanks to [Hanna Pálya](https://www.linkedin.com/in/hanna-palya) for the excellent questions. We made [Pastcasting](https://www.quantifiedintuitions.org/pastcasting) - predict past events to rapidly practise forecasting - and [Calibration](https://www.quantifiedintuitions.org/calibration) - answer EA trivia questions to calibrate your uncertainty.",
     },
   ]
   return (
