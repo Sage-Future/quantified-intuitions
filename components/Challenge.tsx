@@ -57,7 +57,7 @@ export const Challenge = ({
             <h4 className="my-0 text-gray-500">{challenge.name}</h4>
             <Countdown
               countdownToDate={challenge.endDate}
-              completeText={"Game finished!"}
+              completeText={null}
               tickdownSuffix={"remaining"}
             />
             {!challengeComplete &&

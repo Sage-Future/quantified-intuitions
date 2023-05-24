@@ -86,7 +86,7 @@ export const JoinChallenge = ({
                 </h3>
                 <Countdown
                   countdownToDate={challenge.endDate}
-                  completeText={"Game finished!"}
+                  completeText={null}
                   tickdownSuffix={"remaining"}
                 />
 
