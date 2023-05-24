@@ -1,82 +1,52 @@
-import { getSession } from 'next-auth/react';
-import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useState } from 'react'
 
-import { CalibrationQuestion } from '@prisma/client';
+import { CalibrationQuestion } from '@prisma/client'
 
-import { event } from 'nextjs-google-analytics';
-import { ButtonArray } from "../../components/ButtonArray";
-import { CalibrationForm } from '../../components/CalibrationForm';
-import { Footer } from '../../components/Footer';
-import { NavbarCalibration } from '../../components/NavbarCalibration';
-import { NavbarPastcasting } from '../../components/NavbarPastcasting';
-import { Sorry } from '../../components/Sorry';
-import { Prisma } from '../../lib/prisma';
-import Head from 'next/head';
-import Link from 'next/link';
+import Link from 'next/link'
+import { event } from 'nextjs-google-analytics'
+import { deserialize } from 'superjson'
+import { SuperJSONValue } from 'superjson/dist/types'
+import useSWR from 'swr'
+import { ButtonArray } from "../../components/ButtonArray"
+import { CalibrationForm } from '../../components/CalibrationForm'
+import { Footer } from '../../components/Footer'
+import { NavbarCalibration } from '../../components/NavbarCalibration'
+import { Sorry } from '../../components/Sorry'
+import { fetcher } from '../../lib/services/data'
 
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx);
-  if (!session) {
-    return { props: {} };
-  }
-  const userId = session?.user?.id || "";
-  const uniqueCalibrationQuestions = await Prisma.calibrationQuestion.findMany({
-    where: {
-      isDeleted: false,
-      challengeOnly: false,
-      calibrationAnswers: {
-        none: {
-          userId: {
-            equals: userId,
-          }
-        },
-      },
-    },
-  });
-  if (uniqueCalibrationQuestions.length === 0) {
-    return {
-      props: {
-        session,
-        question: null,
-      },
-    };
-  }
-  const randomQuestion =
-    uniqueCalibrationQuestions[Math.floor(Math.random() * uniqueCalibrationQuestions.length)];
-  return {
-    props: {
-      session,
-      calibrationQuestion: randomQuestion,
-    },
-  };
-};
+const Calibration = () => {
+  const [questionsAnswered, setQuestionsAnswered] = useState<number>(0)
+  const tags = ["ea"]
+  const { data } = useSWR<SuperJSONValue>(
+    `/api/v0/getCalibrationQuestion?questionsAnswered=${questionsAnswered}&tags=${tags}`,
+    fetcher,
+  )
 
-const Calibration = ({
-  calibrationQuestion,
-}: {
-  calibrationQuestion: CalibrationQuestion | null;
-}) => {
-  const [confidenceInterval, setConfidenceInterval] = useState<string>("80%");
-  const router = useRouter();
-  const [sessionScore, setSessionScore] = useState<number>(0);
+  const result = deserialize({
+    json: data?.json,
+    meta: data?.meta
+  }) as { calibrationQuestion: CalibrationQuestion | null, allQuestionsAnswered: boolean }
+  const calibrationQuestion = result?.calibrationQuestion
+
+  const [confidenceInterval, setConfidenceInterval] = useState<string>("80%")
+  const [sessionScore, setSessionScore] = useState<number>(0)
   const addToSessionScore = (score: number) => {
-    setSessionScore(sessionScore + score);
-  };
-  const [countdown, setCountdown] = useState<number>(180);
+    setSessionScore(sessionScore + score)
+  }
+  const [countdown, setCountdown] = useState<number>(180)
 
   const nextQuestion = () => {
-    router.replace(router.asPath);
-    setCountdown(180);
+    setQuestionsAnswered(questionsAnswered + 1)
+    setCountdown(180)
     event("calibration_next_question", {
       app: "calibration",
       question_id: calibrationQuestion?.id,
-    });
-  };
+    })
+  }
   const reduceCountdown = () => {
-    setCountdown(countdown - 1);
-    if (countdown < -10) nextQuestion();
-  };
+    setCountdown(countdown - 1)
+    if (countdown < -10) nextQuestion()
+  }
 
   if (!calibrationQuestion) {
     return (
@@ -86,19 +56,25 @@ const Calibration = ({
           <main>
             <div>
               <div className="flex flex-col items-center justify-center prose">
-                <h1 className="text-4xl font-bold text-center">
-                  {"You've answered all the questions!"}
-                </h1>
-                <p className="text-center">
-                  Check your calibration in <Link href="/calibration/charts">charts</Link>, or <Link href="/">try our other games</Link>.
-                </p>
+                {result?.allQuestionsAnswered ? 
+                  <>
+                    <h1 className="text-4xl font-bold text-center">
+                      {"You've answered all the questions!"}
+                    </h1>
+                    <p className="text-center">
+                      Check your calibration in <Link href="/calibration/charts">charts</Link>, or <Link href="/">try our other games</Link>.
+                    </p>
+                  </>
+                  :
+                  <p>Loading...</p>
+                }
               </div>
             </div>
           </main>
         </div>
         <Footer />
       </div>
-    );
+    )
   }
 
   return (
@@ -146,7 +122,7 @@ const Calibration = ({
       </div>
       <Footer />
     </div>
-  );
-};
+  )
+}
 
-export default Calibration;
+export default Calibration

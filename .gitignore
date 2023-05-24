@@ -38,10 +38,8 @@ yarn-error.log*
 # large files
 *importData.ts*
 *importComments.ts
-*importQuestions.ts
+*import*Questions.ts
 *importQuestionsGJO.ts
-*importCalibrationQuestions.ts
-*importAboveBelowQuestions.ts
 *exportContacts.ts
 *.json
 *test.tsx
