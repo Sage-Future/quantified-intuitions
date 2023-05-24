@@ -20,6 +20,11 @@ const Calibration = () => {
   const { data } = useSWR<SuperJSONValue>(
     `/api/v0/getCalibrationQuestion?questionsAnswered=${questionsAnswered}&tags=${tags}`,
     fetcher,
+    {
+      revalidateOnFocus: false,
+      revalidateOnReconnect: false,
+      revalidateIfStale: false,
+    }
   )
 
   const result = deserialize({
