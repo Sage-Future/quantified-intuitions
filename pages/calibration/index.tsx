@@ -66,7 +66,7 @@ const Calibration = () => {
                     </p>
                   </>
                   :
-                  <p>Loading...</p>
+                  <p className='text-gray-700'>Loading...</p>
                 }
               </div>
             </div>

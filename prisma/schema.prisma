@@ -162,19 +162,28 @@ model Room {
 }
 
 model CalibrationQuestion {
-  id                 String              @id @default(cuid())
-  isDeleted          Boolean             @default(false)
-  content            String
-  answer             Float
-  prefix             String              @default("")
-  postfix            String              @default("")
-  useLogScoring      Boolean             @default(false)
-  C                  Float               @default(100)
-  source             String              @default("")
-  challengeOnly      Boolean             @default(false)
-  calibrationAnswers CalibrationAnswer[]
-  challenges         Challenge[]
-  teamAnswers        TeamFermiAnswer[]
+  id                       String                  @id @default(cuid())
+  isDeleted                Boolean                 @default(false)
+  content                  String
+  answer                   Float
+  prefix                   String                  @default("")
+  postfix                  String                  @default("")
+  useLogScoring            Boolean                 @default(false)
+  C                        Float                   @default(100)
+  source                   String                  @default("")
+  challengeOnly            Boolean                 @default(false)
+  calibrationAnswers       CalibrationAnswer[]
+  challenges               Challenge[]
+  teamAnswers              TeamFermiAnswer[]
+  tags                     CalibrationQuestionTag[]
+}
+
+model CalibrationQuestionTag {
+  id                 String                @id @default(cuid())
+  showInDeckSwitcher Boolean               @default(false)
+  name               String
+  description        String?
+  questions          CalibrationQuestion[]
 }
 
 model CalibrationAnswer {
@@ -185,6 +194,7 @@ model CalibrationAnswer {
   confidence Float               @default(0.5)
   lowerBound Float
   upperBound Float
+  median     Float?
   score      Float
   timeSpent  Int?                @default(0)
   correct    Boolean
