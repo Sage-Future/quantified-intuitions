@@ -42,12 +42,17 @@ const getCalibrationQuestion = async (req: Request, res: NextApiResponse) => {
         },
       },
     },
+    orderBy: {
+      calibrationAnswers: {
+        _count: "desc",
+      }
+    }
   });
   if (uniqueCalibrationQuestions.length === 0) {
     return res.status(200).json(serialize({allQuestionsAnswered: true}))
   }
-  const randomQuestion =
-    uniqueCalibrationQuestions[Math.floor(Math.random() * uniqueCalibrationQuestions.length)];
+  const randomQuestion = uniqueCalibrationQuestions[0]
+    // uniqueCalibrationQuestions[Math.floor(Math.random() * uniqueCalibrationQuestions.length)];
   
   console.log({randomQuestion})
   res.status(200).json(serialize({calibrationQuestion: randomQuestion}))
