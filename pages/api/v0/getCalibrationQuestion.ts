@@ -23,8 +23,6 @@ const getCalibrationQuestion = async (req: Request, res: NextApiResponse) => {
     return
   }
 
-  const userId = session.user.id
-
   const uniqueCalibrationQuestions = await Prisma.calibrationQuestion.findMany({
     where: {
       isDeleted: false,
@@ -39,7 +37,7 @@ const getCalibrationQuestion = async (req: Request, res: NextApiResponse) => {
       calibrationAnswers: {
         none: {
           userId: {
-            equals: userId,
+            equals: session.user.id,
           }
         },
       },
