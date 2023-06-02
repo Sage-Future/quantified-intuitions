@@ -6,7 +6,7 @@ import Link from 'next/link'
 import { event } from 'nextjs-google-analytics'
 import { deserialize } from 'superjson'
 import { SuperJSONValue } from 'superjson/dist/types'
-import useSWR from 'swr'
+import useSWR, { mutate } from 'swr'
 import { ButtonArray } from "../../components/ButtonArray"
 import { CalibrationForm } from '../../components/CalibrationForm'
 import { Footer } from '../../components/Footer'
@@ -15,15 +15,14 @@ import { Sorry } from '../../components/Sorry'
 import { fetcher } from '../../lib/services/data'
 
 const Calibration = () => {
-  const [questionsAnswered, setQuestionsAnswered] = useState<number>(0)
   const tags = ["ea"]
-  const { data } = useSWR<SuperJSONValue>(
-    `/api/v0/getCalibrationQuestion?questionsAnswered=${questionsAnswered}&tags=${tags}`,
+  const getQuestionUrl = `/api/v0/getCalibrationQuestion?tags=${tags}`
+  const { data, isValidating } = useSWR<SuperJSONValue>(
+    getQuestionUrl,
     fetcher,
     {
       revalidateOnFocus: false,
-      revalidateOnReconnect: false,
-      revalidateIfStale: false,
+      revalidateOnMount: true,
     }
   )
 
@@ -41,7 +40,7 @@ const Calibration = () => {
   const [countdown, setCountdown] = useState<number>(180)
 
   const nextQuestion = () => {
-    setQuestionsAnswered(questionsAnswered + 1)
+    mutate(getQuestionUrl)
     setCountdown(180)
     event("calibration_next_question", {
       app: "calibration",
@@ -53,14 +52,14 @@ const Calibration = () => {
     if (countdown < -10) nextQuestion()
   }
 
-  if (!calibrationQuestion) {
+  if (!calibrationQuestion || isValidating) {
     return (
       <div className="flex flex-col min-h-screen justify-between">
         <NavbarCalibration />
         <div className="py-10 grow">
           <main>
             <div>
-              <div className="flex flex-col items-center justify-center prose">
+              <div className="flex flex-col items-center justify-center prose mx-auto">
                 {result?.allQuestionsAnswered ? 
                   <>
                     <h1 className="text-4xl font-bold text-center">
