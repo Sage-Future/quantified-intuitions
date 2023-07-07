@@ -30,11 +30,18 @@ export const apps = [
     icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
   },
   {
+    name: "Fatebook",
+    description: "The fastest way to track your predictions",
+    href: "https://fatebook.io",
+    icon: <PlayIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
+    banner: "New",
+    verb: "Add to Slack" 
+  },
+  {
     name: "Fatebook for Slack",
     description: "Track your predictions, right where your team works",
     href: "https://fatebook.io/for-slack",
     icon: <BoltIcon className="-ml-1 mr-2 h-5 w-5" aria-hidden="true" />,
-    banner: "New",
     verb: "Add to Slack" 
   },
 ]
