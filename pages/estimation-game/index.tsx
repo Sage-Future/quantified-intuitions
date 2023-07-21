@@ -1,4 +1,4 @@
-import { CheckCircleIcon, CheckIcon, PlayIcon, TrophyIcon } from "@heroicons/react/24/solid"
+import { CheckCircleIcon, PlayIcon, TrophyIcon } from "@heroicons/react/24/solid"
 import { User } from "@prisma/client"
 import clsx from "clsx"
 import { getSession } from "next-auth/react"
@@ -26,6 +26,18 @@ export const getServerSideProps = async (ctx: any) => {
         include: {
           users: true
         },
+        where: {
+          AND: [
+            session?.user?.id ? 
+            { 
+              users: {
+              some: {
+                id: session?.user?.id
+              }
+              }
+            } : {}
+          ]
+        }
       },
     },
   })
@@ -33,7 +45,10 @@ export const getServerSideProps = async (ctx: any) => {
   return {
     props: {
       session,
-      activeChallenges,
+      activeChallenges: activeChallenges.map(challenge => ({
+        ...challenge,
+        teams: challenge.teams.filter(team => team.users.some(user => user.id == session?.user?.id))
+      })),
       user: session?.user,
     },
   }
@@ -48,6 +63,8 @@ const ChallengePage = ({
 }) => {
   const router = useRouter()
 
+  console.log({activeChallenges})
+
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarChallenge />
@@ -60,7 +77,7 @@ const ChallengePage = ({
           </div>)
           }
           {activeChallenges
-            ?.filter(challenge => (challenge.startDate <= new Date() && challenge.endDate > new Date()))
+            ?.filter(challenge => true || (challenge.startDate <= new Date() && challenge.endDate > new Date()))
             .map((challenge) => (
               <JoinChallenge
                 challenge={challenge}
@@ -83,7 +100,11 @@ const ChallengePage = ({
                   .map((challenge) => (
                     <div key={challenge.id} className="flex flex-col max-w-sm mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
-                      <p className="text-gray-600">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
+                      <p className={clsx(
+                        "text-gray-600 pb-2 text-sm",
+                        !challenge.subtitle && "text-transparent"
+                      )}>{challenge?.subtitle || "."}</p>
+                      <p className="text-gray-600 text-sm">{challenge.startDate.toDateString()} - {challenge.endDate.toDateString()}</p>
                       <div className="mb-2">
                         <Countdown
                           countdownToDate={challenge.startDate}
@@ -115,6 +136,7 @@ const ChallengePage = ({
 
                     return <div key={challenge.id} className="flex flex-col w-[19 rem] mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow rounded-lg">
                       <p className="font-semibold">{challenge.name}</p>
+                      <p className="text-gray-500 text-sm pb-2">{challenge?.subtitle || "General knowledge"}</p>
 
                       <div className="flex-shrink flex gap-2 py-2">
                         <Link href={`/estimation-game/${challenge.id}`} passHref>

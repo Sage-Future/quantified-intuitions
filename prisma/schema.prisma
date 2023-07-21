@@ -207,6 +207,7 @@ model Challenge {
   id                  String                @id @default(cuid())
   isDeleted           Boolean               @default(false)
   name                String
+  subtitle            String?
   startDate           DateTime
   endDate             DateTime
   fermiQuestions      CalibrationQuestion[]

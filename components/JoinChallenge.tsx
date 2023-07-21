@@ -83,6 +83,10 @@ export const JoinChallenge = ({
               <div>
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   {challenge.name}
+                  {challenge.subtitle ? <span className="hidden md:inline">: </span> : ""}
+                  <span className="block md:inline text-md md:text-lg text-gray-500 md:text-gray-900">
+                    {challenge?.subtitle}
+                  </span>
                 </h3>
                 <Countdown
                   countdownToDate={challenge.endDate}
