@@ -77,7 +77,7 @@ const ChallengePage = ({
           </div>)
           }
           {activeChallenges
-            ?.filter(challenge => true || (challenge.startDate <= new Date() && challenge.endDate > new Date()))
+            ?.filter(challenge => (challenge.startDate <= new Date() && challenge.endDate > new Date()))
             .map((challenge) => (
               <JoinChallenge
                 challenge={challenge}
