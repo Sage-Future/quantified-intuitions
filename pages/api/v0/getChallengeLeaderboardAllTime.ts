@@ -43,7 +43,7 @@ const getChallengeLeaderboardAllTime = async (req: Request, res: NextApiResponse
       }
 
       if (team.users.length === 0) {
-        console.error("no users in team!")
+        console.warn("no users in team!")
         return undefined
       }
       const totalScore = challenge.fermiQuestions.reduce((acc, question) => {
