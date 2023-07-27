@@ -7,6 +7,7 @@ import { AppCard } from "./AppCard";
 import { ChallengeLeaderboard } from "./ChallengeLeaderboard";
 import { MailingListSignup } from "./MailingListSignup";
 import { OpenEndedQuestions } from "./OpenEndedQuestions";
+import {TrophyIcon} from '@heroicons/react/24/solid';
 
 export function ChallengeComplete({
   challenge,
@@ -56,6 +57,21 @@ export function ChallengeComplete({
             buttonText="Email me when the next Estimation Game starts"
             tags={["estimation-game-reminder", `end-game-${challenge.name}`]}
           />
+        </div>
+
+        <div className="text-center">
+          <Link href={`/estimation-game/leaderboard`} passHref className="mx-auto">
+            <a
+              type="button"
+              className="text-lg inline-flex mx-auto items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 font-medium text-white shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+            >
+              <TrophyIcon
+                className="-ml-1 mr-2 h-5 w-5"
+                aria-hidden="true"
+              />
+              <span>All-time leaderboard</span>
+            </a>
+          </Link>
         </div>
 
         <h3 className="text-lg font-semibold mt-12">More tools from Quantified Intuitions</h3>
