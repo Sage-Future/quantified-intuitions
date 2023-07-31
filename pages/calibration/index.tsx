@@ -1,6 +1,6 @@
 import { useState } from 'react'
 
-import { CalibrationQuestion } from '@prisma/client'
+import { CalibrationQuestion, CalibrationQuestionTag } from '@prisma/client'
 
 import Link from 'next/link'
 import { event } from 'nextjs-google-analytics'
@@ -13,10 +13,38 @@ import { Footer } from '../../components/Footer'
 import { NavbarCalibration } from '../../components/NavbarCalibration'
 import { Sorry } from '../../components/Sorry'
 import { fetcher } from '../../lib/services/data'
+import { DeckSelector } from '../../components/DeckSelector'
+import { NextPageContext } from 'next'
+import { useRouter } from 'next/router'
 
-const Calibration = () => {
-  const tags = ["ea"]
-  const getQuestionUrl = `/api/v0/getCalibrationQuestion?tags=${tags}`
+// todo make static?
+export const getServerSideProps = async (ctx: NextPageContext) => {
+  const allTags = await Prisma?.calibrationQuestionTag.findMany({
+    where: {
+      showInDeckSwitcher: true
+    }
+  })
+
+  return {
+    props: {
+      allTags
+    }
+  }
+}
+
+const DEFAULT_DECKS = ["ea"]
+
+const Calibration = ({
+  allTags
+}: {
+  allTags: CalibrationQuestionTag[]
+}) => {
+  const router = useRouter()
+
+  const initialDecks = router.query.deck || router.query.decks || DEFAULT_DECKS
+  const [tags, setTags] = useState<CalibrationQuestionTag[]>(allTags.filter((tag) => initialDecks === tag.id || initialDecks.includes(tag.id)))
+
+  const getQuestionUrl = `/api/v0/getCalibrationQuestion?tags=${tags.map((tag) => tag.id).join(",")}`
   const { data, isValidating } = useSWR<SuperJSONValue>(
     getQuestionUrl,
     fetcher,
@@ -65,6 +93,7 @@ const Calibration = () => {
                     <h1 className="text-4xl font-bold text-center">
                       {"You've answered all the questions!"}
                     </h1>
+                    <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
                     <p className="text-center">
                       Check your calibration in <Link href="/calibration/charts">charts</Link>, or <Link href="/">try our other games</Link>.
                     </p>
@@ -85,7 +114,7 @@ const Calibration = () => {
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarCalibration />
       <div className="py-6 px-8 grow">
-        <div className="max-w-prose mx-auto flex justify-between flex-wrap gap-4">
+        <div className="max-w-prose mx-auto flex justify-between flex-wrap gap-4 md:flex-row-reverse">
           <div className="prose">
             <h4 className="my-0 text-gray-500">Time remaining:</h4>
             <h2 className="my-0">
@@ -108,6 +137,7 @@ const Calibration = () => {
               <span className="text-gray-500 text-[16px]"> points</span>
             </h2>
           </div>
+          <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
         </div>
         {calibrationQuestion === undefined ? (
           <div className="mt-10">

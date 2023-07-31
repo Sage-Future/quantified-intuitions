@@ -7,7 +7,7 @@ import { authOptions } from "../auth/[...nextauth]"
 
 interface Request extends NextApiRequest {
   query: {
-    tags: string[]
+    tags: string
   }
 }
 
@@ -30,7 +30,7 @@ const getCalibrationQuestion = async (req: Request, res: NextApiResponse) => {
       tags: {
         some: {
           id: {
-            in: tags,
+            in: tags.split(","),
           }
         }
       },
@@ -54,7 +54,6 @@ const getCalibrationQuestion = async (req: Request, res: NextApiResponse) => {
   const nextQuestion = uniqueCalibrationQuestions[0]
     // uniqueCalibrationQuestions[Math.floor(Math.random() * uniqueCalibrationQuestions.length)];
   
-  console.log({nextQuestion})
   res.status(200).json(serialize({calibrationQuestion: nextQuestion}))
 }
 export default getCalibrationQuestion
