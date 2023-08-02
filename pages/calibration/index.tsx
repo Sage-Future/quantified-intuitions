@@ -2,24 +2,26 @@ import { useState } from 'react'
 
 import { CalibrationQuestion, CalibrationQuestionTag } from '@prisma/client'
 
+import { NextPageContext } from 'next'
 import Link from 'next/link'
+import { useRouter } from 'next/router'
 import { event } from 'nextjs-google-analytics'
 import { deserialize } from 'superjson'
 import { SuperJSONValue } from 'superjson/dist/types'
 import useSWR, { mutate } from 'swr'
 import { ButtonArray } from "../../components/ButtonArray"
 import { CalibrationForm } from '../../components/CalibrationForm'
+import { DeckSelector } from '../../components/DeckSelector'
 import { Footer } from '../../components/Footer'
 import { NavbarCalibration } from '../../components/NavbarCalibration'
 import { Sorry } from '../../components/Sorry'
+import { Prisma } from "../../lib/prisma"
 import { fetcher } from '../../lib/services/data'
-import { DeckSelector } from '../../components/DeckSelector'
-import { NextPageContext } from 'next'
-import { useRouter } from 'next/router'
+
 
 // todo make static?
 export const getServerSideProps = async (ctx: NextPageContext) => {
-  const allTags = await Prisma?.calibrationQuestionTag.findMany({
+  const allTags = await Prisma.calibrationQuestionTag.findMany({
     where: {
       showInDeckSwitcher: true
     }
@@ -57,8 +59,9 @@ const Calibration = ({
   const result = deserialize({
     json: data?.json,
     meta: data?.meta
-  }) as { calibrationQuestion: CalibrationQuestion | null, allQuestionsAnswered: boolean }
+  }) as { calibrationQuestion: CalibrationQuestion | null, scores: number[], allQuestionsAnswered: boolean }
   const calibrationQuestion = result?.calibrationQuestion
+  const otherPlayerScores = result?.scores
 
   const [confidenceInterval, setConfidenceInterval] = useState<string>("80%")
   const [sessionScore, setSessionScore] = useState<number>(0)
@@ -150,6 +153,7 @@ const Calibration = ({
             reduceCountdown={reduceCountdown}
             nextQuestion={nextQuestion}
             addToSessionScore={addToSessionScore}
+            otherPlayerScores={otherPlayerScores}
             key={calibrationQuestion.id}
           />
         )}

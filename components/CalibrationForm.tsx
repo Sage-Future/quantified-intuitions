@@ -18,12 +18,14 @@ export const CalibrationForm = ({
   reduceCountdown,
   nextQuestion,
   addToSessionScore,
+  otherPlayerScores,
 }: {
   calibrationQuestion: CalibrationQuestion;
   confidenceInterval: string;
   reduceCountdown: () => void;
   nextQuestion: () => void;
   addToSessionScore: (score: number) => void;
+  otherPlayerScores?: number[];
 }) => {
   const { register, watch, handleSubmit, setValue, setFocus } = useForm();
   const [pointsEarned, setPointsEarned] = useState<number | null>(null);
@@ -258,6 +260,7 @@ export const CalibrationForm = ({
                   calibrationQuestion.prefix,
                   calibrationQuestion.postfix
                 )}
+                otherPlayersPointsEarned={otherPlayerScores}
               />
               <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
                 <ReactMarkdown remarkPlugins={[remarkGfm]}>

@@ -7,12 +7,24 @@ export const Result = ({
   skipped,
   answer,
   stringAnswer,
+  otherPlayersPointsEarned,
 }: {
   pointsEarned: number;
   skipped: boolean;
   answer: boolean;
   stringAnswer: string | undefined;
+  otherPlayersPointsEarned?: number[];
 }) => {
+  const higherThanPercentage = (otherPlayersPointsEarned && otherPlayersPointsEarned.length > 2) ? 
+    otherPlayersPointsEarned.reduce((acc, curr) => {
+      if (curr < pointsEarned) {
+        return acc + 1;
+      }
+      return acc;
+    }, 0) / otherPlayersPointsEarned.length * 100
+    :
+    undefined
+
   return (
     <div className="sm:col-span-6">
       {pointsEarned >= 0 ? (
@@ -47,6 +59,11 @@ export const Result = ({
                   </>
                 )}
               </p>
+              {!skipped && higherThanPercentage && 
+                <p className="text-sm font-medium text-green-800 pt-4">
+                  You scored higher than {higherThanPercentage.toFixed(1)}% of players
+                </p>
+              }
             </div>
           </div>
         </div>
@@ -82,6 +99,12 @@ export const Result = ({
                   </>
                 )}
               </p>
+
+              {(!skipped && higherThanPercentage != undefined) && 
+                <p className="text-sm font-medium text-red-800 pt-4">
+                  You scored higher than {higherThanPercentage.toFixed(0)}% of players
+                </p>
+              }
             </div>
           </div>
         </div>

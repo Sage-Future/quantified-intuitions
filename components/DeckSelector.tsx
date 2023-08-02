@@ -83,7 +83,7 @@ export function DeckSelector({
                   >
                     Choose calibration decks
                   </Dialog.Title>
-                  <div className="mt-4 flex flex-row gap-2 flex-wrap">
+                  <div className="mt-4 flex flex-row gap-4 md:gap-8 flex-wrap">
                     {
                       allTags.map((tag) => {
                         const selected = localSelectedTags.includes(tag)
@@ -97,8 +97,8 @@ export function DeckSelector({
                           <div
                             key={tag.id}
                             className={clsx(
-                              "w-full md:w-48 bg-gray-100 rounded-md px-4 py-3 prose hover:bg-gray-200 cursor-pointer",
-                              selected ? "border-2 border-indigo-500" : "border-2 border-transparent",
+                              "w-full md:w-48 rounded-md px-4 py-4 prose hover:bg-gray-200 cursor-pointer shadow-md",
+                              selected ? "border-2 border-indigo-500" : "border border-1 border-gray-300",
                             )}
                             onClick={() => setLocalSelectedTags(
                               selected ? localSelectedTags.filter((t) => t.id !== tag.id) : [...localSelectedTags, tag]
@@ -106,7 +106,7 @@ export function DeckSelector({
                           >
                             {<div className="mx-auto text-center">
                               <div
-                                className="radial-progress bg-primary text-primary-content border-4 border-primary text-sm"
+                                className="radial-progress bg-primary text-white border-4 border-primary text-sm"
                                 style={{"--value":percentAnswered || 0, "--size": "4rem"} as any}
                               >
                                 {stats ? `${stats.answered}/${stats.totalQuestions}` : "..."}
