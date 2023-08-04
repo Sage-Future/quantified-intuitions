@@ -83,7 +83,7 @@ export function DeckSelector({
                   >
                     Choose calibration decks
                   </Dialog.Title>
-                  <div className="mt-4 flex flex-row gap-4 md:gap-8 flex-wrap">
+                  <div className="mt-4 flex flex-row gap-4 md:gap-8 flex-wrap justify-around">
                     {
                       allTags.map((tag) => {
                         const selected = localSelectedTags.includes(tag)
