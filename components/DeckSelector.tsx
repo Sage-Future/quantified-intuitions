@@ -47,7 +47,7 @@ export function DeckSelector({
         className="relative hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm"
       >
         <span className="text-gray-600 font-normal text-sm">
-          {"Current deck"}{selectedTags.length > 1 ? "s" : ""}{": "}
+          {"Questions deck"}{selectedTags.length > 1 ? "s" : ""}{": "}
         </span>
           {selectedTags.map((tag) => <span key={tag.id} className="block">{tag.name}</span>)}
       </button>

@@ -172,6 +172,7 @@ model CalibrationQuestion {
   C                        Float                   @default(100)
   source                   String                  @default("")
   challengeOnly            Boolean                 @default(false)
+  context                  String                  @default("")
   calibrationAnswers       CalibrationAnswer[]
   challenges               Challenge[]
   teamAnswers              TeamFermiAnswer[]
