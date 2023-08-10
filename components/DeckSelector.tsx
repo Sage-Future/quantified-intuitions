@@ -6,6 +6,14 @@ import { SuperJSONValue } from 'superjson/dist/types';
 import useSWR from 'swr';
 import { fetcher } from '../lib/services/data';
 
+const EA_SUBDECKS = [
+  "animals",
+  "effective altruism",
+  "effective giving",
+  "global poverty",
+  "long_term_history",
+  "pandemics",
+]
 export function DeckSelector({
   allTags,
   selectedTags,
@@ -42,10 +50,16 @@ export function DeckSelector({
 
   const selectedDeckStats = {
     totalQuestions: selectedTags.reduce((acc, curr) => {
+      if (selectedTags.some(t => t.id === "ea") && EA_SUBDECKS.includes(curr.id)) {
+        return acc
+      }
       const stats = data?.json.find((stat: any) => stat.tag === curr.id)
       return acc + (stats ? stats.totalQuestions : 0)
     }, 0),
     answered: selectedTags.reduce((acc, curr) => {
+      if (selectedTags.some(t => t.id === "ea") && EA_SUBDECKS.includes(curr.id)) {
+        return acc
+      }
       const stats = data?.json.find((stat: any) => stat.tag === curr.id)
       return acc + (stats ? stats.answered : 0)
     }, 0),
