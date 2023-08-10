@@ -40,16 +40,40 @@ export function DeckSelector({
     }
   )
 
+  const selectedDeckStats = {
+    totalQuestions: selectedTags.reduce((acc, curr) => {
+      const stats = data?.json.find((stat: any) => stat.tag === curr.id)
+      return acc + (stats ? stats.totalQuestions : 0)
+    }, 0),
+    answered: selectedTags.reduce((acc, curr) => {
+      const stats = data?.json.find((stat: any) => stat.tag === curr.id)
+      return acc + (stats ? stats.answered : 0)
+    }, 0),
+  }
+
   return (
     <>
       <button
         onClick={() => openModal()}
-        className="relative hover:bg-gray-100 text-gray-800 font-semibold py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm"
+        className="relative flex gap-4 hover:bg-gray-100 font-semibold text-gray-800 py-4 px-6 border border-gray-300 rounded-md shadow-sm text-sm text-left mx-auto"
       >
-        <span className="text-gray-600 font-normal text-sm">
-          {"Questions deck"}{selectedTags.length > 1 ? "s" : ""}{": "}
-        </span>
-          {selectedTags.map((tag) => <span key={tag.id} className="block">{tag.name}</span>)}
+        {<div className="mx-auto my-auto text-center">
+          <div
+            className="radial-progress bg-primary text-white border-4 border-primary text-xs"
+            style={{
+              "--value": (selectedDeckStats.answered / selectedDeckStats.totalQuestions * 100) || 0,
+              "--size": "3rem"
+            } as any}
+          >
+            {data ? `${selectedDeckStats.answered}/${selectedDeckStats.totalQuestions}` : "..."}
+          </div>
+        </div>}
+        <div className="my-auto">
+          <span className="text-gray-600 font-normal text-sm">
+            {"Deck"}{selectedTags.length > 1 ? "s" : ""}{": "}
+          </span>
+          {selectedTags.map((tag) => <span key={tag.id} className="block text-lg">{tag.name}</span>)}
+        </div>
       </button>
       <Transition appear show={isOpen} as={Fragment}>
         <Dialog as="div" className="relative z-10" onClose={closeModal}>

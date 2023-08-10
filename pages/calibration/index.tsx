@@ -98,7 +98,8 @@ const Calibration = ({
                     </h1>
                     <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
                     <p className="text-center">
-                      Check your calibration in <Link href="/calibration/charts">charts</Link>, or <Link href="/">try our other games</Link>.
+                      Check your calibration in <Link href="/calibration/charts">charts</Link>, or 
+                      <Link href="/">try our other games</Link>.
                     </p>
                   </>
                   :
@@ -116,7 +117,10 @@ const Calibration = ({
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarCalibration />
-      <div className="py-6 px-8 grow">
+      <div className="py-6 px-8 grow relative">
+        <div className="pb-8">
+          <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
+        </div>
         <div className="max-w-prose mx-auto flex justify-between flex-wrap gap-4 md:flex-row-reverse">
           <div className="prose">
             <h4 className="my-0 text-gray-500">Time remaining:</h4>
@@ -140,7 +144,6 @@ const Calibration = ({
               <span className="text-gray-500 text-[16px]"> points</span>
             </h2>
           </div>
-          <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
         </div>
         {calibrationQuestion === undefined ? (
           <div className="mt-10">
