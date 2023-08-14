@@ -43,7 +43,7 @@ export function DeckSelector({
   const { data, isValidating } = useSWR<SuperJSONValue>(
     `/api/v0/getCalibrationDeckStats`,
     fetcher,
-    {
+    { 
       revalidateOnMount: true,
     }
   )
@@ -121,6 +121,7 @@ export function DeckSelector({
                   >
                     Choose calibration decks
                   </Dialog.Title>
+                  <span className="text-sm text-gray-400">Select multiple decks to shuffle them together.</span>
                   <div className="mt-4 flex flex-row gap-4 md:gap-8 flex-wrap justify-around">
                     {
                       allTags.map((tag) => {

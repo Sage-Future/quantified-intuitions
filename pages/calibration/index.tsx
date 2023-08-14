@@ -34,7 +34,11 @@ export const getServerSideProps = async (ctx: NextPageContext) => {
   }
 }
 
-const DEFAULT_DECKS = ["ea"]
+const DEFAULT_DECKS = [
+  "animals",
+  "global poverty",
+  "long_term_history",
+]
 
 const Calibration = ({
   allTags
