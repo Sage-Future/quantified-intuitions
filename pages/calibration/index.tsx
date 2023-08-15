@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 import { CalibrationQuestion, CalibrationQuestionTag } from '@prisma/client'
 
@@ -50,6 +50,16 @@ const Calibration = ({
   const initialDecks = router.query.deck || router.query.decks || DEFAULT_DECKS
   const [tags, setTags] = useState<CalibrationQuestionTag[]>(allTags.filter((tag) => initialDecks === tag.id || initialDecks.includes(tag.id)))
 
+  useEffect(() => {
+    router.query.deck = tags.map((tag) => tag.id)
+    router.push(router)
+  },[tags])
+
+  useEffect(() => {
+    router.query.deck = tags.map((tag) => tag.id)
+    router.push(router)
+  },[router.isReady])
+
   const getQuestionUrl = `/api/v0/getCalibrationQuestion?tags=${tags.map((tag) => tag.id).join(",")}`
   const { data, isValidating } = useSWR<SuperJSONValue>(
     getQuestionUrl,
@@ -98,11 +108,11 @@ const Calibration = ({
                 {result?.allQuestionsAnswered ? 
                   <>
                     <h1 className="text-4xl font-bold text-center">
-                      {"You've answered all the questions!"}
+                      {"You've answered all the questions! Try another deck?"}
                     </h1>
                     <DeckSelector allTags={allTags} selectedTags={tags} setSelectedTags={setTags} />
                     <p className="text-center">
-                      Check your calibration in <Link href="/calibration/charts">charts</Link>, or 
+                      Check your calibration in <Link href="/calibration/charts">charts</Link>{", or "}
                       <Link href="/">try our other games</Link>.
                     </p>
                   </>

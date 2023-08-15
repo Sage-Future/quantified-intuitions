@@ -31,6 +31,8 @@ export function DeckSelector({
     setLocalSelectedTags(selectedTags)
   }
 
+  console.log({selectedTags, localSelectedTags})
+
   const closeModal = () => {
     if (localSelectedTags.length === 0) {
       setLocalSelectedTags(selectedTags)
@@ -125,7 +127,7 @@ export function DeckSelector({
                   <div className="mt-4 flex flex-row gap-4 md:gap-8 flex-wrap justify-around">
                     {
                       allTags.map((tag) => {
-                        const selected = localSelectedTags.includes(tag)
+                        const selected = localSelectedTags.find(t => t.id === tag.id)
                         const stats = data?.json.find((stat: any) => stat.tag === tag.id) as {
                           totalQuestions: number,
                           answered: number,
