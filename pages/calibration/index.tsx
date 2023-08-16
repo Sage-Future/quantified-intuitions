@@ -17,6 +17,7 @@ import { NavbarCalibration } from '../../components/NavbarCalibration'
 import { Sorry } from '../../components/Sorry'
 import { Prisma } from "../../lib/prisma"
 import { fetcher } from '../../lib/services/data'
+import { InfoButton } from '../../components/InfoButton'
 
 
 // todo make static?
@@ -149,7 +150,9 @@ const Calibration = ({
             selected={confidenceInterval}
             setSelected={setConfidenceInterval}
             options={["50%", "60%", "70%", "80%", "90%"]}
-            label={"Confidence interval"}
+            label={<div className='flex gap-1'>Confidence interval
+              <InfoButton tooltip={`Choose which confidence interval to train. For your ${confidenceInterval} confidence interval, you are well-calibrated if the true answer is within your bounds ${confidenceInterval} of the time.`} />
+            </div>}
           />
           <div className="prose">
             <h4 className="my-0 text-gray-500">Score:</h4>

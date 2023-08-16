@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { ReactNode } from "react";
 
 export const ButtonArray = ({
     options,
@@ -10,7 +11,7 @@ export const ButtonArray = ({
     options: string[];
     selected: string | null;
     setSelected: (confidenceInterval: string) => void;
-    label: string;
+    label: ReactNode;
     size?: "sm" | "lg" | "xl";
 }) => {
     return (
