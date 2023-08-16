@@ -7,6 +7,7 @@ import useSWR from 'swr';
 import { fetcher } from '../lib/services/data';
 import { event } from "nextjs-google-analytics";
 import { useSession } from "next-auth/react";
+import { PencilIcon } from "@heroicons/react/24/solid";
 
 const EA_SUBDECKS = [
   "animals",
@@ -78,7 +79,7 @@ export function DeckSelector({
     <>
       <button
         onClick={() => openModal()}
-        className="relative flex gap-4 hover:bg-gray-100 font-semibold text-gray-800 py-4 px-6 border border-gray-300 rounded-md shadow-sm text-sm text-left mx-auto"
+        className="relative flex border-none gap-4 hover:bg-gray-100 font-semibold text-gray-800 py-4 px-6 border border-gray-300 rounded-md text-sm text-left mx-auto"
       >
         {<div className="mx-auto my-auto text-center">
           <div
@@ -92,8 +93,9 @@ export function DeckSelector({
           </div>
         </div>}
         <div className="my-auto">
-          <span className="text-gray-600 font-normal text-sm">
-            {"Deck"}{selectedTags.length > 1 ? "s" : ""}{": "}
+          <span className="text-gray-600 font-normal text-sm flex gap-2">
+            {"Selected deck"}{selectedTags.length > 1 ? "s" : ""}{""}
+            <PencilIcon className="text-indigo-600" width={12} />
           </span>
           {selectedTags.map((tag) => <span key={tag.id} className="block text-lg">{tag.name}</span>)}
         </div>
