@@ -5,6 +5,8 @@ import { Fragment, useState } from "react";
 import { SuperJSONValue } from 'superjson/dist/types';
 import useSWR from 'swr';
 import { fetcher } from '../lib/services/data';
+import { event } from "nextjs-google-analytics";
+import { useSession } from "next-auth/react";
 
 const EA_SUBDECKS = [
   "animals",
@@ -23,6 +25,7 @@ export function DeckSelector({
   selectedTags: CalibrationQuestionTag[]
   setSelectedTags: (selectedTags: CalibrationQuestionTag[]) => void
 }) {
+  const session = useSession()
   const [isOpen, setIsOpen] = useState(false)
 
   const [localSelectedTags, setLocalSelectedTags] = useState<CalibrationQuestionTag[]>(selectedTags)
@@ -38,6 +41,10 @@ export function DeckSelector({
       setLocalSelectedTags(selectedTags)
     } else {
       setSelectedTags(localSelectedTags)
+      event("calibration_switch_decks", {
+        app: "calibration",
+        userId: session.data?.user?.id,
+      });
     }
     setIsOpen(false)
   }
