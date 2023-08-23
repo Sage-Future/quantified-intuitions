@@ -67,6 +67,11 @@ export const CalibrationForm = ({
       setIsLoading(false);
       return;
     }
+    if ((upperBoundNumber >= Infinity || lowerBoundNumber >= Infinity) && calibrationQuestion.prefix.includes("10^")) {
+      setErrors(["This question uses scientific notation, your answer is too high. Enter the number of zeroes, e.g. 10^6 is 1,000,000"]);
+      setIsLoading(false);
+      return;
+    }
 
     await fetch("/api/v0/createCalibrationAnswer", {
       method: "POST",
