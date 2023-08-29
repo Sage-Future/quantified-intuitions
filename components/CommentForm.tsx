@@ -12,7 +12,7 @@ export const CommentForm = ({ disabled = false }: { disabled?: boolean }) => {
         >
           Reasoning
         </label>
-        <span className="text-sm text-gray-500" id="reasoning-optional">
+        <span className="text-sm text-gray-500 select-none" id="reasoning-optional">
           Optional
         </span>
       </div>
@@ -26,7 +26,7 @@ export const CommentForm = ({ disabled = false }: { disabled?: boolean }) => {
 
           "
           defaultValue={""}
-          placeholder={`I predicted X% because...\nNote: This feature is not yet implemented.`}
+          placeholder={`I predicted X% because...`}
           {...register("comment")}
         />
       </div>

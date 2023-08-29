@@ -105,6 +105,7 @@ model Pastcast {
   timeSpent         Int?     @default(0)
   room              Room?    @relation(fields: [roomId], references: [id])
   roomId            String?
+  comment           String?
 
   @@id([questionId, userId])
 }

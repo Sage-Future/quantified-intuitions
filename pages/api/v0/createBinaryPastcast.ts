@@ -65,6 +65,7 @@ const createBinaryPastcast = async (req: Request, res: NextApiResponse) => {
       score,
       skipped,
       timeSpent,
+      comment,
     },
   });
   res.status(201).json({
