@@ -38,7 +38,7 @@ export const Sidebar = ({
       current: selected === "VantageSearch",
     },
     {
-      name: "Wikipedia Search (Beta)",
+      name: "Wikipedia Search",
       icon: MagnifyingGlassIcon,
       onClick: () => setSelected("WikiSearch"),
       current: selected === "WikiSearch",

@@ -68,17 +68,23 @@ export default async function handle(req: Request, res: NextApiResponse) {
     console.log(fetchUrl2);
     console.log(response2);
     const json2 = await response2.json();
+    const page = Object.keys(json2.query.pages)?.[0]
     const revisionId =
-      json2.query.pages[Object.keys(json2.query.pages)[0]].revisions[0].revid;
-    const link = `https://en.wikipedia.org/?oldid=${revisionId}`;
-    console.log(link);
-    results.push({
-      title,
-      snippet: snippet.replace(/<[^>]*>?/gm, ""),
-      link,
-      displayedLink: link,
-      position: i + 1,
-    });
+      page && json2.query?.pages[page]?.revisions?.[0]?.revid;
+
+    if (!revisionId) {
+      console.error("no revision id found for ", {title, snippet, page});
+    } else {
+      const link = `https://en.wikipedia.org/?oldid=${revisionId}`;
+      console.log(link);
+      results.push({
+        title,
+        snippet: snippet.replace(/<[^>]*>?/gm, ""),
+        link,
+        displayedLink: link,
+        position: i + 1,
+      });
+    }
   }
   console.log(results);
   res.json(results);
