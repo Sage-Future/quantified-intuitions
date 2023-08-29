@@ -227,6 +227,7 @@ export const ForecastForm = ({
                       skipped={false}
                       answer={question.binaryResolution}
                       stringAnswer={undefined}
+                      helpText="Scored using log scoring relative to the original crowd forecast at that time - you'll get zero points if you submit the same value as the crowd. Maximise your score by reporting your true belief!"
                     />
                     <OriginalPlatform question={question} />
                   </>

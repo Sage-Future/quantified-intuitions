@@ -1,6 +1,7 @@
 import { CheckCircleIcon, XCircleIcon } from "@heroicons/react/24/solid";
 
 import { valueToString } from "../lib/services/format";
+import { InfoButton } from "./InfoButton";
 
 export const Result = ({
   pointsEarned,
@@ -8,12 +9,14 @@ export const Result = ({
   answer,
   stringAnswer,
   otherPlayersPointsEarned,
+  helpText,
 }: {
   pointsEarned: number;
   skipped: boolean;
   answer: boolean;
   stringAnswer: string | undefined;
   otherPlayersPointsEarned?: number[];
+  helpText?: string;
 }) => {
   const higherThanPercentage = (otherPlayersPointsEarned && otherPlayersPointsEarned.length > 2) ? 
     otherPlayersPointsEarned.reduce((acc, curr) => {
@@ -96,6 +99,9 @@ export const Result = ({
                       stringAnswer !== undefined
                     )}{" "}
                     points!
+                    {helpText && <span className="ml-1">
+                      <InfoButton tooltip={helpText} className="tooltip-left" />
+                    </span>}
                   </>
                 )}
               </p>
