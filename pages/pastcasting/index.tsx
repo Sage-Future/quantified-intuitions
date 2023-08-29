@@ -7,7 +7,6 @@ import { QuestionWithCommentsAndPastcasts } from '../../types/additional';
 import type { GetServerSideProps } from "next";
 import { unstable_getServerSession } from 'next-auth';
 import { authOptions } from '../api/auth/[...nextauth]';
-import Head from 'next/head';
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions);
@@ -74,12 +73,22 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
     // or has been skipped the minimum number of times
     skippedByQuestion.some(q => q.questionId === question.id && q._count.skipped === minSkipped)
   );
+
+  // order uniqueQuestions deterministically so that same question persists across page refresh
+  function hashCode(str: string) {
+    let hash = 0;
+    for (let i = 0; i < str.length; i++) {
+      hash = str.charCodeAt(i) + ((hash << 5) - hash);
+    }
+    return hash;
+  }
+  filteredQuestions.sort((a, b) => hashCode(a.title) - hashCode(b.title));
+
   const questionId = uniqueQuestions.some(
     (question) => question.id === "metaculus-395"
   )
     ? "metaculus-395"
-    : filteredQuestions[Math.floor(Math.random() * filteredQuestions.length)]
-      .id;
+    : filteredQuestions[0].id;
   const question = await Prisma.question.findUnique({
     where: {
       id: questionId,
