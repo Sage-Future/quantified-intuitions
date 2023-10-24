@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export const Footer = ({
   showReportProblem = true
 }: {
@@ -119,7 +121,9 @@ export const Footer = ({
           </a>
         </div>
         <div className="mt-8 md:mt-0 md:order-1">
-          <p className="text-center text-base text-gray-400">Sage Future Inc</p>
+          <Link className="no-underline" href="https://sage-future.org">
+            <a className="text-center text-base text-gray-400 hover:underline">Sage Future Inc</a>
+          </Link>
         </div>
       </div>
     </footer>
