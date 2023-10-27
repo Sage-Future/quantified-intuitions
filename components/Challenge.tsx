@@ -103,12 +103,12 @@ export const Challenge = ({
                   <p className="my-0">{"A narrower interval gets you more points, if you're right."}</p>
                   <p className="my-0">{"But if you're wrong, a narrower interval loses you more points!"}</p>
 
-                  {/* <div className="mt-4 mb-2 text-sm flex flex-row">
+                  <div className="mt-4 mb-2 text-sm flex flex-row">
                     <InformationCircleIcon className="mr-2 w-20 md:w-12 text-indigo-500 inline-block" />
                     <p className="my-0 flex-shrink">
-                      {`To maximise your score, enter your ${CHALLENGE_CONFIDENCE_INTERVAL}% confidence interval: a range narrow enough that you think there's a ${CHALLENGE_CONFIDENCE_INTERVAL}% chance the right answer is inside it.`}
+                      {`To maximise your score, we suggest you enter your 90% confidence interval: a range narrow enough that you think there's a 90% chance the right answer is inside it.`}
                     </p>
-                  </div> */}
+                  </div>
                   <div className="pt-2">
                     <button
                       className="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
