@@ -64,7 +64,7 @@ export const NavbarCalibration = () => {
   ].filter(Boolean);
   return (
     <>
-      <NextSeo title="Calibration" />
+      <NextSeo title="Calibration" description="Answer trivia questions to calibrate your uncertainty" />
       <Disclosure as="nav" className="bg-white border-b border-gray-200">
         {({ open }) => (
           <>

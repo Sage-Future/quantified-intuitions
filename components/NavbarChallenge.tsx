@@ -59,7 +59,7 @@ export const NavbarChallenge = () => {
   ].filter(Boolean);
   return (
     <>
-      <NextSeo title="The Estimation Game" />
+      <NextSeo title="The Estimation Game" description="Team up with your friends to play our monthly estimation quiz" />
       <Disclosure as="nav" className="bg-white border-b border-gray-200">
         {({ open }) => (
           <>

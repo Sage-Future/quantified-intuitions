@@ -75,7 +75,7 @@ export const NavbarPastcasting = () => {
   const router = useRouter();
   return (
     <>
-      <NextSeo title="Pastcasting" />
+      <NextSeo title="Pastcasting" description="Predict past events to rapidly practise forecasting" />
       <Disclosure as="nav" className="bg-white border-b border-gray-200">
         {({ open }) => (
           <>

@@ -10,7 +10,7 @@ import { NavbarGeneric } from "../../components/NavbarGeneric"
 const AnkiPage = () => {
   return (
     <div className="flex flex-col min-h-screen ">
-      <NextSeo title="Anki with Uncertainty" />
+      <NextSeo title="Anki with Uncertainty" description="Turn any flashcard deck into a calibration training tool" />
       <NavbarGeneric />
       <div className="bg-gray-50 grow">
         <div className="px-4 pt-12 lg:pt-16 mx-auto max-w-6xl">
