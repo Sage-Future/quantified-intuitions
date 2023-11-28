@@ -63,7 +63,11 @@ const Faq = () => {
     },
     {
       question: "Can I run a game outside the dates listed?",
-      answer: "You can either wait until the next month's challenge drops, or play a past month's game from the archives.",
+      answer: "You can either wait until the next month's challenge drops, or play any past month's game from the archives.",
+    },
+    {
+      question: "How do I show a QR code for players to join?",
+      answer: "Go to the leaderboard and click \"Show QR code\"",
     },
     {
       question: "I'm hosting a large event, conference or retreat, can I run a bespoke Estimation Game?",

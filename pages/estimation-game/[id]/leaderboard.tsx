@@ -1,11 +1,13 @@
 import { GetServerSideProps, NextPage } from "next"
 import { Session } from "next-auth"
 import { getSession, useSession } from "next-auth/react"
-import Image from "next/image"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import { useState } from "react"
+import QRCode from "react-qr-code"
 import { ChallengeLeaderboard } from "../../../components/ChallengeLeaderboard"
 import { Footer } from "../../../components/Footer"
+import { LoadingButton } from "../../../components/LoadingButton"
 import { NavbarChallenge } from "../../../components/NavbarChallenge"
 import { Prisma } from "../../../lib/prisma"
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../../../types/additional"
@@ -57,6 +59,8 @@ const Leaderboard: NextPage<ChallengeProps> = ({ challenge }) => {
   const router = useRouter()
   const user = session?.user
 
+  const [showJoinCode, setShowJoinCode] = useState(false)
+
   const usersTeam = challenge?.teams.find((team) =>
     team.users.some((theUser) => theUser.id === user?.id)
   )
@@ -76,12 +80,19 @@ const Leaderboard: NextPage<ChallengeProps> = ({ challenge }) => {
                 <h3 className="text-gray-600 prose">
                   <Link href={`/estimation-game/${challenge.id}`}>{challenge.name}</Link>
                 </h3>
-                <ChallengeLeaderboard challengeId={challenge.id} latestQuestion={null} teamId={usersTeam?.id} />
-                {challenge.id === "eagxnordics" && 
-                <div className="mx-auto text-center">
-                  <p className="prose">Join game: <Link href={`/estimation-game/${challenge.id}`}>{`quantifiedintuitions.org/estimation-game/${challenge.id}`}</Link></p>
-                  <Image src={"/nordics_qr.png"} alt="qr code" width={300} height={300} className="flex-grow mx-auto pt-8 aspect-square" />
+                {!showJoinCode && <div className="mt-8">
+                  <LoadingButton
+                    onClick={() => setShowJoinCode(!showJoinCode)} buttonText={`${showJoinCode ? "Hide" : "Show"} QR code`}
+                    isLoading={false}
+                    loadingText=""
+                  />
                 </div>}
+                {showJoinCode && 
+                <div className="mx-auto text-center my-8">
+                  <p className="prose">Join game: <Link href={`/estimation-game/${challenge.id}`}>{`quantifiedintuitions.org/estimation-game/${challenge.id}`}</Link></p>
+                  <QRCode value={`https://quantifiedintuitions.org/estimation-game/${challenge.id}`} size={300} className="flex-grow mx-auto pt-8 aspect-square" />
+                </div>}
+                <ChallengeLeaderboard challengeId={challenge.id} latestQuestion={null} teamId={usersTeam?.id} />
               </div>
             </div>
           )
