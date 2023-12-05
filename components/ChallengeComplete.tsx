@@ -39,7 +39,7 @@ export function ChallengeComplete({
         <OpenEndedQuestions />
       </div>
 
-      <div className="max-h-[405px] overflow-y-scroll">
+      <div className="max-h-[405px] overflow-y-auto">
         <ChallengeLeaderboard
           challengeId={challenge.id}
           teamId={teamId}

@@ -95,7 +95,7 @@ export const ChallengeLeaderboardAllTime = ({
                     </td>
                     <td
                       key={"team"}
-                      className="whitespace-nowrap overflow-x-scroll max-w-[12rem] px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
+                      className="whitespace-nowrap overflow-x-auto max-w-[12rem] px-3 py-4 first:pl-4 first:pr-3 text-sm font-medium text-gray-900 first:sm:pl-6"
                     >
                       {userScore.user.name}
                     </td>
