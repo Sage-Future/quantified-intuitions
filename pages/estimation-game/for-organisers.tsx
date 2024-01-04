@@ -38,11 +38,11 @@ const Faq = () => {
     {
       question: "Who should I invite?",
       answer:
-        "Anyone! Questions don't rely on EA knowledge - it's designed for everyone.",
+        "Anyone! Questions don't rely on specialist knowledge - it's designed for everyone.",
     },
     {
       question: "Who can host events?",
-      answer: "You can! Assemble your EA group, your group chat or your coworkers.",
+      answer: "You can! Assemble your group, your group chat or your coworkers.",
     },
     {
       question: "What do I need to run the event?",
@@ -79,7 +79,7 @@ const Faq = () => {
     },
     {
       question: "Who made this?",
-      answer: "The Estimation Game is built by [Sage](https://sage-future.org). Special thanks to [Hanna Pálya](https://www.linkedin.com/in/hanna-palya) for the excellent questions. We made [Pastcasting](https://www.quantifiedintuitions.org/pastcasting) - predict past events to rapidly practise forecasting - and [Calibration](https://www.quantifiedintuitions.org/calibration) - answer EA trivia questions to calibrate your uncertainty.",
+      answer: "The Estimation Game is built by [Sage](https://sage-future.org). Special thanks to [Hanna Pálya](https://www.linkedin.com/in/hanna-palya) for the excellent questions.",
     },
   ]
   return (
@@ -97,7 +97,7 @@ const Faq = () => {
           <div className="">
             <ul className="list-none space-y-4 pl-0">
               <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /> <span>{'Players answer two rounds of Fermi estimation questions, like "How many piano tuners are in New York?"'}</span></li>
-              <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Form teams and see how your scores compare to other EA groups and orgs around the world"}</span></li>
+              <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Form teams and see how your scores compare to other teams and players around the world"}</span></li>
               <li className="flex items-center space-x-3"><GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Build community, train your epistemics, and get comfortable putting numbers on things"}</span></li>
               <li className="flex items-center space-x-3"><RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Designed to be super easy for you to organise an event"}</span></li>
             </ul>
