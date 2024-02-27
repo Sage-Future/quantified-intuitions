@@ -381,7 +381,6 @@ export const getStaticProps: GetStaticProps = async () => {
                     )
                     .map((userAnswers) => userAnswers[index]?.score)
                   const avg = sum(answers) / answers.length
-                  !avg && console.log({ avg, index, answers })
                   return {
                     value: avg,
                     index,
