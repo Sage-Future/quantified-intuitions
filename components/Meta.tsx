@@ -17,7 +17,7 @@ export const Meta = () => {
         site_name: "Quantified Intuitions",
         images: [
           {
-            url: "https://www.quantifiedintuitions.org/mclean.png",
+            url: "https://www.quantifiedintuitions.org/athena.png",
             width: 800,
             height: 533,
           },
