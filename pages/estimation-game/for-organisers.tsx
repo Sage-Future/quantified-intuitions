@@ -1,4 +1,9 @@
-import { GlobeAsiaAustraliaIcon, RocketLaunchIcon, TrophyIcon, UsersIcon } from "@heroicons/react/24/solid"
+import {
+  GlobeAsiaAustraliaIcon,
+  RocketLaunchIcon,
+  TrophyIcon,
+  UsersIcon,
+} from "@heroicons/react/24/solid"
 import { GetStaticProps } from "next"
 import Link from "next/link"
 import ReactMarkdown from "react-markdown"
@@ -28,7 +33,8 @@ const Faq = () => {
     },
     {
       question: "What does The Estimation Game look like?",
-      answer: "Check out [this spoiler-free demo game](https://quantifiedintuitions.org/estimation-game/demo)."
+      answer:
+        "Check out [this spoiler-free demo game](https://quantifiedintuitions.org/estimation-game/demo).",
     },
     {
       question: "How easy is it to organise this event?",
@@ -42,11 +48,13 @@ const Faq = () => {
     },
     {
       question: "Who can host events?",
-      answer: "You can! Assemble your group, your group chat or your coworkers.",
+      answer:
+        "You can! Assemble your group, your group chat or your coworkers.",
     },
     {
       question: "What do I need to run the event?",
-      answer: "Each team will need a phone or laptop to play. We'd recommend teams of 2-3, or at most 5 people. Players might want to use pen and paper to make notes, or they can use a notetaking app or [Guesstimate](https://getguesstimate.com).",
+      answer:
+        "Each team will need a phone or laptop to play. We'd recommend teams of 2-3, or at most 5 people. Players might want to use pen and paper to make notes, or they can use a notetaking app or [Guesstimate](https://getguesstimate.com).",
     },
     {
       question: "In detail, how does the event work?",
@@ -55,31 +63,43 @@ const Faq = () => {
     },
     {
       question: "Can I play solo?",
-      answer: "Absolutely! Be sure to mention it in your team name so your leaderboard position is even more impressive!",
+      answer:
+        "Absolutely! Be sure to mention it in your team name so your leaderboard position is even more impressive!",
     },
     {
       question: "Can my team play remotely?",
-      answer: "Yes - just have one player use the website and screenshare the questions.",
+      answer:
+        "Yes - just have one player use the website and screenshare the questions.",
     },
     {
       question: "Can I run a game outside the dates listed?",
-      answer: "You can either wait until the next month's challenge drops, or play any past month's game from the archives.",
+      answer:
+        "You can either wait until the next month's challenge drops, or play any past month's game from the archives.",
     },
     {
       question: "How do I show a QR code for players to join?",
-      answer: "Go to the leaderboard and click \"Show QR code\"",
+      answer: 'Go to the leaderboard and click "Show QR code"',
     },
     {
-      question: "I'm hosting a large event, conference or retreat, can I run a bespoke Estimation Game?",
+      question:
+        "I'm playing with a team, how should we aggregate our estimates?",
+      answer:
+        "Use whatever method you prefer! @jewillem and their group use [this spreadsheet](https://docs.google.com/spreadsheets/d/1v-hKYYsuCH4EOzfVMxVGxvjM7q3rZzCMKGFtN4Vybt4/edit#gid=0) to take the geometric mean of their estimates for each question.",
+    },
+    {
+      question:
+        "I'm hosting a large event, conference or retreat, can I run a bespoke Estimation Game?",
       answer: "We're interested! Get in touch at adam@sage-future.org.",
     },
     {
       question: "How can I submit feedback about the site?",
-      answer: "You can email us at adam@sage-future.org or message us on our [Discord](https://discord.gg/mt9YVB8VDE).",
+      answer:
+        "You can email us at adam@sage-future.org or message us on our [Discord](https://discord.gg/mt9YVB8VDE).",
     },
     {
       question: "Who made this?",
-      answer: "The Estimation Game is built by [Sage](https://sage-future.org). Special thanks to [Hanna Pálya](https://www.linkedin.com/in/hanna-palya) for the excellent questions.",
+      answer:
+        "The Estimation Game is built by [Sage](https://sage-future.org). Special thanks to [Hanna Pálya](https://www.linkedin.com/in/hanna-palya) for the excellent questions.",
     },
   ]
   return (
@@ -90,22 +110,59 @@ const Faq = () => {
           <h2 className="text-3xl mb-2 font-extrabold text-gray-900">
             The Estimation Game
           </h2>
-          <h3 className="text-gray-600">An off-the-shelf event for your group</h3>
+          <h3 className="text-gray-600">
+            An off-the-shelf event for your group
+          </h3>
 
-          <p className="mt-12">Host an event for your group members to play The Estimation Game!</p>
+          <p className="mt-12">
+            Host an event for your group members to play The Estimation Game!
+          </p>
 
           <div className="">
             <ul className="list-none space-y-4 pl-0">
-              <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /> <span>{'Players answer two rounds of Fermi estimation questions, like "How many piano tuners are in New York?"'}</span></li>
-              <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Form teams and see how your scores compare to other teams and players around the world"}</span></li>
-              <li className="flex items-center space-x-3"><GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Build community, train your epistemics, and get comfortable putting numbers on things"}</span></li>
-              <li className="flex items-center space-x-3"><RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" /><span>{"Designed to be super easy for you to organise an event"}</span></li>
+              <li className="flex items-center space-x-3">
+                <UsersIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" />{" "}
+                <span>
+                  {
+                    'Players answer two rounds of Fermi estimation questions, like "How many piano tuners are in New York?"'
+                  }
+                </span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <TrophyIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" />
+                <span>
+                  {
+                    "Form teams and see how your scores compare to other teams and players around the world"
+                  }
+                </span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" />
+                <span>
+                  {
+                    "Build community, train your epistemics, and get comfortable putting numbers on things"
+                  }
+                </span>
+              </li>
+              <li className="flex items-center space-x-3">
+                <RocketLaunchIcon className="flex-shrink-0 mr-2 w-6 h-6 text-indigo-500 inline-block" />
+                <span>
+                  {"Designed to be super easy for you to organise an event"}
+                </span>
+              </li>
             </ul>
           </div>
 
-          <p className="">All you need to do is bring some people together and point them to <Link href="/estimation-game">The Estimation Game</Link>{"'s website."}</p>
+          <p className="">
+            All you need to do is bring some people together and point them to{" "}
+            <Link href="/estimation-game">The Estimation Game</Link>
+            {"'s website."}
+          </p>
 
-          <MailingListSignup buttonText="Send me email reminders about the event" tags={["estimation-game-organiser"]} />
+          <MailingListSignup
+            buttonText="Send me email reminders about the event"
+            tags={["estimation-game-organiser"]}
+          />
         </div>
 
         <div className="max-w-7xl mx-auto py-12 px-4 divide-y divide-gray-200 sm:px-6 lg:px-8">
