@@ -1,4 +1,9 @@
-import { GlobeAsiaAustraliaIcon, TrophyIcon, UsersIcon, WifiIcon } from "@heroicons/react/24/solid"
+import {
+  GlobeAsiaAustraliaIcon,
+  TrophyIcon,
+  UsersIcon,
+  WifiIcon,
+} from "@heroicons/react/24/solid"
 import { User } from "next-auth"
 import Link from "next/link"
 import { useState } from "react"
@@ -8,7 +13,6 @@ import { Countdown } from "./Countdown"
 import { Errors } from "./Errors"
 import { LoadingButton } from "./LoadingButton"
 import { Success } from "./Success"
-
 
 export const JoinChallenge = ({
   challenge,
@@ -42,7 +46,7 @@ export const JoinChallenge = ({
       return
     }
 
-    console.log({num: data.numPlayers})
+    console.log({ num: data.numPlayers })
 
     setIsLoading(true)
     await fetch("/api/v0/createTeam", {
@@ -75,15 +79,17 @@ export const JoinChallenge = ({
         className="max-w-3xl mx-auto py-8 px-4 sm:px-6 lg:px-8 bg-white shadow md:rounded-lg"
         key={challenge.id}
       >
-        <form
-          onSubmit={handleSubmit((data) => createTeam(data, challenge.id))}
-        >
+        <form onSubmit={handleSubmit((data) => createTeam(data, challenge.id))}>
           <div className="space-y-8 divide-y divide-gray-200">
             <div>
               <div>
                 <h3 className="text-lg leading-6 font-medium text-gray-900">
                   {challenge.name}
-                  {challenge.subtitle ? <span className="hidden md:inline">: </span> : ""}
+                  {challenge.subtitle ? (
+                    <span className="hidden md:inline">: </span>
+                  ) : (
+                    ""
+                  )}
                   <span className="block md:inline text-md md:text-lg text-gray-500 md:text-gray-900">
                     {challenge?.subtitle}
                   </span>
@@ -96,15 +102,39 @@ export const JoinChallenge = ({
 
                 <div className="mt-4 text-sm">
                   <ul className="list-none space-y-4 pl-0">
-                    <li className="flex items-center space-x-3"><GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"Answer 10 questions to train your estimation skills"}</span></li>
-                    <li className="flex items-center space-x-3"><UsersIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /> <span>{'Play solo or team up with friends'}</span></li>
-                    <li className="flex items-center space-x-3"><TrophyIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"See how your scores compare on the "} 
-                    <Link href={`/estimation-game/${challenge.id}/leaderboard`}><a className="underline">leaderboard</a></Link></span></li>
-                    <li className="flex items-center space-x-3"><WifiIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" /><span>{"Estimate based on your knowledge - don't look things up online"}</span></li>
+                    <li className="flex items-center space-x-3">
+                      <GlobeAsiaAustraliaIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" />
+                      <span>{`Answer ${
+                        challenge.id === "nontrivial-april" ? 8 : 10 // dumb hack
+                      } questions to train your estimation skills`}</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <UsersIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" />{" "}
+                      <span>{"Play solo or team up with friends"}</span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <TrophyIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" />
+                      <span>
+                        {"See how your scores compare on the "}
+                        <Link
+                          href={`/estimation-game/${challenge.id}/leaderboard`}
+                        >
+                          <a className="underline">leaderboard</a>
+                        </Link>
+                      </span>
+                    </li>
+                    <li className="flex items-center space-x-3">
+                      <WifiIcon className="flex-shrink-0 mr-1 w-5 h-5 text-indigo-500 inline-block" />
+                      <span>
+                        {
+                          "Estimate based on your knowledge - don't look things up online"
+                        }
+                      </span>
+                    </li>
                   </ul>
                 </div>
               </div>
-              {!existingTeam && user &&
+              {!existingTeam && user && (
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
@@ -137,7 +167,7 @@ export const JoinChallenge = ({
                     </div>
                   </div>
                 </div>
-              }
+              )}
             </div>
           </div>
           <div>
@@ -153,23 +183,25 @@ export const JoinChallenge = ({
             )}
             <div className="pt-5">
               <div className="flex justify-end">
-                {(existingTeam || !user) ?
+                {existingTeam || !user ? (
                   <LoadingButton
                     isLoading={false}
                     buttonText={existingTeam ? "Resume game" : "Join game"}
-                    loadingText={existingTeam ? "Resuming game..." : "Joining game..."}
+                    loadingText={
+                      existingTeam ? "Resuming game..." : "Joining game..."
+                    }
                     submit={false}
                     onClick={() => onJoin(existingTeam?.id)}
                   />
-                  :
+                ) : (
                   <LoadingButton
                     isLoading={isLoading}
                     buttonText="Join game"
                     loadingText="Joining game..."
                     submit={true}
-                    onClick={() => { }}
+                    onClick={() => {}}
                   />
-                }
+                )}
               </div>
             </div>
           </div>
