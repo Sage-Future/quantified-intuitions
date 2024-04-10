@@ -1,7 +1,8 @@
-import Link from "next/link";
+import Link from "next/link"
+import { QuickFeedback } from "./QuickFeedback"
 
 export const Footer = ({
-  showReportProblem = true
+  showReportProblem = true,
 }: {
   showReportProblem?: boolean
 }) => {
@@ -9,12 +10,13 @@ export const Footer = ({
     <footer className="bg-white border-t border-gray-200 ">
       <div className="max-w-7xl mx-auto py-6 px-4 sm:px-6 md:flex md:items-center md:justify-between lg:px-8">
         <div className="flex justify-center space-x-6 md:order-2">
-          {showReportProblem && <a
-            key={"feedbackForm"}
-            href="https://forms.gle/Tcg9Gtgc1C2UBWKA8"
-            className="text-gray-400 text-xs my-auto hover:text-gray-500">
-            Report a problem
-          </a>}
+          {showReportProblem && (
+            <QuickFeedback
+              placeholder="Report a problem"
+              type="QI report problem"
+              btnClassname="btn-xs"
+            />
+          )}
           <a
             key={"eaforum"}
             href={"https://forum.effectivealtruism.org/users/sage"}
@@ -121,11 +123,17 @@ export const Footer = ({
           </a>
         </div>
         <div className="mt-8 md:mt-0 md:order-1">
-          <Link className="no-underline" href="https://sage-future.org" target="_blank">
-            <a className="text-center text-base text-gray-400 hover:underline">Sage Future Inc</a>
+          <Link
+            className="no-underline"
+            href="https://sage-future.org"
+            target="_blank"
+          >
+            <a className="text-center text-base text-gray-400 hover:underline">
+              Sage Future Inc
+            </a>
           </Link>
         </div>
       </div>
     </footer>
-  );
-};
+  )
+}

@@ -163,21 +163,21 @@ model Room {
 }
 
 model CalibrationQuestion {
-  id                       String                  @id @default(cuid())
-  isDeleted                Boolean                 @default(false)
-  content                  String
-  answer                   Float
-  prefix                   String                  @default("")
-  postfix                  String                  @default("")
-  useLogScoring            Boolean                 @default(false)
-  C                        Float                   @default(100)
-  source                   String                  @default("")
-  challengeOnly            Boolean                 @default(false)
-  context                  String                  @default("")
-  calibrationAnswers       CalibrationAnswer[]
-  challenges               Challenge[]
-  teamAnswers              TeamFermiAnswer[]
-  tags                     CalibrationQuestionTag[]
+  id                 String                   @id @default(cuid())
+  isDeleted          Boolean                  @default(false)
+  content            String
+  answer             Float
+  prefix             String                   @default("")
+  postfix            String                   @default("")
+  useLogScoring      Boolean                  @default(false)
+  C                  Float                    @default(100)
+  source             String                   @default("")
+  challengeOnly      Boolean                  @default(false)
+  context            String                   @default("")
+  calibrationAnswers CalibrationAnswer[]
+  challenges         Challenge[]
+  teamAnswers        TeamFermiAnswer[]
+  tags               CalibrationQuestionTag[]
 }
 
 model CalibrationQuestionTag {
@@ -275,4 +275,13 @@ model MailingListSubscriber {
   email     String
   createdAt DateTime @default(now())
   tags      String[]
+}
+
+model Feedback {
+  id        String   @id @default(cuid())
+  createdAt DateTime @default(now())
+  type      String
+  message   String
+  email     String?
+  userId    String?
 }
