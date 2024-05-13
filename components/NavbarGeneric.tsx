@@ -1,35 +1,34 @@
-import clsx from "clsx";
-import { signIn, signOut, useSession } from "next-auth/react";
-import Link from "next/link";
-import { useRouter } from "next/router";
-import { Fragment } from "react";
+import clsx from "clsx"
+import { signIn, signOut, useSession } from "next-auth/react"
+import Link from "next/link"
+import { Fragment } from "react"
 
-import { Disclosure, Menu, Transition } from "@headlessui/react";
-import { Bars3Icon, ScaleIcon, XMarkIcon } from "@heroicons/react/24/outline";
+import { Disclosure, Menu, Transition } from "@headlessui/react"
+import { Bars3Icon, ScaleIcon, XMarkIcon } from "@heroicons/react/24/outline"
 
-import { STOCK_PHOTO } from "../lib/services/magicNumbers";
+import { STOCK_PHOTO } from "../lib/services/magicNumbers"
 
 export const NavbarGeneric = () => {
-  const { data: session, status } = useSession();
+  const { data: session, status } = useSession()
 
   const user = {
     name: session?.user?.name ?? "",
     email: session?.user?.email ?? "",
     imageUrl: session?.user?.image ?? STOCK_PHOTO,
-  };
-  const navigation: { name: string, href: string, current: boolean }[] = [
+  }
+  const navigation: { name: string; href: string; current: boolean }[] = [
     // {
     //   name: "Discord",
     //   href: "https://discord.gg/mt9YVB8VDE",
     //   current: false,
     // },
-  ];
+  ]
   const userNavigation = [
     {
       name: session ? "Sign out" : "Sign in",
       href: undefined,
     },
-  ].filter(Boolean);
+  ].filter(Boolean)
   return (
     <>
       <Disclosure as="nav" className="bg-white border-b border-gray-200">
@@ -43,9 +42,15 @@ export const NavbarGeneric = () => {
                     <Disclosure.Button className="bg-white inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                       <span className="sr-only">Open main menu</span>
                       {open ? (
-                        <XMarkIcon className="block h-6 w-6" aria-hidden="true" />
+                        <XMarkIcon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       ) : (
-                        <Bars3Icon className="block h-6 w-6" aria-hidden="true" />
+                        <Bars3Icon
+                          className="block h-6 w-6"
+                          aria-hidden="true"
+                        />
                       )}
                     </Disclosure.Button>
                   </div>
@@ -82,12 +87,14 @@ export const NavbarGeneric = () => {
                         href={item.href}
                         aria-current={item.current ? "page" : undefined}
                       >
-                        <a className={clsx(
-                          item.current
-                            ? "border-indigo-500 text-gray-900"
-                            : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
-                          "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
-                        )}>
+                        <a
+                          className={clsx(
+                            item.current
+                              ? "border-indigo-500 text-gray-900"
+                              : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700",
+                            "inline-flex items-center px-1 pt-1 border-b-2 text-sm font-medium"
+                          )}
+                        >
                           {item.name}
                         </a>
                       </Link>
@@ -96,6 +103,11 @@ export const NavbarGeneric = () => {
                 </div>
                 <div className="flex items-center">
                   <div className="hidden lg:ml-6 lg:flex lg:items-center">
+                    <Link href="https://sage-future.org/jobs">
+                      <button className="btn normal-case min-h-[40px] h-auto mr-2">
+                        {"We're hiring!"}
+                      </button>
+                    </Link>
                     {/*
                 <button
                   type="button"
@@ -141,7 +153,8 @@ export const NavbarGeneric = () => {
                                       )}
                                       onClick={
                                         item.href === undefined
-                                          ? () => (session ? signOut() : signIn())
+                                          ? () =>
+                                              session ? signOut() : signIn()
                                           : undefined
                                       }
                                     >
@@ -231,5 +244,5 @@ export const NavbarGeneric = () => {
         )}
       </Disclosure>
     </>
-  );
-};
+  )
+}
