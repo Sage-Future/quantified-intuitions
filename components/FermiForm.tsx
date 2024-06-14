@@ -156,6 +156,7 @@ export const FermiForm = ({
                       : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
+                  autoComplete="off"
                   {...register("lowerBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (
@@ -214,6 +215,7 @@ export const FermiForm = ({
                       : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
+                  autoComplete="off"
                   {...register("upperBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (

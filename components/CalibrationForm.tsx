@@ -122,11 +122,13 @@ export const CalibrationForm = ({
           {calibrationQuestion.content}
         </ReactMarkdown>
       </div>
-      {calibrationQuestion.context && <div className="prose break-words text-gray-500 pt-4 text-sm italic">
-        <ReactMarkdown remarkPlugins={[remarkGfm]}>
-          {calibrationQuestion.context}
-        </ReactMarkdown>
-      </div>}
+      {calibrationQuestion.context && (
+        <div className="prose break-words text-gray-500 pt-4 text-sm italic">
+          <ReactMarkdown remarkPlugins={[remarkGfm]}>
+            {calibrationQuestion.context}
+          </ReactMarkdown>
+        </div>
+      )}
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="pt-10">
           <h3 className="text-lg leading-6 font-medium text-gray-900">
@@ -163,6 +165,7 @@ export const CalibrationForm = ({
                       : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
+                  autoComplete="off"
                   {...register("lowerBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (
@@ -221,6 +224,7 @@ export const CalibrationForm = ({
                       : "text-right"
                   )}
                   disabled={pointsEarned !== null || isLoading}
+                  autoComplete="off"
                   {...register("upperBound")}
                 />
                 {calibrationQuestion.postfix.length > 0 && (
@@ -273,16 +277,23 @@ export const CalibrationForm = ({
                 otherPlayersPointsEarned={otherPlayerScores}
               />
               <div className="sm:col-span-6 block text-sm font-medium text-gray-500 text-center prose">
-                {calibrationQuestion.source && calibrationQuestion.source.startsWith("https://ourworldindata.org/grapher/") ?
+                {calibrationQuestion.source &&
+                calibrationQuestion.source.startsWith(
+                  "https://ourworldindata.org/grapher/"
+                ) ? (
                   <iframe
                     src={calibrationQuestion.source}
-                    style={{ width: "100%", height: "600px", border: "0px none" }}
+                    style={{
+                      width: "100%",
+                      height: "600px",
+                      border: "0px none",
+                    }}
                   />
-                :
-                <ReactMarkdown remarkPlugins={[remarkGfm]}>
-                  {"Source: " + calibrationQuestion.source}
-                </ReactMarkdown>
-                }
+                ) : (
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                    {"Source: " + calibrationQuestion.source}
+                  </ReactMarkdown>
+                )}
               </div>
               <LoadingButton
                 onClick={nextQuestion}
@@ -295,5 +306,5 @@ export const CalibrationForm = ({
         </div>
       </form>
     </div>
-  );
+  )
 };

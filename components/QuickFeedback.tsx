@@ -130,6 +130,7 @@ export function QuickFeedback({
             )}
             value={email}
             onChange={(e) => setEmail(e.target.value)}
+            autoComplete="off"
           />
         </motion.div>
       ) : null}
