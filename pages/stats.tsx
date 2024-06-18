@@ -2,6 +2,8 @@ import { NextSeo } from "next-seo"
 
 import { GetStaticProps } from "next"
 import {
+  Bar,
+  BarChart,
   CartesianGrid,
   Legend,
   Line,
@@ -37,6 +39,7 @@ export const getStaticProps: GetStaticProps = async () => {
         createdAt: true,
         team: {
           select: {
+            numPlayers: true,
             users: {
               select: {
                 id: true,
@@ -86,6 +89,17 @@ export const getStaticProps: GetStaticProps = async () => {
     {}
   )
 
+  const teamFermiAnswersByNumPlayers = teamFermiAnswers.reduce(
+    (acc: Record<number, (typeof teamFermiAnswers)[number][]>, curr) => {
+      if (!acc[curr.team.numPlayers]) {
+        acc[curr.team.numPlayers] = []
+      }
+      acc[curr.team.numPlayers].push(curr)
+      return acc
+    },
+    {}
+  )
+
   const answers = [answersByUser, pastcastsByUser, teamFermiAnswers]
   answers.forEach((arr: any) =>
     Object.keys(arr).forEach((userId) => {
@@ -121,6 +135,27 @@ export const getStaticProps: GetStaticProps = async () => {
         ),
     }
   }
+
+  const estimationGames = await Prisma.challenge.findMany({
+    include: {
+      teams: {
+        select: {
+          numPlayers: true,
+          users: {
+            select: {
+              id: true,
+            },
+          },
+        },
+      },
+    },
+    where: {
+      unlisted: false,
+    },
+    orderBy: {
+      startDate: "asc",
+    },
+  })
 
   const stats: StatsPageProps["stats"] = [
     {
@@ -336,6 +371,51 @@ export const getStaticProps: GetStaticProps = async () => {
           data: getUniqueUserIdsByDate(teamFermiAnswers),
         },
         {
+          type: "bar",
+          title: "Estimation Game number of teams",
+          data: estimationGames.map((game) => ({
+            label: game.id,
+            value: game.teams.length,
+          })),
+        },
+        {
+          type: "bar",
+          title: "Estimation Game self-reported number of players",
+          data: estimationGames.map((game) => ({
+            label: game.id,
+            value: game.teams.reduce((acc, team) => acc + team.numPlayers, 0),
+          })),
+        },
+        {
+          type: "bar",
+          title: "Estimation Game new team leaders",
+          data: estimationGames.map((game) => ({
+            label: game.id,
+            value: game.teams.filter(
+              (team) =>
+                !estimationGames.some(
+                  (otherGame) =>
+                    otherGame.startDate < game.startDate &&
+                    otherGame.teams.some((otherTeam) =>
+                      otherTeam.users.some((user) =>
+                        team.users.some((teamUser) => teamUser.id === user.id)
+                      )
+                    )
+                )
+            ).length,
+          })),
+        },
+        {
+          type: "bar",
+          title: "Estimation Game average score by team size",
+          data: Object.entries(teamFermiAnswersByNumPlayers).map(
+            ([numPlayers, answers]) => ({
+              label: `${numPlayers} players`,
+              value: round(mean(answers.map((answer) => answer.score)), 2),
+            })
+          ),
+        },
+        {
           type: "data over index",
           title:
             "20 random users score rolling average across their first 20 Estimation Game answers",
@@ -420,6 +500,11 @@ interface StatsPageProps {
             label: string
             data: { index: number; value: number; rollingAvg: number }[]
           }[]
+        }
+      | {
+          type: "bar"
+          title: string
+          data: { label: string; value: number }[]
         }
     )[]
   }[]
@@ -542,6 +627,46 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                 />,
                               ])}
                             </LineChart>
+                          </ResponsiveContainer>
+                        </div>
+                      )
+                    } else if (chart.type === "bar") {
+                      return (
+                        <div
+                          key={chart.title}
+                          className="flex flex-col bg-gray-100 p-4 rounded-lg"
+                        >
+                          <h3 className="text-lg font-medium mb-4">
+                            {chart.title}
+                          </h3>
+                          <ResponsiveContainer
+                            width="100%"
+                            height={300}
+                            key={chart.title}
+                          >
+                            <BarChart data={chart.data}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="label"
+                                angle={-25}
+                                textAnchor="end"
+                                tick={{
+                                  fontSize: 10,
+                                }}
+                                interval={0}
+                              />
+                              <YAxis />
+                              <Tooltip />
+                              <Bar
+                                dataKey="value"
+                                fill="#6366F1"
+                                label={{
+                                  position: "insideTop",
+                                  fontSize: 8,
+                                  fill: "white",
+                                }}
+                              />
+                            </BarChart>
                           </ResponsiveContainer>
                         </div>
                       )
