@@ -48,9 +48,9 @@ export const ChallengeLeaderboard = ({
         ? challenge.fermiQuestions
         : challenge.aboveBelowQuestions
     const answers = questions[questionIndex].teamAnswers
-    // @ts-ignore
     return (
       answers &&
+      // @ts-ignore
       answers.find((answer: { teamId: string }) => answer.teamId === teamId)
     )
   }
