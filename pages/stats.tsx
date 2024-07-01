@@ -349,6 +349,18 @@ export const getStaticProps: GetStaticProps = async () => {
           }
           return acc
         }, []).length,
+        "Total number of teams": estimationGames.reduce(
+          (acc, curr) => acc + curr.teams.length,
+          0
+        ),
+        "Average self-reported num of players per team (defaults to 1)": round(
+          mean(
+            estimationGames.flatMap((game) =>
+              game.teams.flatMap((team) => team.numPlayers)
+            )
+          ),
+          2
+        ),
         ...firstAndLastNUsers(teamFermiAnswersByUser, 20),
       },
       chartData: [
