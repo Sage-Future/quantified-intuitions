@@ -38,19 +38,20 @@ model Session {
 }
 
 model User {
-  id                  String                   @id @default(cuid())
-  name                String?
-  email               String?                  @unique
-  emailVerified       DateTime?
-  image               String?
-  accounts            Account[]
-  sessions            Session[]
-  pastcasts           Pastcast[]
-  searches            Search[]
-  commentInteractions UserCommentInteraction[]
-  rooms               Room[]
-  CalibrationAnswer   CalibrationAnswer[]
-  teams               Team[]
+  id                         String                   @id @default(cuid())
+  name                       String?
+  email                      String?                  @unique
+  emailVerified              DateTime?
+  image                      String?
+  challengeLeaderboardBanned Boolean                  @default(false)
+  accounts                   Account[]
+  sessions                   Session[]
+  pastcasts                  Pastcast[]
+  searches                   Search[]
+  commentInteractions        UserCommentInteraction[]
+  rooms                      Room[]
+  CalibrationAnswer          CalibrationAnswer[]
+  teams                      Team[]
 }
 
 model VerificationToken {
