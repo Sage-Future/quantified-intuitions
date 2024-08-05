@@ -71,8 +71,6 @@ const ChallengePage = ({
 }) => {
   const router = useRouter()
 
-  console.log({ activeChallenges })
-
   return (
     <div className="flex flex-col min-h-screen justify-between">
       <NavbarChallenge />
