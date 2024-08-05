@@ -122,14 +122,29 @@ export const Footer = ({
             </svg>
           </a>
         </div>
-        <div className="mt-8 md:mt-0 md:order-1">
+        <div className="mt-4 md:mt-0 md:order-1 flex flex-col gap-1 md:items-start">
           <Link
             className="no-underline"
             href="https://sage-future.org"
             target="_blank"
           >
-            <a className="text-center text-base text-gray-400 hover:underline">
+            <a
+              target="_blank"
+              className="text-center text-base text-gray-400 font-semibold hover:underline"
+            >
               Sage Future Inc
+            </a>
+          </Link>
+          <Link
+            className="no-underline"
+            href="https://www.every.org/sage-future?utm_campaign=donate-link&method=card%2Cbank%2Cpaypal%2Cpay%2Cvenmo%2Cstocks%2Cdaf%2Ccrypto#/donate"
+            target="_blank"
+          >
+            <a
+              target="_blank"
+              className="text-center text-gray-400 hover:underline"
+            >
+              Donate
             </a>
           </Link>
         </div>
