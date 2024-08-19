@@ -99,7 +99,7 @@ export default async function handle(req: Request, res: NextApiResponse) {
     return;
   }
   const time1 = Date.now();
-  const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=b1345b2c7e4bc848fa01b269898eeae970907e8abecc064f93b912a3812d7960&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=${MAX_SEARCH_RESULTS}`;
+  const fetchUrl = `https://serpapi.com/search.json?engine=google&q=${query}&api_key=${process.env.SERPAPI_API_KEY}&tbs=cdr:1,cd_min:,cd_max:${maxMonth}/${maxDay}/${maxYear}&num=${MAX_SEARCH_RESULTS}`;
   console.log(fetchUrl);
   const rawResult = await fetch(fetchUrl);
 
