@@ -32,8 +32,8 @@ export const getStaticProps: GetStaticProps = async () => {
       createdAt: true,
     },
   })
-  const teamFermiAnswers = (
-    await Prisma.teamFermiAnswer.findMany({
+  const fetchTeamFermiAnswers = async (skip: number, take: number) => {
+    return await Prisma.teamFermiAnswer.findMany({
       select: {
         score: true,
         createdAt: true,
@@ -48,13 +48,31 @@ export const getStaticProps: GetStaticProps = async () => {
           },
         },
       },
+      skip,
+      take,
     })
-  )
+  }
+
+  // Fetch team fermi answers in batches to avoid Prisma error `too many bind variables in prepared statement, expected maximum of 32767, received N`
+  const batchSize = 32000
+  let unprocessedTeamFermiAnswers: Awaited<
+    ReturnType<typeof fetchTeamFermiAnswers>
+  > = []
+  let offset = 0
+  let batch
+
+  do {
+    batch = await fetchTeamFermiAnswers(offset, batchSize)
+    unprocessedTeamFermiAnswers.push(...batch)
+    offset += batchSize
+  } while (batch.length === batchSize)
+
+  const teamFermiAnswers = unprocessedTeamFermiAnswers
     .map((answer) => ({
       ...answer,
       userId: answer.team.users[0]?.id,
     }))
-    .filter((answer) => answer.userId !== null)
+    .filter((answer) => answer.userId !== undefined)
 
   const answersByUser = calibrationAnswers.reduce(
     (acc: Record<string, (typeof calibrationAnswers)[number][]>, curr) => {
