@@ -32,17 +32,11 @@ export const getServerSideProps = async (ctx: any) => {
           users: true,
         },
         where: {
-          AND: [
-            session?.user?.id
-              ? {
-                  users: {
-                    some: {
-                      id: session?.user?.id,
-                    },
-                  },
-                }
-              : {},
-          ],
+          users: {
+            some: {
+              id: session?.user?.id || "not logged in, don't match",
+            },
+          },
         },
       },
     },
