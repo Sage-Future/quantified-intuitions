@@ -3,67 +3,49 @@ import {
   PlayIcon,
   TrophyIcon,
 } from "@heroicons/react/24/solid"
-import { User } from "@prisma/client"
 import clsx from "clsx"
-import { getSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
+import useSWR from "swr"
 import { Countdown } from "../../components/Countdown"
-
 import { Footer } from "../../components/Footer"
 import { JoinChallenge } from "../../components/JoinChallenge"
 import { MailingListSignup } from "../../components/MailingListSignup"
 import { NavbarChallenge } from "../../components/NavbarChallenge"
 import { QuickFeedback } from "../../components/QuickFeedback"
 import { Prisma } from "../../lib/prisma"
+import { fetcher } from "../../lib/services/data"
 import { ChallengeWithTeamsWithUsers } from "../../types/additional"
 
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx)
-
+export const getStaticProps = async () => {
   const activeChallenges = await Prisma.challenge.findMany({
     where: {
       isDeleted: false,
       unlisted: false,
     },
-    // include: {
-    //   teams: {
-    //     include: {
-    //       users: true,
-    //     },
-    //     where: {
-    //       users: {
-    //         some: {
-    //           id: session?.user?.id || "not logged in, don't match",
-    //         },
-    //       },
-    //     },
-    //   },
-    // },
   })
 
   return {
     props: {
-      session,
-      activeChallenges: activeChallenges.map((challenge) => ({
-        ...challenge,
-        teams: [], // challenge.teams.filter((team) =>
-          //team.users.some((user) => user.id == session?.user?.id)
-        //),
-      })),
-      user: session?.user,
+      activeChallenges,
     },
+    revalidate: 600, // Regenerate every 10 minutes
   }
 }
 
 const ChallengePage = ({
   activeChallenges,
-  user,
 }: {
   activeChallenges: ChallengeWithTeamsWithUsers[]
-  user: User
 }) => {
   const router = useRouter()
+  const { data: session } = useSession()
+  const user = session?.user
+  const { data: playedChallenges } = useSWR(
+    session?.user ? "/api/v0/getPlayedChallenges" : null,
+    fetcher
+  )
 
   return (
     <div className="flex flex-col min-h-screen justify-between">
@@ -145,11 +127,9 @@ const ChallengePage = ({
                 ?.filter((challenge) => challenge.endDate < new Date())
                 .sort((a, b) => b.startDate.getTime() - a.startDate.getTime())
                 .map((challenge) => {
-                  const challengeComplete =
-                    user &&
-                    challenge.teams.some((team) =>
-                      team.users.some((u) => u.id == user.id)
-                    )
+                  const challengeComplete = playedChallenges?.includes(
+                    challenge.id
+                  )
 
                   return (
                     <div
