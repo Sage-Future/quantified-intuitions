@@ -26,20 +26,20 @@ export const getServerSideProps = async (ctx: any) => {
       isDeleted: false,
       unlisted: false,
     },
-    include: {
-      teams: {
-        include: {
-          users: true,
-        },
-        where: {
-          users: {
-            some: {
-              id: session?.user?.id || "not logged in, don't match",
-            },
-          },
-        },
-      },
-    },
+    // include: {
+    //   teams: {
+    //     include: {
+    //       users: true,
+    //     },
+    //     where: {
+    //       users: {
+    //         some: {
+    //           id: session?.user?.id || "not logged in, don't match",
+    //         },
+    //       },
+    //     },
+    //   },
+    // },
   })
 
   return {
@@ -47,9 +47,9 @@ export const getServerSideProps = async (ctx: any) => {
       session,
       activeChallenges: activeChallenges.map((challenge) => ({
         ...challenge,
-        teams: challenge.teams.filter((team) =>
-          team.users.some((user) => user.id == session?.user?.id)
-        ),
+        teams: [], // challenge.teams.filter((team) =>
+          //team.users.some((user) => user.id == session?.user?.id)
+        //),
       })),
       user: session?.user,
     },
