@@ -2,8 +2,7 @@
 // learn more about it in the docs: https://pris.ly/d/prisma-schema
 
 generator client {
-  provider        = "prisma-client-js"
-  previewFeatures = ["relationJoins"]
+  provider = "prisma-client-js"
 }
 
 datasource db {
@@ -218,6 +217,7 @@ model Challenge {
   aboveBelowQuestions AboveBelowQuestion[]
   teams               Team[]
   unlisted            Boolean               @default(false)
+  createdAt           DateTime              @default(now())
 }
 
 model Team {
