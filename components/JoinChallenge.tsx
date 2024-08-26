@@ -69,7 +69,7 @@ export const JoinChallenge = ({
     })
   }
 
-  const existingTeam = challenge.teams.find((team) =>
+  const existingTeam = challenge.teams?.find((team) =>
     team.users.some((u) => u.id === user?.id)
   )
 
