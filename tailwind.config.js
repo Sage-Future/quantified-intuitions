@@ -1,6 +1,6 @@
 /** @type {import('tailwindcss').Config} */
 
-const defaultTheme = require("tailwindcss/defaultTheme");
+const defaultTheme = require("tailwindcss/defaultTheme")
 module.exports = {
   content: [
     "./pages/**/*.{js,ts,jsx,tsx}",
@@ -23,17 +23,18 @@ module.exports = {
     themes: [
       {
         mytheme: {
-          "primary": "#4338ca",
-          "secondary": "#f000b8",
-          "accent": "#1dcdbc",
-          "neutral": "#2b3440",
+          primary: "#4338ca",
+          secondary: "#f000b8",
+          accent: "#1dcdbc",
+          neutral: "#2b3440",
           "base-100": "#ffffff",
-          "info": "#3abff8",
-          "success": "#36d399",
-          "warning": "#fbbd23",
-          "error": "#f87272",
+          info: "#3abff8",
+          success: "#36d399",
+          warning: "#fbbd23",
+          error: "#f87272",
         },
       },
     ],
-  }
-};
+    logs: false,
+  },
+}

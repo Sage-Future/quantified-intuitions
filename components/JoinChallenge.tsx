@@ -4,11 +4,14 @@ import {
   UsersIcon,
   WifiIcon,
 } from "@heroicons/react/24/solid"
+import { Challenge } from "@prisma/client"
 import { User } from "next-auth"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useState } from "react"
 import { useForm } from "react-hook-form"
-import { ChallengeWithTeamsWithUsers } from "../types/additional"
+import useSWR from "swr"
+import { fetcher } from "../lib/services/data"
 import { Countdown } from "./Countdown"
 import { Errors } from "./Errors"
 import { LoadingButton } from "./LoadingButton"
@@ -19,10 +22,19 @@ export const JoinChallenge = ({
   user,
   onJoin,
 }: {
-  challenge: ChallengeWithTeamsWithUsers
+  challenge: Challenge
   user: User | undefined
   onJoin: (teamId: string | undefined) => void
 }) => {
+  const { data: session } = useSession()
+  const { data: existingTeamId } = useSWR(
+    session?.user
+      ? `/api/v0/getChallengeTeamId?challengeId=${challenge.id}`
+      : null,
+    fetcher
+  )
+  console.log({ existingTeamId })
+
   const { register, handleSubmit } = useForm()
   const [errors, setErrors] = useState<string[]>([])
   const [success, setSuccess] = useState<string>("")
@@ -30,15 +42,8 @@ export const JoinChallenge = ({
   const createTeam = async (data: any, challengeId: string) => {
     setErrors([])
     setSuccess("")
-    //team name must only contain letters, numbers, and spaces and cannot only be spaces
-    if (
-      data.teamName.length < 2 ||
-      data.teamName.length > 50 ||
-      !/^[a-zA-Z0-9 ]*$/.test(data.teamName)
-    ) {
-      setErrors([
-        "Team name must be between 2 and 50 characters and only contain letters, numbers, and spaces.",
-      ])
+    if (data.teamName.length < 2 || data.teamName.length > 50) {
+      setErrors(["Team name must be between 2 and 50 characters"])
       return
     }
     if (!data.numPlayers || data.numPlayers < 1) {
@@ -68,10 +73,6 @@ export const JoinChallenge = ({
       }
     })
   }
-
-  const existingTeam = challenge.teams?.find((team) =>
-    team.users.some((u) => u.id === user?.id)
-  )
 
   return (
     <div className="py-10 bg-gray-100 grow">
@@ -134,7 +135,7 @@ export const JoinChallenge = ({
                   </ul>
                 </div>
               </div>
-              {!existingTeam && user && (
+              {!existingTeamId && user && (
                 <div className="mt-6 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
                   <div className="sm:col-span-3">
                     <label
@@ -183,15 +184,15 @@ export const JoinChallenge = ({
             )}
             <div className="pt-5">
               <div className="flex justify-end">
-                {existingTeam || !user ? (
+                {existingTeamId || !user ? (
                   <LoadingButton
                     isLoading={false}
-                    buttonText={existingTeam ? "Resume game" : "Join game"}
+                    buttonText={existingTeamId ? "Resume game" : "Join game"}
                     loadingText={
-                      existingTeam ? "Resuming game..." : "Joining game..."
+                      existingTeamId ? "Resuming game..." : "Joining game..."
                     }
                     submit={false}
-                    onClick={() => onJoin(existingTeam?.id)}
+                    onClick={() => onJoin(existingTeamId)}
                   />
                 ) : (
                   <LoadingButton

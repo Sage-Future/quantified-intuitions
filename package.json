@@ -3,10 +3,10 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "prebuild": "prisma generate",
+    "prebuild": "prisma generate --no-hints",
     "dev": "next dev",
     "build": "next build",
-    "vercel-build": "prisma generate && prisma migrate deploy && next build",
+    "vercel-build": "prisma generate --no-hints && prisma migrate deploy && next build",
     "start": "next start",
     "lint": "next lint",
     "dbpush": "dotenv -e .env.local -- npx prisma db push",

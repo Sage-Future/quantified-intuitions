@@ -3,6 +3,7 @@ import {
   PlayIcon,
   TrophyIcon,
 } from "@heroicons/react/24/solid"
+import { Challenge } from "@prisma/client"
 import clsx from "clsx"
 import { useSession } from "next-auth/react"
 import Link from "next/link"
@@ -16,7 +17,6 @@ import { NavbarChallenge } from "../../components/NavbarChallenge"
 import { QuickFeedback } from "../../components/QuickFeedback"
 import { Prisma } from "../../lib/prisma"
 import { fetcher } from "../../lib/services/data"
-import { ChallengeWithTeamsWithUsers } from "../../types/additional"
 
 export const getStaticProps = async () => {
   const activeChallenges = await Prisma.challenge.findMany({
@@ -37,7 +37,7 @@ export const getStaticProps = async () => {
 const ChallengePage = ({
   activeChallenges,
 }: {
-  activeChallenges: ChallengeWithTeamsWithUsers[]
+  activeChallenges: Challenge[]
 }) => {
   const router = useRouter()
   const { data: session } = useSession()
