@@ -7,6 +7,7 @@ interface Subscriber {
   tags?: string[]
   name?: string
   products?: string[]
+  createdAt?: string // ISO string
 }
 
 interface Request extends NextApiRequest {
@@ -30,35 +31,42 @@ export default async function handler(req: Request, res: NextApiResponse) {
 }
 
 export async function subscribeToMailingList(subscribers: Subscriber[]) {
-  await Prisma.$transaction(async (prisma) => {
-    for (const { email, tags, name, products } of subscribers) {
-      const existingSubscriber = await prisma.mailingListSubscriber.findUnique({
-        where: { email },
-      })
+  await Prisma.$transaction(
+    async (prisma) => {
+      for (const { email, tags, name, products, createdAt } of subscribers) {
+        const existingSubscriber =
+          await prisma.mailingListSubscriber.findUnique({
+            where: { email },
+          })
 
-      await prisma.mailingListSubscriber.upsert({
-        where: { email },
-        update: {
-          tags: {
-            set: Array.from(
-              new Set([...(tags || []), ...(existingSubscriber?.tags || [])])
+        await prisma.mailingListSubscriber.upsert({
+          where: { email },
+          update: {
+            tags: {
+              set: Array.from(
+                new Set([...(tags || []), ...(existingSubscriber?.tags || [])])
+              ),
+            },
+            name: name || undefined,
+            products: Array.from(
+              new Set([
+                ...(products || []),
+                ...(existingSubscriber?.products || []),
+              ])
             ),
           },
-          name: name || undefined,
-          products: Array.from(
-            new Set([
-              ...(products || []),
-              ...(existingSubscriber?.products || []),
-            ])
-          ),
-        },
-        create: {
-          email,
-          tags,
-          name,
-          products,
-        },
-      })
+          create: {
+            email,
+            tags,
+            name,
+            products,
+            createdAt: createdAt ? new Date(createdAt) : undefined,
+          },
+        })
+      }
+    },
+    {
+      timeout: 60000,
     }
-  })
+  )
 }
