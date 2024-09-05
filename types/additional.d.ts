@@ -1,50 +1,70 @@
 import {
-  AboveBelowQuestion, CalibrationAnswer, CalibrationQuestion, Challenge, Comment, Pastcast, Question, Team, TeamAboveBelowAnswer, TeamFermiAnswer, User
-} from '@prisma/client';
+  AboveBelowQuestion,
+  CalibrationAnswer,
+  CalibrationQuestion,
+  Challenge,
+  Comment,
+  Pastcast,
+  Question,
+  Team,
+  TeamAboveBelowAnswer,
+  TeamFermiAnswer,
+  User,
+} from "@prisma/client"
 
 export type PastcastWithQuestion = Pastcast & {
-  question: Question;
-};
+  question: Question
+}
 
 export type UserWithPastcastsWithQuestionWithCalibrationAnswers = User & {
-  pastcasts: PastcastWithQuestion[];
-  CalibrationAnswer: CalibrationAnswer[];
-};
+  pastcasts: PastcastWithQuestion[]
+  CalibrationAnswer: CalibrationAnswer[]
+}
 
 export type UserWithPastcasts = User & {
-  pastcasts: Pastcast[];
-};
+  pastcasts: Pastcast[]
+}
 
 export type QuestionWithComments = Question & {
-  comments: Comment[];
-};
+  comments: Comment[]
+}
 
 export type QuestionWithCommentsAndPastcasts = Question & {
-  comments: Comment[];
-  pastcasts: Pastcast[];
-};
+  comments: Comment[]
+  pastcasts: Pastcast[]
+}
 
 export type ChallengeWithTeamsWithUsersAndQuestions = Challenge & {
-  teams: TeamWithUsers[];
+  teams: TeamWithUsers[]
   fermiQuestions: (CalibrationQuestion & {
-    teamAnswers: TeamFermiAnswer[];
-  })[];
+    teamAnswers: TeamFermiAnswer[]
+  })[]
   aboveBelowQuestions: (AboveBelowQuestion & {
-    teamAnswers: TeamAboveBelowAnswer[];
-  })[];
-};
+    teamAnswers: TeamAboveBelowAnswer[]
+  })[]
+}
+
+export type ChallengeWithTeamsAndQuestions = Challenge & {
+  teams: Team[]
+  fermiQuestions: (CalibrationQuestion & {
+    teamAnswers: TeamFermiAnswer[]
+  })[]
+  aboveBelowQuestions: (AboveBelowQuestion & {
+    teamAnswers: TeamAboveBelowAnswer[]
+  })[]
+}
 
 export type ChallengeWithTeamsWithUsers = Challenge & {
-  teams: TeamWithUsers[];
-};
+  teams: TeamWithUsers[]
+}
 
 export type TeamWithUsers = Team & {
-  users: User[];
-};
+  users: User[]
+}
 
 export type CalibrationOptions =
   | "QuestionDescription"
   | "VantageSearch"
   | "Scores"
   | "Leaderboard"
-  | "WikiSearch";
+  | "WikiSearch"

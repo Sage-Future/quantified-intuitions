@@ -3,14 +3,13 @@ import {
   EllipsisHorizontalCircleIcon,
   XCircleIcon,
 } from "@heroicons/react/24/solid"
-import { AboveBelowQuestion, CalibrationQuestion, Team } from "@prisma/client"
 import clsx from "clsx"
 import { deserialize } from "superjson"
 import { SuperJSONValue } from "superjson/dist/types"
 import useSWR from "swr"
 import { fetcher } from "../lib/services/data"
 import { valueToString } from "../lib/services/format"
-import { ChallengeWithTeamsWithUsersAndQuestions } from "../types/additional"
+import { getChallengeLeaderboardReturnType } from "../pages/api/v0/getChallengeLeaderboard"
 
 export const ChallengeLeaderboard = ({
   challengeId,
@@ -25,97 +24,25 @@ export const ChallengeLeaderboard = ({
   } | null
 }) => {
   const { data } = useSWR<SuperJSONValue>(
-    challengeId && `/api/v0/getChallengeLeaderboard?challengeId=${challengeId}`,
+    challengeId &&
+      `/api/v0/getChallengeLeaderboard?challengeId=${challengeId}${
+        latestQuestion
+          ? `&latestQuestionIndexWithinType=${latestQuestion.indexWithinType}&latestQuestionType=${latestQuestion.type}`
+          : ""
+      }`,
     fetcher,
     { refreshInterval: 5000, revalidateOnMount: true }
   )
-  const challenge = deserialize({
+  const formattedTeams = deserialize({
     json: data?.json,
     meta: data?.meta,
-  }) as ChallengeWithTeamsWithUsersAndQuestions
+  }) as getChallengeLeaderboardReturnType
 
-  if (!challenge) {
+  console.log(formattedTeams)
+
+  if (!formattedTeams) {
     return <div>Loading...</div>
   }
-
-  const getAnswer = (
-    questionIndex: number,
-    teamId: string,
-    type: "fermi" | "aboveBelow"
-  ) => {
-    const questions =
-      type === "fermi"
-        ? challenge.fermiQuestions
-        : challenge.aboveBelowQuestions
-    const answers = questions[questionIndex].teamAnswers
-    return (
-      answers &&
-      // @ts-ignore
-      answers.find((answer: { teamId: string }) => answer.teamId === teamId)
-    )
-  }
-
-  const countPointsSoFar = (
-    team: Team,
-    questions: (CalibrationQuestion | AboveBelowQuestion)[],
-    type: "fermi" | "aboveBelow"
-  ) =>
-    questions.reduce(
-      (
-        acc: number,
-        question: CalibrationQuestion | AboveBelowQuestion,
-        index: number
-      ) => {
-        if (
-          latestQuestion &&
-          latestQuestion?.type === type &&
-          latestQuestion?.indexWithinType < index
-        ) {
-          return acc
-        }
-
-        const answer = getAnswer(index, team.id, type)
-        return acc + (answer?.score || 0)
-      },
-      0
-    )
-
-  const formattedTeams = challenge.teams
-    .filter(
-      (team) =>
-        !(
-          team.name === "sherlock" &&
-          ["health-and-poverty", "open-sourcery"].includes(challenge.id)
-        )
-    )
-    .map((team) => {
-      const fermiPointsSoFar = countPointsSoFar(
-        team,
-        challenge.fermiQuestions,
-        "fermi"
-      )
-      // NB: assumes that aboveBelowQuestions are always after fermiQuestions
-      const aboveBelowPointsSoFar =
-        latestQuestion?.type === "fermi"
-          ? 0
-          : countPointsSoFar(team, challenge.aboveBelowQuestions, "aboveBelow")
-      const latestAnswer =
-        latestQuestion &&
-        getAnswer(latestQuestion.indexWithinType, team.id, latestQuestion.type)
-      return {
-        id: team.id,
-        name: team.name,
-        questionPoints: latestAnswer ? latestAnswer.score : "",
-        correct: latestAnswer && latestAnswer.score > 0,
-        fermiPointsSoFar,
-        aboveBelowPointsSoFar,
-        totalPoints: fermiPointsSoFar + aboveBelowPointsSoFar,
-      }
-    })
-    .sort((a, b) => {
-      // sort descending
-      return b.totalPoints - a.totalPoints
-    })
 
   const columns = {
     ...(latestQuestion === null ? {} : { "This question": "questionPoints" }),
