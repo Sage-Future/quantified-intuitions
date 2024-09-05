@@ -29,7 +29,7 @@ export default async function handler(req: Request, res: NextApiResponse) {
   res.status(200).json({ results })
 }
 
-async function subscribeToMailingList(subscribers: Subscriber[]) {
+export async function subscribeToMailingList(subscribers: Subscriber[]) {
   await Prisma.$transaction(async (prisma) => {
     for (const { email, tags, name, products } of subscribers) {
       const existingSubscriber = await prisma.mailingListSubscriber.findUnique({
