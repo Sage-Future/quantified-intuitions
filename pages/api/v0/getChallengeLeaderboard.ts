@@ -13,7 +13,7 @@ interface Request extends NextApiRequest {
   }
 }
 
-const getChallengeLeaderboard = async (req: Request, res: NextApiResponse) => {
+const handler = async (req: Request, res: NextApiResponse) => {
   const { challengeId, latestQuestionIndexWithinType, latestQuestionType } =
     req.query
   if (typeof challengeId !== "string") {
@@ -34,6 +34,26 @@ const getChallengeLeaderboard = async (req: Request, res: NextApiResponse) => {
     return
   }
 
+  try {
+    const formattedTeams = await getChallengeLeaderboard(
+      challengeId,
+      latestQuestionIndexWithinType,
+      latestQuestionType
+    )
+    res.status(200).json(serialize(formattedTeams))
+  } catch (error) {
+    res.status(404).json({
+      error: "challenge not found",
+    })
+  }
+}
+export default handler
+
+export async function getChallengeLeaderboard(
+  challengeId: string,
+  latestQuestionIndexWithinType?: string,
+  latestQuestionType?: "fermi" | "aboveBelow"
+) {
   const challenge = await Prisma.challenge.findUnique({
     where: {
       id: challengeId,
@@ -64,10 +84,7 @@ const getChallengeLeaderboard = async (req: Request, res: NextApiResponse) => {
   })
 
   if (!challenge) {
-    res.status(404).json({
-      error: "challenge not found",
-    })
-    return
+    throw new Error("challenge not found")
   }
 
   const formattedTeams = getFormattedTeams(
@@ -79,10 +96,9 @@ const getChallengeLeaderboard = async (req: Request, res: NextApiResponse) => {
         }
       : null
   )
-  res.status(200).json(serialize(formattedTeams))
-}
 
-export default getChallengeLeaderboard
+  return formattedTeams
+}
 
 function getFormattedTeams(
   challenge: ChallengeWithTeamsAndQuestions,
