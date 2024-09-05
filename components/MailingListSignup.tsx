@@ -13,22 +13,31 @@ export const MailingListSignup = ({
   disabled?: boolean
 }) => {
   const [email, setEmail] = useState("")
-  const [submissionState, setSubmissionState] = useState<"idle" | "loading" | "success">("idle")
+  const [submissionState, setSubmissionState] = useState<
+    "idle" | "loading" | "success"
+  >("idle")
   const [errors, setErrors] = useState<string[]>([])
 
   const submit = async () => {
-    if (email === "") { return }
+    if (email === "") {
+      return
+    }
 
     setSubmissionState("loading")
 
-    await fetch("/api/v0/joinMailingList", {
+    await fetch("/api/email/subscribe", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        email,
-        tags,
+        subscribers: [
+          {
+            email,
+            tags,
+            products: ["Quantified Intuitions"],
+          },
+        ],
       }),
     }).then(async (res) => {
       if (res.status === 200) {
@@ -53,7 +62,7 @@ export const MailingListSignup = ({
           type="text"
           id="email"
           className={clsx(
-            "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 sm:text-sm border-gray-300 disabled:opacity-50 rounded-t-md",
+            "flex-1 focus:ring-indigo-500 focus:border-indigo-500 block w-full min-w-0 sm:text-sm border-gray-300 disabled:opacity-50 rounded-t-md"
           )}
           placeholder="your@email.com"
           disabled={disabled}
@@ -91,19 +100,15 @@ export const MailingListSignup = ({
               {` ${"Signing up..."}`}
             </>
           )}
-          {submissionState === "idle" && (
-            <>{buttonText}</>
-          )}
-          {submissionState === "success" && (
-            <>Subscribed!</>
-          )}
+          {submissionState === "idle" && <>{buttonText}</>}
+          {submissionState === "success" && <>Subscribed!</>}
         </button>
       </div>
-        {errors.length > 0 && (
-          <div className="pt-5">
-            <Errors errors={errors} />
-          </div>
-        )}
+      {errors.length > 0 && (
+        <div className="pt-5">
+          <Errors errors={errors} />
+        </div>
+      )}
     </div>
   )
 }

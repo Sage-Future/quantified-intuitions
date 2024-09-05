@@ -274,8 +274,10 @@ model TeamAboveBelowAnswer {
 
 model MailingListSubscriber {
   id        String   @id @default(cuid())
-  email     String
+  email     String   @unique
+  name      String?
   createdAt DateTime @default(now())
+  products  String[]
   tags      String[]
 }
 
