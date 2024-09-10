@@ -17,6 +17,12 @@ interface Request extends NextApiRequest {
 }
 
 export default async function handler(req: Request, res: NextApiResponse) {
+  if (
+    process.env.MAILING_LIST_SECRET !== req.headers.authorization
+  ) {
+    return res.status(401).json({ message: "Unauthorized" })
+  }
+
   const { subscribers } = req.body
   if (!Array.isArray(subscribers)) {
     res.status(400).json({

@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Prisma } from "../../../lib/prisma"
-import { round } from "../../../lib/utils"
+import { isCronJob, round } from "../../../lib/utils"
 import { getChallengeLeaderboard } from "../v0/getChallengeLeaderboard"
 import { sendBroadcastEmail } from "./sendBroadcast"
 
@@ -8,6 +8,10 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!isCronJob(req)) {
+    return res.status(401).json({ message: "Unauthorized" })
+  }
+
   const today = new Date()
 
   const startOfThisMonth = new Date(today.getFullYear(), today.getMonth(), 1)
