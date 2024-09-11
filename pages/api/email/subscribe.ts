@@ -17,18 +17,23 @@ interface Request extends NextApiRequest {
 }
 
 export default async function handler(req: Request, res: NextApiResponse) {
-  if (
-    process.env.MAILING_LIST_SECRET !== req.headers.authorization
-  ) {
+  if (process.env.MAILING_LIST_SECRET !== req.headers.authorization) {
     return res.status(401).json({ message: "Unauthorized" })
   }
 
   const { subscribers } = req.body
   if (!Array.isArray(subscribers)) {
-    res.status(400).json({
-      error: `invalid request`,
+    return res.status(400).json({
+      error: `Subscribers must be an array (got ${typeof subscribers})`,
     })
-    return
+  }
+
+  if (subscribers.some((subscriber) => typeof subscriber.email !== "string")) {
+    return res.status(400).json({
+      error: `All subscribers must have an email (got ${subscribers
+        .map((s) => typeof s.email)
+        .join(", ")})`,
+    })
   }
 
   const results = await subscribeToMailingList(subscribers)
