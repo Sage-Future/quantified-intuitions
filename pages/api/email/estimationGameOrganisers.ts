@@ -1,7 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next"
 import { Prisma } from "../../../lib/prisma"
-import { isCronJob, mailingListPreviewTag, round } from "../../../lib/utils"
-import { getChallengeLeaderboard } from "../v0/getChallengeLeaderboard"
+import { isCronJob, mailingListPreviewTag } from "../../../lib/utils"
 import { sendBroadcastEmail } from "./sendBroadcast"
 
 export default async function handler(
@@ -20,11 +19,6 @@ export default async function handler(
     today.getMonth() + 1,
     1
   )
-  const startOfLastMonth = new Date(
-    today.getFullYear(),
-    today.getMonth() - 1,
-    1
-  )
 
   const getChallenges = async (start: Date, end: Date) => {
     return await Prisma.challenge.findMany({
@@ -40,44 +34,36 @@ export default async function handler(
     startOfThisMonth,
     startOfNextMonth
   )
-  const lastMonthChallenges = await getChallenges(
-    startOfLastMonth,
-    startOfThisMonth
-  )
 
-  if (thisMonthChallenges.length !== 1 || lastMonthChallenges.length !== 1) {
+  if (thisMonthChallenges.length !== 1) {
     return res.status(400).json({
-      message: `Expected 1 challenge each month, found ${thisMonthChallenges.length} this month and ${lastMonthChallenges.length} last month`,
+      message: `Expected 1 challenge each month, found ${thisMonthChallenges.length} this month`,
     })
   }
 
   const challenge = thisMonthChallenges[0]
-  const previousChallenge = lastMonthChallenges[0]
 
-  const previousChallengeTeams = await getChallengeLeaderboard(
-    previousChallenge.id
+  const daysUntilChallenge = Math.ceil(
+    (challenge.startDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)
   )
-  const previousChallengeWinners = previousChallengeTeams
-    .sort((a, b) => b.totalPoints - a.totalPoints)
-    .slice(0, 10)
 
   const templateParams = {
     product_url: "https://quantifiedintuitions.org",
     product_name: "Quantified Intuitions",
+    game_date: challenge.startDate.toLocaleDateString("en-US", {
+      month: "long",
+      day: "numeric",
+    }),
     game_month: today.toLocaleString("default", { month: "long" }),
     game_theme: challenge.name,
-    winners: previousChallengeWinners.map((team, index) => ({
-      rank: index + 1,
-      name: team.name,
-      points: round(team.totalPoints, 1),
-    })),
+    days_until: daysUntilChallenge,
   }
   const response = await sendBroadcastEmail({
-    templateAlias: "new-estimation-game",
+    templateAlias: "estimation-game-organisers",
     templateParams,
     from: "estimation.game@quantifiedintuitions.org",
-    messageStream: "estimation-game-notifications",
-    toTags: [...mailingListPreviewTag(req)],
+    messageStream: "estimation-game-organiser-upda", // yes, this is the full ID, see https://account.postmarkapp.com/servers/10869808/streams/estimation-game-organiser-upda/settings
+    toTags: ["estimation-game-organiser", ...mailingListPreviewTag(req)],
   })
 
   res.status(200).json({ message: "success", response })

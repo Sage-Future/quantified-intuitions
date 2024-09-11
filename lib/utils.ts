@@ -20,8 +20,8 @@ export function mean(arr: number[]) {
 }
 
 export function isCronJob(req: NextApiRequest) {
-  if (process.env.NODE_ENV !== "production") {
-    console.log("allowing non-cron job in non-production environment")
+  if (process.env.NODE_ENV === "development") {
+    console.log("allowing non-cron job in development environment")
     return true
   }
 
@@ -33,4 +33,11 @@ export function isCronJob(req: NextApiRequest) {
     !!process.env.CRON_SECRET &&
     authHeader === `Bearer ${process.env.CRON_SECRET}`
   )
+}
+
+export function mailingListPreviewTag(req: NextApiRequest) {
+  if (req.query.preview) {
+    return ["preview"]
+  }
+  return []
 }
