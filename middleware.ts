@@ -8,6 +8,5 @@ export const config = {
     "/pastcasting/charts",
     "/pastcasting/settings",
     "/pastcasting/multiplayer/:page*",
-    "/api/email/*",
   ],
 }
