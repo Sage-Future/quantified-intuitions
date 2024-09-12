@@ -1,0 +1,20 @@
+{
+  "crons": [
+    {
+      "path": "/api/email/newEstimationGame?preview=1",
+      "schedule": "25 17 23 * *"
+    },
+    {
+      "path": "/api/email/newEstimationGame",
+      "schedule": "25 17 24 * *"
+    },
+    {
+      "path": "/api/email/estimationGameOrganisers?preview=1",
+      "schedule": "25 17 9 * *"
+    },
+    {
+      "path": "/api/email/estimationGameOrganisers",
+      "schedule": "25 17 10 * *"
+    }
+  ]
+}

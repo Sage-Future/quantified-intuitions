@@ -57,7 +57,7 @@ export async function sendBroadcastEmail({
   }
   const postmarkClient = new ServerClient(process.env.POSTMARK_API_KEY)
 
-  const recipients = await getRecipients(toTags)
+  const recipients = Array.from(new Set(await getRecipients(toTags)))
 
   console.log(
     "Sending email with template: ",
@@ -67,24 +67,31 @@ export async function sendBroadcastEmail({
     `\n to ${recipients.length} recipients`
   )
 
-  if (process.env.NODE_ENV === "development" && recipients.length > 1) {
-    console.log(
-      "NOT sending email in development mode (unless single recipient)"
+  // if (process.env.NODE_ENV === "development" && recipients.length > 1) {
+  //   console.log(
+  //     "NOT sending email in development mode (unless single recipient)"
+  //   )
+  //   return
+  // }
+
+  // Postmark has a limit of 500 recipients per batch
+  const batchSize = 500
+  const responses = []
+  for (let i = 0; i < recipients.length; i += batchSize) {
+    const batch = recipients.slice(i, i + batchSize)
+    const response = await postmarkClient.sendEmailBatchWithTemplates(
+      batch.map((recipient) => ({
+        From: from,
+        To: recipient,
+        TemplateAlias: templateAlias,
+        TemplateModel: templateParams,
+        MessageStream: messageStream,
+      }))
     )
-    return
+    responses.push(response)
   }
 
-  const response = await postmarkClient.sendEmailBatchWithTemplates(
-    recipients.map((recipient) => ({
-      From: from,
-      To: recipient,
-      TemplateAlias: templateAlias,
-      TemplateModel: templateParams,
-      MessageStream: messageStream,
-    }))
-  )
-
-  return response
+  return responses.flat()
 }
 
 async function getRecipients(toTags?: string[]) {
