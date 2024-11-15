@@ -2,9 +2,12 @@ import { NextSeo } from "next-seo"
 
 import { GetStaticProps } from "next"
 import {
+  Area,
+  AreaChart,
   Bar,
   BarChart,
   CartesianGrid,
+  LabelList,
   Legend,
   Line,
   LineChart,
@@ -16,6 +19,11 @@ import {
 import { NavbarGeneric } from "../components/NavbarGeneric"
 import { Prisma } from "../lib/prisma"
 import { getYYYYMMDD, mean, round, sum } from "../lib/utils"
+
+interface TimelineEvent {
+  date: string // YYYY-MM-DD
+  label: string
+}
 
 export const getStaticProps: GetStaticProps = async () => {
   const calibrationAnswers = await Prisma.calibrationAnswer.findMany({
@@ -175,7 +183,85 @@ export const getStaticProps: GetStaticProps = async () => {
     },
   })
 
+  const mailingListSubscribers = await Prisma.mailingListSubscriber.findMany({
+    select: {
+      email: true,
+      products: true,
+      createdAt: true,
+    },
+    orderBy: {
+      createdAt: "asc",
+    },
+  })
+
   const stats: StatsPageProps["stats"] = [
+    {
+      header: "Mailing List",
+      datapoints: {
+        "Total subscribers": mailingListSubscribers.length,
+        "Subscribers by first product": Object.entries(
+          mailingListSubscribers.reduce((acc, curr) => {
+            const firstProduct = curr.products[0] || "none"
+            acc[firstProduct] = (acc[firstProduct] || 0) + 1
+            return acc
+          }, {} as Record<string, number>)
+        )
+          .map(([product, count]) => `${product}: ${count}`)
+          .join(", "),
+      },
+      chartData: [
+        {
+          type: "line over time",
+          title: "Cumulative AI Digest subscribers",
+          data: getAIDigestCumulativeData(mailingListSubscribers),
+          events: [
+            {
+              date: "2023-10-26",
+              label: "How Fast is AI Improving?",
+            },
+            {
+              date: "2023-12-14",
+              label: "Compare Claude 3, GPT-4, and Gemini Ultra",
+            },
+            {
+              date: "2024-03-18",
+              label: "How Can AI Disrupt Elections?",
+            },
+            {
+              date: "2024-04-05",
+              label: "Timeline of AI Forecasts",
+            },
+            {
+              date: "2024-08-27",
+              label: "AI Can or Can't",
+            },
+            {
+              date: "2024-10-24",
+              label: "Beyond Chat: AI Agent Demo",
+            },
+          ],
+        },
+        {
+          type: "stacked area",
+          title: "Cumulative subscribers by first product",
+          data: getCumulativeProductData(mailingListSubscribers),
+        },
+        {
+          type: "bar",
+          title: "Product signup overlap (%)",
+          data: getProductOverlapData(mailingListSubscribers),
+        },
+        ...Array.from(
+          new Set(mailingListSubscribers.flatMap((s) => s.products))
+        )
+          .filter(Boolean) // Remove empty product names
+          .map((product) => ({
+            type: "line over time" as const,
+            title: `Cumulative ${product} subscribers`,
+            data: getProductCumulativeData(mailingListSubscribers, product),
+          })),
+      ],
+    },
     {
       header: "Calibration",
       datapoints: {
@@ -516,12 +602,13 @@ export const getStaticProps: GetStaticProps = async () => {
 interface StatsPageProps {
   stats: {
     header: string
-    datapoints: Record<string, number>
+    datapoints: Record<string, number | string>
     chartData: (
       | {
           type: "line over time"
           title: string
           data: Record<string, number>
+          events?: TimelineEvent[]
         }
       | {
           type: "data over index"
@@ -535,6 +622,11 @@ interface StatsPageProps {
           type: "bar"
           title: string
           data: { label: string; value: number }[]
+        }
+      | {
+          type: "stacked area"
+          title: string
+          data: Array<Record<string, number | string>>
         }
     )[]
   }[]
@@ -565,6 +657,19 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                 {stat.chartData &&
                   stat.chartData.map((chart) => {
                     if (chart.type === "line over time") {
+                      const chartData = getDateData(chart.data)
+
+                      if (chart.events) {
+                        chart.events.forEach((event) => {
+                          const dataPoint = chartData.find(
+                            (d) => d.date === event.date
+                          )
+                          if (dataPoint) {
+                            dataPoint.event = event.label
+                          }
+                        })
+                      }
+
                       return (
                         <div
                           key={chart.title}
@@ -575,7 +680,7 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                           </h3>
                           {chart.data && Object.keys(chart.data).length > 0 ? (
                             <ResponsiveContainer width="100%" height={300}>
-                              <LineChart data={getDateData(chart.data)}>
+                              <LineChart data={chartData}>
                                 <CartesianGrid strokeDasharray="3 3" />
                                 <XAxis
                                   dataKey="date"
@@ -583,21 +688,89 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                   interval={150}
                                 />
                                 <YAxis />
-                                <Tooltip />
+                                <Tooltip
+                                  content={({ active, payload, label }) => {
+                                    if (active && payload && payload.length) {
+                                      return (
+                                        <div className="bg-white p-2 border border-gray-200 rounded shadow">
+                                          <p className="text-sm">{label}</p>
+                                          {payload.map((p: any) => (
+                                            <p key={p.name} className="text-sm">
+                                              {p.name}: {p.value}
+                                            </p>
+                                          ))}
+                                          {chartData.find(
+                                            (d) => d.date === label
+                                          )?.event && (
+                                            <p className="text-sm font-medium mt-1 text-blue-600">
+                                              {
+                                                chartData.find(
+                                                  (d) => d.date === label
+                                                )?.event
+                                              }
+                                            </p>
+                                          )}
+                                        </div>
+                                      )
+                                    }
+                                    return null
+                                  }}
+                                />
                                 <Legend />
                                 <Line
                                   type="monotone"
                                   dataKey="value"
                                   stroke="#8884d8"
-                                  dot={false}
-                                />
-                                <Line
-                                  type="monotone"
-                                  dataKey="Rolling average"
-                                  stroke="#006400" // Dark green
-                                  strokeWidth={1.5}
-                                  dot={false}
-                                />
+                                  // @ts-ignore
+                                  dot={(props: any) => {
+                                    const hasEvent =
+                                      chartData[props.index]?.event
+                                    if (!hasEvent) return null
+                                    return (
+                                      <svg>
+                                        <circle
+                                          cx={props.cx}
+                                          cy={props.cy}
+                                          r={4}
+                                          fill="#8884d8"
+                                          stroke="none"
+                                        />
+                                      </svg>
+                                    )
+                                  }}
+                                  label={false}
+                                >
+                                  <LabelList
+                                    dataKey="event"
+                                    position="insideLeft"
+                                    offset={-15}
+                                    content={(props: any) => {
+                                      const { x, y, value } = props
+                                      if (!value) return null
+                                      return (
+                                        <text
+                                          x={x - 10}
+                                          y={y}
+                                          fill="#666"
+                                          fontSize={10}
+                                          textAnchor="end"
+                                          dominantBaseline="middle"
+                                        >
+                                          {value}
+                                        </text>
+                                      )
+                                    }}
+                                  />
+                                </Line>
+                                {!chart.title.startsWith("Cumulative") && (
+                                  <Line
+                                    type="monotone"
+                                    dataKey="Rolling average"
+                                    stroke="#006400"
+                                    strokeWidth={1.5}
+                                    dot={false}
+                                  />
+                                )}
                               </LineChart>
                             </ResponsiveContainer>
                           ) : (
@@ -674,19 +847,35 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                             height={300}
                             key={chart.title}
                           >
-                            <BarChart data={chart.data}>
+                            <BarChart
+                              data={chart.data}
+                              margin={{
+                                top: 5,
+                                right: 30,
+                                left: 20,
+                                bottom: 70, // Increased bottom margin for labels
+                              }}
+                            >
                               <CartesianGrid strokeDasharray="3 3" />
                               <XAxis
                                 dataKey="label"
-                                angle={-25}
+                                angle={-45} // Increased angle for better readability
                                 textAnchor="end"
                                 tick={{
                                   fontSize: 10,
                                 }}
                                 interval={0}
+                                height={60} // Increased height for labels
                               />
-                              <YAxis />
-                              <Tooltip />
+                              <YAxis
+                                tickFormatter={(value) => `${value}%`} // Add % to y-axis labels
+                              />
+                              <Tooltip
+                                formatter={(value: number) => [
+                                  `${value}%`,
+                                  "Overlap",
+                                ]} // Add % to tooltip
+                              />
                               <Bar
                                 dataKey="value"
                                 fill="#6366F1"
@@ -694,9 +883,49 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                   position: "insideTop",
                                   fontSize: 8,
                                   fill: "white",
+                                  formatter: (value: number) => `${value}%`, // Add % to bar labels
                                 }}
                               />
                             </BarChart>
+                          </ResponsiveContainer>
+                        </div>
+                      )
+                    } else if (chart.type === "stacked area") {
+                      return (
+                        <div
+                          key={chart.title}
+                          className="flex flex-col bg-gray-100 p-4 rounded-lg"
+                        >
+                          <h3 className="text-lg font-medium mb-4">
+                            {chart.title}
+                          </h3>
+                          <ResponsiveContainer width="100%" height={300}>
+                            <AreaChart data={chart.data}>
+                              <CartesianGrid strokeDasharray="3 3" />
+                              <XAxis
+                                dataKey="date"
+                                tick={{ fontSize: 12 }}
+                                interval={150}
+                                tickFormatter={(date) =>
+                                  getYYYYMMDD(new Date(date))
+                                }
+                              />
+                              <YAxis />
+                              <Tooltip />
+                              <Legend />
+                              {Object.keys(chart.data[0] || {})
+                                .filter((key) => key !== "date")
+                                .map((key, index) => (
+                                  <Area
+                                    key={key}
+                                    type="monotone"
+                                    dataKey={key}
+                                    stackId="1"
+                                    stroke={`hsl(${index * 137.5}, 70%, 50%)`}
+                                    fill={`hsl(${index * 137.5}, 70%, 50%)`}
+                                  />
+                                ))}
+                            </AreaChart>
                           </ResponsiveContainer>
                         </div>
                       )
@@ -742,6 +971,7 @@ function getDateData(data: Record<string, number>) {
     date: string
     value: number
     "Rolling average": number
+    event?: string
   }[] = []
 
   let rolling = []
@@ -769,6 +999,168 @@ function getDateData(data: Record<string, number>) {
   }
 
   return dateArray
+}
+
+function getCumulativeProductData(
+  subscribers: {
+    products: string[]
+    createdAt: Date
+  }[]
+) {
+  const productCounts: Record<string, number> = {}
+  const dateData: Record<string, Record<string, number>> = {}
+
+  subscribers.forEach((sub) => {
+    const firstProduct = sub.products[0] || "none"
+    const date = sub.createdAt.toISOString().split("T")[0]
+
+    productCounts[firstProduct] = (productCounts[firstProduct] || 0) + 1
+
+    if (!dateData[date]) {
+      dateData[date] = { ...productCounts }
+    } else {
+      dateData[date][firstProduct] = productCounts[firstProduct]
+    }
+  })
+
+  // Fill in missing dates and maintain running totals
+  const dates = Object.keys(dateData).sort()
+  const allProducts = Object.keys(productCounts)
+
+  return dates.map((date) => {
+    const entry: Record<string, string | number> = { date }
+    let prevDate = dates[dates.indexOf(date) - 1]
+
+    allProducts.forEach((product) => {
+      entry[product] =
+        dateData[date][product] || (prevDate ? dateData[prevDate][product] : 0)
+    })
+
+    return entry
+  })
+}
+
+function getProductOverlapData(subscribers: { products: string[] }[]) {
+  const allProducts = new Set(subscribers.flatMap((s) => s.products))
+  const data: { label: string; value: number }[] = []
+
+  allProducts.forEach((fromProduct) => {
+    if (!fromProduct) return // Skip empty product names
+
+    const usersWithProduct = subscribers.filter((s) =>
+      s.products.includes(fromProduct)
+    )
+
+    if (usersWithProduct.length === 0) return // Skip products with no users
+
+    allProducts.forEach((toProduct) => {
+      if (!toProduct || fromProduct === toProduct) return // Skip empty products and self-comparisons
+
+      const usersWithBoth = usersWithProduct.filter((s) =>
+        s.products.includes(toProduct)
+      )
+
+      const percentage = Math.round(
+        (usersWithBoth.length / usersWithProduct.length) * 100
+      )
+
+      data.push({
+        label: `${fromProduct} → ${toProduct}`,
+        value: percentage,
+      })
+    })
+  })
+
+  return data
+    .filter((item) => item.value > 0) // Only show non-zero overlaps
+    .sort((a, b) => b.value - a.value)
+}
+
+function getAIDigestCumulativeData(
+  subscribers: {
+    products: string[]
+    createdAt: Date
+  }[]
+) {
+  const aiDigestSubs = subscribers
+    .filter((s) => s.products.includes("AI Digest"))
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+
+  const dateData: Record<string, number> = {}
+  let cumulative = 0
+
+  aiDigestSubs.forEach((sub) => {
+    const date = sub.createdAt.toISOString().split("T")[0]
+    cumulative++
+    dateData[date] = cumulative // Store cumulative count instead of daily count
+  })
+
+  // Fill in gaps between dates with the last known cumulative value
+  const dates = Object.keys(dateData).sort()
+  const startDate = new Date(dates[0])
+  const endDate = new Date(dates[dates.length - 1])
+
+  const result: Record<string, number> = {}
+  let lastValue = 0
+
+  for (
+    let dt = new Date(startDate);
+    dt <= endDate;
+    dt.setDate(dt.getDate() + 1)
+  ) {
+    const formattedDate = dt.toISOString().split("T")[0]
+    if (dateData[formattedDate] !== undefined) {
+      lastValue = dateData[formattedDate]
+    }
+    result[formattedDate] = lastValue
+  }
+
+  return result
+}
+
+function getProductCumulativeData(
+  subscribers: {
+    products: string[]
+    createdAt: Date
+  }[],
+  targetProduct: string
+) {
+  const productSubs = subscribers
+    .filter((s) => s.products.includes(targetProduct))
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+
+  const dateData: Record<string, number> = {}
+  let cumulative = 0
+
+  productSubs.forEach((sub) => {
+    const date = sub.createdAt.toISOString().split("T")[0]
+    cumulative++
+    dateData[date] = cumulative
+  })
+
+  // Fill in gaps between dates with the last known cumulative value
+  const dates = Object.keys(dateData).sort()
+  if (dates.length === 0) return {} // Return empty object if no subscribers
+
+  const startDate = new Date(dates[0])
+  const endDate = new Date(dates[dates.length - 1])
+
+  const result: Record<string, number> = {}
+  let lastValue = 0
+
+  for (
+    let dt = new Date(startDate);
+    dt <= endDate;
+    dt.setDate(dt.getDate() + 1)
+  ) {
+    const formattedDate = dt.toISOString().split("T")[0]
+    if (dateData[formattedDate] !== undefined) {
+      lastValue = dateData[formattedDate]
+    }
+    result[formattedDate] = lastValue
+  }
+
+  return result
 }
 
 export default StatsPage
