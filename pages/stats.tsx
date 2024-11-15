@@ -196,7 +196,7 @@ export const getStaticProps: GetStaticProps = async () => {
 
   const stats: StatsPageProps["stats"] = [
     {
-      header: "Mailing List",
+      header: "Mailing list",
       datapoints: {
         "Total subscribers": mailingListSubscribers.length,
         "Subscribers by first product": Object.entries(
@@ -210,37 +210,6 @@ export const getStaticProps: GetStaticProps = async () => {
           .join(", "),
       },
       chartData: [
-        {
-          type: "line over time",
-          title: "Cumulative AI Digest subscribers",
-          data: getAIDigestCumulativeData(mailingListSubscribers),
-          events: [
-            {
-              date: "2023-10-26",
-              label: "How Fast is AI Improving?",
-            },
-            {
-              date: "2023-12-14",
-              label: "Compare Claude 3, GPT-4, and Gemini Ultra",
-            },
-            {
-              date: "2024-03-18",
-              label: "How Can AI Disrupt Elections?",
-            },
-            {
-              date: "2024-04-05",
-              label: "Timeline of AI Forecasts",
-            },
-            {
-              date: "2024-08-27",
-              label: "AI Can or Can't",
-            },
-            {
-              date: "2024-10-24",
-              label: "Beyond Chat: AI Agent Demo",
-            },
-          ],
-        },
         {
           type: "stacked area",
           title: "Cumulative subscribers by first product",
@@ -259,6 +228,69 @@ export const getStaticProps: GetStaticProps = async () => {
             type: "line over time" as const,
             title: `Cumulative ${product} subscribers`,
             data: getProductCumulativeData(mailingListSubscribers, product),
+            events: 
+              product === "AI Digest" ? [
+                {
+                  date: "2023-10-26",
+                  label: "How Fast is AI Improving?",
+                },
+                {
+                  date: "2023-12-14",
+                  label: "Compare Claude 3, GPT-4, and Gemini Ultra",
+                },
+                {
+                  date: "2024-03-18",
+                  label: "How Can AI Disrupt Elections?",
+                },
+                {
+                  date: "2024-04-05",
+                  label: "Timeline of AI Forecasts",
+                },
+                {
+                  date: "2024-08-27",
+                  label: "AI Can or Can't",
+                },
+                {
+                  date: "2024-10-24",
+                  label: "Beyond Chat: AI Agent Demo",
+                },
+              ] : 
+              product === "Quantified Intuitions" ? [
+                {
+                  date: "2022-08-11",
+                  label: "Pastcasting",
+                },
+                {
+                  date: "2022-09-20",
+                  label: "Calibration/QI.org",
+                },
+                {
+                  date: "2023-02-20",
+                  label: "Estimation Game",
+                },
+                {
+                  date: "2023-03-22",
+                  label: "Anki with Uncertainty",
+                },
+              ] :
+              product === "Fatebook" ? [
+                {
+                  date: "2023-05-11",
+                  label: "Fatebook for Slack",
+                },
+                {
+                  date: "2023-07-11",
+                  label: "Fatebook.io",
+                },
+                {
+                  date: "2024-01-05",
+                  label: "Predict your Year",
+                },
+                {
+                  date: "2024-02-16",
+                  label: "Fatebook for Chrome",
+                },
+              ] : undefined,
           })),
       ],
     },
@@ -685,7 +717,7 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                 <XAxis
                                   dataKey="date"
                                   tick={{ fontSize: 12 }}
-                                  interval={150}
+                                  interval={chart.title.startsWith("Cumulative") ? 150 : 30}
                                 />
                                 <YAxis />
                                 <Tooltip
@@ -1074,48 +1106,6 @@ function getProductOverlapData(subscribers: { products: string[] }[]) {
   return data
     .filter((item) => item.value > 0) // Only show non-zero overlaps
     .sort((a, b) => b.value - a.value)
-}
-
-function getAIDigestCumulativeData(
-  subscribers: {
-    products: string[]
-    createdAt: Date
-  }[]
-) {
-  const aiDigestSubs = subscribers
-    .filter((s) => s.products.includes("AI Digest"))
-    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
-
-  const dateData: Record<string, number> = {}
-  let cumulative = 0
-
-  aiDigestSubs.forEach((sub) => {
-    const date = sub.createdAt.toISOString().split("T")[0]
-    cumulative++
-    dateData[date] = cumulative // Store cumulative count instead of daily count
-  })
-
-  // Fill in gaps between dates with the last known cumulative value
-  const dates = Object.keys(dateData).sort()
-  const startDate = new Date(dates[0])
-  const endDate = new Date(dates[dates.length - 1])
-
-  const result: Record<string, number> = {}
-  let lastValue = 0
-
-  for (
-    let dt = new Date(startDate);
-    dt <= endDate;
-    dt.setDate(dt.getDate() + 1)
-  ) {
-    const formattedDate = dt.toISOString().split("T")[0]
-    if (dateData[formattedDate] !== undefined) {
-      lastValue = dateData[formattedDate]
-    }
-    result[formattedDate] = lastValue
-  }
-
-  return result
 }
 
 function getProductCumulativeData(
