@@ -27,22 +27,6 @@ const POSTS: Post[] = [
       Record your predictions: how fast will AI capabilities advance in the next year?
     `,
   },
-  {
-    id: "welcome-ai-digest",
-    list: "ai-digest",
-    subject: "Welcome to AI Digest",
-    htmlContent: `
-      <h1>Welcome to AI Digest!</h1>
-      <p>Here's our logo:</p>
-      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1733312285/logo-ai-digest-tmp.png" style="max-width: 400px"/>
-      <p>We're excited to have you here.</p>
-    `,
-    textContent: `
-      Welcome to AI Digest!
-
-      We're excited to have you here.
-    `,
-  },
 ]
 
 function getButtonHtml({ link, text }: { link: string; text: string }) {
