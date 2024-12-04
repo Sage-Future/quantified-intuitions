@@ -45,12 +45,19 @@ export async function sendBroadcastEmail({
   from,
   messageStream,
   toTags,
+  attachments,
 }: {
   templateAlias: string
   templateParams: object
   from: string
   messageStream: string
   toTags?: string[]
+  attachments?: {
+    name: string
+    content: string
+    contentType: string
+    contentId: string
+  }[]
 }) {
   if (!process.env.POSTMARK_API_KEY) {
     throw new Error("POSTMARK_API_KEY is not set")
@@ -86,6 +93,12 @@ export async function sendBroadcastEmail({
         TemplateAlias: templateAlias,
         TemplateModel: templateParams,
         MessageStream: messageStream,
+        Attachments: attachments?.map(att => ({
+          Name: att.name,
+          Content: att.content,
+          ContentType: att.contentType,
+          ContentID: att.contentId
+        }))
       }))
     )
     responses.push(response)
