@@ -4,6 +4,42 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "beyond-chat",
+    list: "ai-digest",
+    subject: "Beyond chat: an AI agent demo",
+    htmlContent: `
+      <h1>Beyond chat: an AI agent demo</h1>
+      <p>Introducing our <a href="https://theaidigest.org/agent">AI Agent demo</a>. Watch an agent autonomously perform tasks in real-time.</p>
+      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1733316696/agent_cpychx.webp" style="max-width: 400px; display: block; margin: 20px auto;"/>
+      <p>The next phase of AI is agents that can use computers like remote workers. <a href="https://www.bloomberg.com/news/articles/2024-11-13/openai-nears-launch-of-ai-agents-to-automate-tasks-for-users">Leaks from OpenAI</a> indicate that they'll release a computer use agent codenamed Operator in January, and Anthropic has already released a <a href="https://www.anthropic.com/news/3-5-models-and-computer-use">developer preview</a>.</p>
+      <p>To help you get a glimpse of what these agents will be capable of, try out our interactive agent demo.</p>
+      <p>To our knowledge, this is the first computer use agent that you can give a task to and watch it think and act, right from your browser – with no sign up or set up.</p>
+      <p>The agent uses GPT-4o to navigate two simulated environments: a Gmail inbox and a shopping website. You can also swap in other models, like the new Claude Sonnet 3.5 model from Anthropic.</p>
+      <p>We hope you'll find this useful for understanding what the next stage of AI will look like as AI systems move beyond the chatbox, and to get a sense of the strengths and limitations of today's agents.</p>
+      <p>If you use clips of this demo in slides or link to it in resources, we'd be interested to hear, as this helps us evaluate our impact.</p>
+      ${getButtonHtml({
+        link: "https://theaidigest.org/agent",
+        text: "Try out Beyond Chat: an AI Agent Demo",
+      })}
+      <p>Thanks,</p>
+      <p>Zak and Adam</p>
+    `,
+    textContent: `
+      Watch an agent autonomously perform tasks in real-time
+    `,
+  },
+  {
+    id: "agents",
+    list: "ai-digest",
+    subject: "",
+    htmlContent: `
+      <h1></h1>
+    `,
+    textContent: `
+      
+    `,
+  },
+  {
     id: "2025-survey",
     list: "ai-digest",
     subject: "Announcing the AI 2025 Forecasting Survey",
@@ -14,7 +50,7 @@ const POSTS: Post[] = [
       <p>This is a great way to capture a snapshot of your current expectations – as events unfold over the next year you can concretely see whether AI is progressing faster or slower than you expected.</p>
       <p>At the end of next year, we'll send you our analysis – you can see how accurate your predictions were, alongside the predictions of the crowd and public figures.</p>
       <p>If you answer the survey, you can share a Spotify Wrapped-style screenshot of your predictions with colleagues or on social media. This will help the survey reach more respondents and make the results more interesting!</p>
-      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1733314558/forecast-summary_o7omif.png" style="max-width: 300px; display: block; margin: 5px auto;"/>
+      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1733314558/forecast-summary_o7omif.png" style="max-width: 300px; display: block; margin: 20px auto;"/>
       <p>All questions are optional. If you participate – thank you!</p>
       ${getButtonHtml({
         link: "https://theaidigest.org/2025-ai-forecasting-survey",
