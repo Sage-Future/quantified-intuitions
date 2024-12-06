@@ -5,6 +5,7 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 const POSTS: Post[] = [
   {
     id: "beyond-chat",
+    status: "draft",
     list: "ai-digest",
     subject: "Beyond chat: an AI agent demo",
     preheader: "Watch an agent autonomously perform tasks in real-time",
@@ -30,6 +31,7 @@ const POSTS: Post[] = [
   },
   {
     id: "2025-survey",
+    status: "sent",
     list: "ai-digest",
     subject: "Announcing the AI 2025 Forecasting Survey",
     preheader: "How fast will capabilities advance in the next year?",
@@ -101,6 +103,7 @@ type Post = {
   preheader: string
   htmlContent: string
   textContent: string
+  status: "draft" | "ready" | "sent"
 }
 
 export default async function handler(
@@ -123,6 +126,12 @@ export default async function handler(
   const post = POSTS.find((p) => p.id === postId)
   if (!post) {
     return res.status(404).json({ message: `Post ${postId} not found` })
+  }
+
+  if (post.status !== "ready" && !req.query.preview) {
+    return res
+      .status(400)
+      .json({ message: `Post ${postId} status is not ready (${post.status})` })
   }
 
   const list = MAILING_LISTS[post.list]

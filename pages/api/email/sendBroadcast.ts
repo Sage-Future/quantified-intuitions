@@ -93,12 +93,12 @@ export async function sendBroadcastEmail({
         TemplateAlias: templateAlias,
         TemplateModel: templateParams,
         MessageStream: messageStream,
-        Attachments: attachments?.map(att => ({
+        Attachments: attachments?.map((att) => ({
           Name: att.name,
           Content: att.content,
           ContentType: att.contentType,
-          ContentID: att.contentId
-        }))
+          ContentID: att.contentId,
+        })),
       }))
     )
     responses.push(response)
