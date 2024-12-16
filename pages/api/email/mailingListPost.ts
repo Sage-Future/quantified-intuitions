@@ -5,10 +5,10 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 const POSTS: Post[] = [
   {
     id: "beyond-chat",
-    status: "draft",
+    status: "sent",
     list: "ai-digest",
     subject: "Beyond chat: an AI agent demo",
-    preheader: "Watch an agent autonomously perform tasks in real-time",
+    preheader: "Watch a GPT-4o agent autonomously perform tasks in real-time",
     htmlContent: `
       <h1>Beyond chat: an AI agent demo</h1>
       <p>Introducing our <a href="https://theaidigest.org/agent">AI Agent demo</a>. Watch an agent autonomously perform tasks in real-time.</p>
