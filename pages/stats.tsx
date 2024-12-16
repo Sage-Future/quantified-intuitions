@@ -228,69 +228,77 @@ export const getStaticProps: GetStaticProps = async () => {
             type: "line over time" as const,
             title: `Cumulative ${product} subscribers`,
             data: getProductCumulativeData(mailingListSubscribers, product),
-            events: 
-              product === "AI Digest" ? [
-                {
-                  date: "2023-10-26",
-                  label: "How Fast is AI Improving?",
-                },
-                {
-                  date: "2023-12-14",
-                  label: "Compare Claude 3, GPT-4, and Gemini Ultra",
-                },
-                {
-                  date: "2024-03-18",
-                  label: "How Can AI Disrupt Elections?",
-                },
-                {
-                  date: "2024-04-05",
-                  label: "Timeline of AI Forecasts",
-                },
-                {
-                  date: "2024-08-27",
-                  label: "AI Can or Can't",
-                },
-                {
-                  date: "2024-10-24",
-                  label: "Beyond Chat: AI Agent Demo",
-                },
-              ] : 
-              product === "Quantified Intuitions" ? [
-                {
-                  date: "2022-08-11",
-                  label: "Pastcasting",
-                },
-                {
-                  date: "2022-09-20",
-                  label: "Calibration/QI.org",
-                },
-                {
-                  date: "2023-02-20",
-                  label: "Estimation Game",
-                },
-                {
-                  date: "2023-03-22",
-                  label: "Anki with Uncertainty",
-                },
-              ] :
-              product === "Fatebook" ? [
-                {
-                  date: "2023-05-11",
-                  label: "Fatebook for Slack",
-                },
-                {
-                  date: "2023-07-11",
-                  label: "Fatebook.io",
-                },
-                {
-                  date: "2024-01-05",
-                  label: "Predict your Year",
-                },
-                {
-                  date: "2024-02-16",
-                  label: "Fatebook for Chrome",
-                },
-              ] : undefined,
+            events:
+              product === "AI Digest"
+                ? [
+                    {
+                      date: "2023-10-26",
+                      label: "How Fast is AI Improving?",
+                    },
+                    {
+                      date: "2023-12-14",
+                      label: "Compare Claude 3, GPT-4, and Gemini Ultra",
+                    },
+                    {
+                      date: "2024-03-18",
+                      label: "How Can AI Disrupt Elections?",
+                    },
+                    {
+                      date: "2024-04-05",
+                      label: "Timeline of AI Forecasts",
+                    },
+                    {
+                      date: "2024-08-27",
+                      label: "AI Can or Can't",
+                    },
+                    {
+                      date: "2024-10-24",
+                      label: "Beyond Chat: AI Agent Demo",
+                    },
+                    {
+                      date: "2024-12-06",
+                      label: "AI 2025 Forecasting Survey",
+                    },
+                  ]
+                : product === "Quantified Intuitions"
+                ? [
+                    {
+                      date: "2022-08-11",
+                      label: "Pastcasting",
+                    },
+                    {
+                      date: "2022-09-20",
+                      label: "Calibration/QI.org",
+                    },
+                    {
+                      date: "2023-02-20",
+                      label: "Estimation Game",
+                    },
+                    {
+                      date: "2023-03-22",
+                      label: "Anki with Uncertainty",
+                    },
+                  ]
+                : product === "Fatebook"
+                ? [
+                    {
+                      date: "2023-05-11",
+                      label: "Fatebook for Slack",
+                    },
+                    {
+                      date: "2023-07-11",
+                      label: "Fatebook.io",
+                    },
+                    {
+                      date: "2024-01-05",
+                      label: "Predict your Year",
+                    },
+                    {
+                      date: "2024-02-16",
+                      label: "Fatebook for Chrome",
+                    },
+                  ]
+                : undefined,
           })),
       ],
     },
@@ -717,7 +725,11 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                 <XAxis
                                   dataKey="date"
                                   tick={{ fontSize: 12 }}
-                                  interval={chart.title.startsWith("Cumulative") ? 150 : 30}
+                                  interval={
+                                    chart.title.startsWith("Cumulative")
+                                      ? 150
+                                      : 30
+                                  }
                                 />
                                 <YAxis />
                                 <Tooltip
