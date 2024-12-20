@@ -259,6 +259,10 @@ export const getStaticProps: GetStaticProps = async () => {
                       date: "2024-12-06",
                       label: "AI 2025 Forecasting Survey",
                     },
+                    {
+                      date: "2024-12-20",
+                      label: "AIs are becoming more self-aware",
+                    },
                   ]
                 : product === "Quantified Intuitions"
                 ? [
