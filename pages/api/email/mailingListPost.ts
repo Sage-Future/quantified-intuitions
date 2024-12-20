@@ -2,7 +2,57 @@ import { NextApiRequest, NextApiResponse } from "next"
 import { mailingListPreviewTag } from "../../../lib/utils"
 import { sendBroadcastEmail } from "./sendBroadcast"
 
+// Important notes:
+// 1. Include ?utm_source=newsletter in all links
+// 2. Set draft status until ready to send
+
 const POSTS: Post[] = [
+  {
+    id: "self-awareness",
+    status: "sent",
+    list: "ai-digest",
+    subject: "AIs are becoming more self-aware",
+    preheader: "Here's why that matters",
+    htmlContent: `
+      <h1><a href="https://theaidigest.org/self-awareness?utm_source=newsletter">AIs are becoming more self-aware. Here's why that matters.</a></h1>
+      <p><b>Summary</b></p>
+      <ul>
+        <li><a href="https://theaidigest.org/self-awareness?utm_source=newsletter#benchmarking-self-awareness">Benchmarks show</a> that AIs are becoming more self-aware</li>
+        <li>That's good news for <a href="https://theaidigest.org/self-awareness?utm_source=newsletter#powerful-agents">competent AI agents</a> and <a href="https://theaidigest.org/self-awareness?utm_source=newsletter#calibrated-responses">accurate chatbots</a></li>
+        <li>And it increases AI's ability to <a href="https://theaidigest.org/self-awareness#introspection">predict its own behavior</a></li>
+        <li>But it also creates the <a href="https://theaidigest.org/self-awareness?utm_source=newsletter#sandbagging">potential for AI to act deceptively</a></li>
+        <li>It's important we monitor the rate at which AI self-awareness improves, and also systematically explore the associated risks</li>
+      </ul>
+      <p>Large language models, like ChatGPT, know a lot about the world. But how much do they know about <i>themselves</i>? How sophisticated is their self-awareness?</p>
+      <p>By self-awareness, we don't mean consciousness or sentience. We just mean the ability of language to reason about themselves, their situation, their capabilities, and their limitations.</p>
+      <p>One thing researchers have discovered is that self-awareness is increasing as models become more capable. We can start to get a sense of this by asking models questions about themselves.</p>
+      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1734630787/self-awareness-examples-sm_ukhkuj.png" style="max-width: 400px; display: block; margin: 20px auto;"/>
+      ${getButtonHtml({
+        link: "https://theaidigest.org/self-awareness?utm_source=newsletter",
+        text: "Continue reading on AI Digest",
+      })}
+    `,
+    textContent: `
+      AIs are becoming more self-aware. Here's why that matters
+
+      • Benchmarks show that AIs are becoming more self-aware.
+      • That's good news for competent AI agents and accurate chatbots.
+      • It increases AI's ability to predict its own behavior.
+      • But it also creates the potential for AI to act deceptively.
+      • We need to monitor this development and explore the associated risks
+
+      Large language models, like ChatGPT, know a lot about the world. But how much do they know about themselves?
+
+      By self-awareness, we don't mean consciousness or sentience. We just mean the ability of language to reason about themselves, their situation, their capabilities, and their limitations.
+
+      One thing researchers have discovered is that self-awareness is increasing as models become more capable. We can start to get a sense of this by asking models questions about themselves.
+
+      Continue reading: https://theaidigest.org/self-awareness?utm_source=newsletter
+
+      Thanks,
+      Zak and Sanyu
+    `,
+  },
   {
     id: "beyond-chat",
     status: "sent",
