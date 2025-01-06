@@ -9,14 +9,14 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 const POSTS: Post[] = [
   {
     id: "predict-your-year-2025",
-    status: "draft",
+    status: "sent",
     list: "forecasting",
     subject: "Predict your life in 2025",
     preheader: "What will the new year hold for you?",
     htmlContent: `
       <h1>What will the new year hold for you?</h1>
-      <p>It's the end of 2024. Did your life this year align with your expectations? What came out of nowhere and threw off your predictions? Did your actions align with your intentions? What fresh goals are you planning?</p>
-      <p>We've built <a href="https://fatebook.io/predict-your-year?utm_source=newsletter">predict your year in 2025</strong></a>, a space for you to write down your predictions for the year. At the end of your year, you can return, resolve your predictions as YES, NO or AMBIGUOUS, and reflect.</p>
+      <p>It's the end of 2024. Did your life this year match your expectations? What came out of nowhere and threw off your predictions? Did your actions align with your intentions? What fresh goals are you planning?</p>
+      <p>We've built <a href="https://fatebook.io/predict-your-year?utm_source=newsletter"><strong>predict your year in 2025</strong></a>, a space for you to write down your predictions for the year. At the end of your year, you can return, resolve your predictions as YES, NO or AMBIGUOUS, and reflect.</p>
       <p>We've written some starter questions to make it super easy to get started predicting your year. You can tweak these and write your own - those will likely be the most important questions for you.</p>
       <p>You can use this tool to <strong>predict your personal life</strong> in 2025 - your goals, relationships, work, health, and adventures. If you like, you can share your predictions with friends - for fun, for better predictions, and for motivation to achieve your goals this year!</p>
       <p>You can also use this tool to <strong>predict questions relevant to your team or organisation</strong> in the coming year - your team strategy, performance, big financial questions, and potentially disruptive black swans. You can share your predictions with your team and let everyone contribute, to build common knowledge about expectations and pool your insights.</p>
@@ -27,6 +27,7 @@ const POSTS: Post[] = [
         text: "Predict your year in 2025",
       })}
       <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1734716498/541e065e-c514-4ef2-8859-5bcfa287babf.png" style="max-width: 300px; display: block; margin: 20px auto;"/>
+      <p>If you made predictions at the start of 2024, now's the time to <a href="https://fatebook.io/predict-your-year?utm_source=newsletter">return to your predictions</a> and resolve them as YES, NO or AMBIGUOUS!</p>
       <p>If you have feedback or suggestions for our work in the coming year, we'd love to hear from you. We can chat in our <a href="https://discord.gg/mt9YVB8VDE">Discord</a>, or you can reply to this email.</p>
       <p>Happy holidays,<br/>Adam</p>
     `,
