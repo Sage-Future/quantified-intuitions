@@ -17,7 +17,7 @@
       "schedule": "25 17 10 * *"
     },
     {
-      "path": "/api/email/checkUpcomingGames",
+      "path": "/api/v0/checkUpcomingGames",
       "schedule": "30 17 * * *"
     }
   ]

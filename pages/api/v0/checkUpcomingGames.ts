@@ -1,11 +1,16 @@
 import { NextApiRequest, NextApiResponse } from "next"
 import SlackNotify from "slack-notify"
 import { Prisma } from "../../../lib/prisma"
+import { isCronJob } from "../../../lib/utils"
 
 export default async function checkUpcomingGames(
   req: NextApiRequest,
   res: NextApiResponse
 ) {
+  if (!isCronJob(req)) {
+    return res.status(401).json({ message: "Unauthorized" })
+  }
+
   if (req.method !== "GET") {
     return res.status(405).json({ error: "Method not allowed" })
   }
