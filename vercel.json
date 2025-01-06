@@ -15,6 +15,10 @@
     {
       "path": "/api/email/estimationGameOrganisers",
       "schedule": "25 17 10 * *"
+    },
+    {
+      "path": "/api/email/checkUpcomingGames",
+      "schedule": "30 17 * * *"
     }
   ]
 }
