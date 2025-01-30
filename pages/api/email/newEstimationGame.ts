@@ -78,6 +78,7 @@ export default async function handler(
     from: "estimation.game@quantifiedintuitions.org",
     messageStream: "estimation-game-notifications",
     toTags: [...mailingListPreviewTag(req)],
+    toProducts: ["Quantified Intuitions", "Fatebook"], // do not send to AI Digest-only subscribers
   })
 
   res.status(200).json({ message: "success", response })

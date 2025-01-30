@@ -45,6 +45,7 @@ export async function sendBroadcastEmail({
   from,
   messageStream,
   toTags,
+  toProducts,
   attachments,
 }: {
   templateAlias: string
@@ -52,6 +53,7 @@ export async function sendBroadcastEmail({
   from: string
   messageStream: string
   toTags?: string[]
+  toProducts?: ("AI Digest" | "Fatebook" | "Quantified Intuitions")[]
   attachments?: {
     name: string
     content: string
@@ -64,7 +66,9 @@ export async function sendBroadcastEmail({
   }
   const postmarkClient = new ServerClient(process.env.POSTMARK_API_KEY)
 
-  const recipients = Array.from(new Set(await getRecipients(toTags)))
+  const recipients = Array.from(
+    new Set(await getRecipients(toTags, toProducts))
+  )
 
   console.log(
     "Sending email with template: ",
@@ -107,7 +111,10 @@ export async function sendBroadcastEmail({
   return responses.flat()
 }
 
-async function getRecipients(toTags?: string[]) {
+async function getRecipients(
+  toTags?: string[],
+  toProducts?: ("AI Digest" | "Fatebook" | "Quantified Intuitions")[]
+) {
   return (
     await Prisma.mailingListSubscriber.findMany({
       where: {
@@ -115,6 +122,13 @@ async function getRecipients(toTags?: string[]) {
           ? {
               tags: {
                 hasEvery: toTags, // NB: must have all tags. Used to send preview emails only internally
+              },
+            }
+          : {}),
+        ...(toProducts
+          ? {
+              products: {
+                hasSome: toProducts,
               },
             }
           : {}),
