@@ -219,6 +219,7 @@ export const getStaticProps: GetStaticProps = async () => {
           type: "bar",
           title: "Product signup overlap (%)",
           data: getProductOverlapData(mailingListSubscribers),
+          suffix: "%",
         },
         ...Array.from(
           new Set(mailingListSubscribers.flatMap((s) => s.products))
@@ -666,6 +667,7 @@ interface StatsPageProps {
           type: "bar"
           title: string
           data: { label: string; value: number }[]
+          suffix?: string
         }
       | {
           type: "stacked area"
@@ -916,13 +918,14 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                 height={60} // Increased height for labels
                               />
                               <YAxis
-                                tickFormatter={(value) => `${value}%`} // Add % to y-axis labels
+                                tickFormatter={(value) =>
+                                  `${value}${chart.suffix || ""}`
+                                }
                               />
                               <Tooltip
                                 formatter={(value: number) => [
-                                  `${value}%`,
-                                  "Overlap",
-                                ]} // Add % to tooltip
+                                  `${value}${chart.suffix || ""}`,
+                                ]}
                               />
                               <Bar
                                 dataKey="value"
@@ -931,7 +934,8 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                   position: "insideTop",
                                   fontSize: 8,
                                   fill: "white",
-                                  formatter: (value: number) => `${value}%`, // Add % to bar labels
+                                  formatter: (value: number) =>
+                                    `${value}${chart.suffix || ""}`,
                                 }}
                               />
                             </BarChart>
