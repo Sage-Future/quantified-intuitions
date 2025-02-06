@@ -11,7 +11,7 @@ const prisma = new PrismaClient()
 export const authOptions: NextAuthOptions = {
   adapter: {
     ...PrismaAdapter(prisma),
-    createUser: async (user) => {
+    createUser: async (user: any) => {
       const createdUser = await PrismaAdapter(prisma).createUser(user)
 
       if (createdUser.email) {
