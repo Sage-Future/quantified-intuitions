@@ -20,6 +20,41 @@ import { NavbarGeneric } from "../components/NavbarGeneric"
 import { Prisma } from "../lib/prisma"
 import { getYYYYMMDD, mean, round, sum } from "../lib/utils"
 
+const AI_DIGEST_EVENTS: TimelineEvent[] = [
+  {
+    date: "2023-10-26",
+    label: "How Fast is AI Improving?",
+  },
+  {
+    date: "2023-12-14",
+    label: "Compare Claude 3, GPT-4, and Gemini Ultra",
+  },
+  {
+    date: "2024-03-18",
+    label: "How Can AI Disrupt Elections?",
+  },
+  {
+    date: "2024-04-05",
+    label: "Timeline of AI Forecasts",
+  },
+  {
+    date: "2024-08-27",
+    label: "AI Can or Can't",
+  },
+  {
+    date: "2024-10-24",
+    label: "Beyond Chat: AI Agent Demo",
+  },
+  {
+    date: "2024-12-06",
+    label: "AI 2025 Forecasting Survey",
+  },
+  {
+    date: "2024-12-20",
+    label: "AIs are becoming more self-aware",
+  },
+]
+
 interface TimelineEvent {
   date: string // YYYY-MM-DD
   label: string
@@ -231,40 +266,7 @@ export const getStaticProps: GetStaticProps = async () => {
             data: getProductCumulativeData(mailingListSubscribers, product),
             events:
               product === "AI Digest"
-                ? [
-                    {
-                      date: "2023-10-26",
-                      label: "How Fast is AI Improving?",
-                    },
-                    {
-                      date: "2023-12-14",
-                      label: "Compare Claude 3, GPT-4, and Gemini Ultra",
-                    },
-                    {
-                      date: "2024-03-18",
-                      label: "How Can AI Disrupt Elections?",
-                    },
-                    {
-                      date: "2024-04-05",
-                      label: "Timeline of AI Forecasts",
-                    },
-                    {
-                      date: "2024-08-27",
-                      label: "AI Can or Can't",
-                    },
-                    {
-                      date: "2024-10-24",
-                      label: "Beyond Chat: AI Agent Demo",
-                    },
-                    {
-                      date: "2024-12-06",
-                      label: "AI 2025 Forecasting Survey",
-                    },
-                    {
-                      date: "2024-12-20",
-                      label: "AIs are becoming more self-aware",
-                    },
-                  ]
+                ? AI_DIGEST_EVENTS
                 : product === "Quantified Intuitions"
                 ? [
                     {
@@ -305,6 +307,22 @@ export const getStaticProps: GetStaticProps = async () => {
                   ]
                 : undefined,
           })),
+        ...(mailingListSubscribers.some((s) => s.products.includes("AI Digest"))
+          ? [
+              {
+                type: "line over time" as const,
+                title:
+                  "Daily  AI Digest subscribers (last 6mo, excl extreme outliers)",
+                data: getProductDailyData(
+                  mailingListSubscribers,
+                  "AI Digest",
+                  new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) // 180 days = ~6 months
+                ),
+                events: AI_DIGEST_EVENTS,
+                excludeOutliers: true,
+              },
+            ]
+          : []),
       ],
     },
     {
@@ -654,6 +672,7 @@ interface StatsPageProps {
           title: string
           data: Record<string, number>
           events?: TimelineEvent[]
+          excludeOutliers?: boolean
         }
       | {
           type: "data over index"
@@ -703,7 +722,10 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                 {stat.chartData &&
                   stat.chartData.map((chart) => {
                     if (chart.type === "line over time") {
-                      const chartData = getDateData(chart.data)
+                      const chartData = getDateData(
+                        chart.data,
+                        chart.excludeOutliers
+                      )
 
                       if (chart.events) {
                         chart.events.forEach((event) => {
@@ -1012,7 +1034,7 @@ function getUniqueUserIdsByDate(
 }
 
 // adds zeroes for dates with no data and calculates 7 day rolling average
-function getDateData(data: Record<string, number>) {
+function getDateData(data: Record<string, number>, excludeOutliers = false) {
   const dates = Object.keys(data)
     .map((date) => new Date(date))
     .sort((a, b) => a.getTime() - b.getTime())
@@ -1028,25 +1050,47 @@ function getDateData(data: Record<string, number>) {
 
   let rolling = []
 
+  // Calculate outlier thresholds if needed
+  let outlierThreshold = Infinity
+  if (excludeOutliers) {
+    const sortedValues = Object.values(data).sort((a, b) => a - b)
+    const len = sortedValues.length
+    if (len >= 4) {
+      // Only calculate quartiles if we have enough data points
+      const q1Index = Math.floor(len * 0.25)
+      const q3Index = Math.floor(len * 0.75)
+      const q1 = sortedValues[q1Index]
+      const q3 = sortedValues[q3Index]
+      const iqr = q3 - q1
+      outlierThreshold = q3 + iqr * 10 // Using 10 * IQR as requested
+    }
+  }
+
   for (
     let dt = new Date(startDate);
     dt <= endDate;
     dt.setDate(dt.getDate() + 1)
   ) {
     const formattedDate = dt.toISOString().split("T")[0]
-    const value = data[formattedDate] ?? 0
+    const rawValue = data[formattedDate] ?? 0
+    const value =
+      excludeOutliers && rawValue > outlierThreshold
+        ? outlierThreshold
+        : rawValue
 
     rolling.unshift(value) // add to start
     if (rolling.length > 7) rolling.pop()
     const rollingAverage =
       rolling.length == 7
         ? rolling.reduce((a, b) => a + b, 0) / rolling.length
-        : null
+        : rolling.length > 0
+        ? rolling.reduce((a, b) => a + b, 0) / rolling.length // Calculate partial rolling average when < 7 days
+        : 0
 
     dateArray.push({
       date: getYYYYMMDD(new Date(dt)),
       value,
-      "Rolling average": round(rollingAverage ?? 0, 1),
+      "Rolling average": round(rollingAverage, 1),
     })
   }
 
@@ -1168,6 +1212,48 @@ function getProductCumulativeData(
       lastValue = dateData[formattedDate]
     }
     result[formattedDate] = lastValue
+  }
+
+  return result
+}
+
+function getProductDailyData(
+  subscribers: {
+    products: string[]
+    createdAt: Date
+  }[],
+  targetProduct: string,
+  startDate?: Date
+): Record<string, number> {
+  const productSubs = subscribers
+    .filter((s) => s.products.includes(targetProduct))
+    .filter((s) => !startDate || s.createdAt >= startDate)
+    .sort((a, b) => a.createdAt.getTime() - b.createdAt.getTime())
+
+  const dateData: Record<string, number> = {}
+
+  productSubs.forEach((sub) => {
+    const date = sub.createdAt.toISOString().split("T")[0]
+    dateData[date] = (dateData[date] || 0) + 1
+  })
+
+  // Fill in gaps between dates with zeros
+  if (Object.keys(dateData).length === 0) return {}
+
+  const dates = Object.keys(dateData).sort()
+  const effectiveStartDate =
+    startDate && startDate > new Date(dates[0]) ? startDate : new Date(dates[0])
+  const endDate = new Date(dates[dates.length - 1])
+
+  const result: Record<string, number> = {}
+
+  for (
+    let dt = new Date(effectiveStartDate);
+    dt <= endDate;
+    dt.setDate(dt.getDate() + 1)
+  ) {
+    const formattedDate = dt.toISOString().split("T")[0]
+    result[formattedDate] = dateData[formattedDate] || 0
   }
 
   return result
