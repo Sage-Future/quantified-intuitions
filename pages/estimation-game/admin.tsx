@@ -4,7 +4,7 @@ import {
   Challenge,
 } from "@prisma/client"
 import { GetServerSideProps } from "next"
-import { getSession } from "next-auth/react"
+import { auth } from "../../lib/auth"
 import { useEffect, useState } from "react"
 import { Footer } from "../../components/Footer"
 import { NavbarChallenge } from "../../components/NavbarChallenge"
@@ -14,7 +14,7 @@ const adminEmails =
   process.env.ESTIMATION_GAME_ADMIN_EMAILS_COMMA_SEPARATED?.split(",") || []
 
 export const getServerSideProps: GetServerSideProps = async (context) => {
-  const session = await getSession(context)
+  const session = await auth(context.req, context.res)
   const userEmail = session?.user?.email
 
   if (!userEmail || !adminEmails.includes(userEmail)) {

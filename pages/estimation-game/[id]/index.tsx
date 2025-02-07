@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next"
 import { Session } from "next-auth"
-import { getSession, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
 import { useRouter } from "next/router"
 import { Challenge } from "../../../components/Challenge"
@@ -9,6 +9,7 @@ import { JoinChallenge } from "../../../components/JoinChallenge"
 import { NavbarChallenge } from "../../../components/NavbarChallenge"
 import { Prisma } from "../../../lib/prisma"
 import { ChallengeWithTeamsWithUsersAndQuestions } from "../../../types/additional"
+import { auth } from "../../../lib/auth"
 
 export type ChallengeProps = {
   challenge: ChallengeWithTeamsWithUsersAndQuestions
@@ -18,7 +19,7 @@ export type ChallengeProps = {
 export const getServerSideProps: GetServerSideProps<ChallengeProps | {}> = async (
   ctx
 ) => {
-  const session = await getSession(ctx)
+  const session = await auth(ctx.req, ctx.res)
   if (!session) {
     return { props: {} }
   }

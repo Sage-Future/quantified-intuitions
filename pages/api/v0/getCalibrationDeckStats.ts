@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { unstable_getServerSession } from "next-auth"
+import { getServerSession } from "next-auth"
 import { serialize } from "superjson"
 
 import { Prisma } from "../../../lib/prisma"
@@ -12,7 +12,7 @@ interface Request extends NextApiRequest {
 }
 
 const getCalibrationDeckStats = async (req: Request, res: NextApiResponse) => {
-  const session = await unstable_getServerSession(req, res, authOptions)
+  const session = await getServerSession(req, res, authOptions)
 
   if (!session) {
     res.status(401).json({

@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useSession } from "next-auth/react";
 
 export const SubmitForm = ({
   disabled,
@@ -7,6 +8,8 @@ export const SubmitForm = ({
   disabled: boolean;
   isLoading: boolean;
 }) => {
+  const { data: session } = useSession();
+
   return (
     <div className=" sm:col-span-6">
       <div className="flex justify-start">

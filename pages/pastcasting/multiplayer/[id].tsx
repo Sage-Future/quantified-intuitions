@@ -1,10 +1,11 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useState } from "react";
 import { deserialize } from "superjson";
 import { SuperJSONValue } from "superjson/dist/types";
 import useSWR from "swr";
+import { auth } from "../../../lib/auth";
 
 import { Room, User } from "@prisma/client";
 
@@ -28,7 +29,7 @@ export type RoomProps = {
 export const getServerSideProps: GetServerSideProps<RoomProps | {}> = async (
   ctx
 ) => {
-  const session = await getSession(ctx);
+  const session = await auth(ctx.req, ctx.res);
   if (!session) {
     return { props: {} };
   }

@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth"
+import NextAuth from "next-auth"
+import type { NextAuthOptions, Session, User } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import GoogleProvider from "next-auth/providers/google"
 
@@ -9,7 +10,24 @@ import { subscribeToMailingList } from "../email/subscribe"
 const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
-  adapter: PrismaAdapter(prisma),
+  adapter: {
+    ...PrismaAdapter(prisma),
+    createUser: async (user: any) => {
+      const createdUser = await PrismaAdapter(prisma).createUser(user)
+
+      if (createdUser.email) {
+        void subscribeToMailingList([
+          {
+            email: createdUser.email,
+            tags: ["qi-user"],
+            products: ["Quantified Intuitions"],
+          },
+        ])
+      }
+
+      return createdUser
+    },
+  },
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -35,7 +53,8 @@ export const authOptions: NextAuthOptions = {
       }
       return session
     },
-    jwt: async ({ token, user }) => {
+    jwt: async (params: { token: JWT; user?: User }) => {
+      const { token, user } = params
       if (user) {
         token.sub = user.id
       }
