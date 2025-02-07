@@ -1,12 +1,12 @@
 import { NextApiRequest, NextApiResponse } from "next"
-import { getSession } from "next-auth/react"
+import { auth } from "../../../lib/auth"
 import { Prisma } from "../../../lib/prisma"
 
 const getPlayedChallenges = async (
   req: NextApiRequest,
   res: NextApiResponse
 ) => {
-  const session = await getSession({ req })
+  const session = await auth(req, res)
 
   if (!session || !session.user) {
     return res.status(200).json([])

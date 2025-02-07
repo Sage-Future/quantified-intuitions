@@ -1,8 +1,9 @@
 import { GetServerSideProps } from "next";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { auth } from "../../../lib/auth";
 
 import { Errors } from "../../../components/Errors";
 import { Footer } from "../../../components/Footer";
@@ -10,7 +11,7 @@ import { NavbarPastcasting } from "../../../components/NavbarPastcasting";
 import { Success } from "../../../components/Success";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+  const session = await auth(ctx.req, ctx.res);
   if (!session) {
     return { props: {} };
   }

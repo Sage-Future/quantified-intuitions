@@ -1,4 +1,5 @@
-import NextAuth, { NextAuthOptions, Session, User } from "next-auth"
+import NextAuth from "next-auth"
+import type { NextAuthOptions, Session, User } from "next-auth"
 import { JWT } from "next-auth/jwt"
 import GoogleProvider from "next-auth/providers/google"
 
@@ -11,7 +12,7 @@ const prisma = new PrismaClient()
 export const authOptions: NextAuthOptions = {
   adapter: {
     ...PrismaAdapter(prisma),
-    createUser: async (user: Omit<User, "id">) => {
+    createUser: async (user: any) => {
       const createdUser = await PrismaAdapter(prisma).createUser(user)
 
       if (createdUser.email) {
@@ -53,7 +54,7 @@ export const authOptions: NextAuthOptions = {
       }
       return Promise.resolve(session)
     },
-    jwt: async (params: { token: JWT; user?: User | undefined }) => {
+    jwt: async (params: { token: JWT; user?: User }) => {
       const { token, user } = params
       if (user) {
         token.id = user.id

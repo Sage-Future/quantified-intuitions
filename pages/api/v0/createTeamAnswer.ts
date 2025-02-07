@@ -1,5 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { getSession } from "next-auth/react";
+import { auth } from "../../../lib/auth";
 
 import { Prisma } from "../../../lib/prisma";
 import { CHALLENGE_CONFIDENCE_INTERVAL } from "../../../lib/services/magicNumbers";
@@ -27,8 +27,8 @@ const createTeamAnswer = async (req: Request, res: NextApiResponse) => {
     return;
   }
 
-  const session = await getSession({ req });
-  if (session === null || session === undefined) {
+  const session = await auth(req, res);
+  if (!session) {
     res.status(401).json({
       error: "unauthorized",
     });

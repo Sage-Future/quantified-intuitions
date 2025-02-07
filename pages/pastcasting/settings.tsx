@@ -1,5 +1,5 @@
 import { GetServerSideProps } from "next";
-import { getSession } from "next-auth/react";
+import { auth } from "../../lib/auth";
 
 import { User } from "@prisma/client";
 
@@ -9,7 +9,7 @@ import { Settings } from "../../components/Settings";
 import { Prisma } from "../../lib/prisma";
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx);
+  const session = await auth(ctx.req, ctx.res);
   if (!session) {
     return { props: {} };
   }

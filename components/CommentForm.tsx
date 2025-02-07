@@ -1,8 +1,10 @@
 import { useFormContext } from "react-hook-form";
 import ReactTextareaAutosize from "react-textarea-autosize";
+import { useSession } from "next-auth/react"
 
 export const CommentForm = ({ disabled = false }: { disabled?: boolean }) => {
   const { register } = useFormContext();
+  const { data: session } = useSession()
   return (
     <div className="sm:col-span-6">
       <div className="flex justify-between">

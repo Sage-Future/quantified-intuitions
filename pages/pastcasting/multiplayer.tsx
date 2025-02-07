@@ -1,6 +1,6 @@
 import { GetServerSideProps, NextPage } from "next";
 import { Session } from "next-auth";
-import { getSession, useSession } from "next-auth/react";
+import { useSession } from "next-auth/react";
 import Link from "next/link";
 
 import { PlusIcon } from "@heroicons/react/24/solid";
@@ -11,6 +11,7 @@ import { NavbarPastcasting } from "../../components/NavbarPastcasting";
 import { Rooms } from "../../components/Rooms";
 import { Prisma } from "../../lib/prisma";
 import { MULTIPLAYER_EXPIRATION } from "../../lib/services/magicNumbers";
+import { auth } from "../../lib/auth";
 
 type MultiplayerProps = {
   session: Session;
@@ -22,7 +23,7 @@ type MultiplayerProps = {
 export const getServerSideProps: GetServerSideProps<
   MultiplayerProps | {}
 > = async (ctx) => {
-  const session = await getSession(ctx);
+  const session = await auth(ctx.req, ctx.res);
 
   const rooms = await Prisma.room.findMany({
     include: {

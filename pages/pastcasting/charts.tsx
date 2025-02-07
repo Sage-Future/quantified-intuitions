@@ -1,4 +1,5 @@
-import { getSession } from "next-auth/react";
+import { auth } from "../../lib/auth";
+import { GetServerSideProps } from 'next';
 
 import { Charts } from "../../components/Charts";
 import { Footer } from "../../components/Footer";
@@ -6,8 +7,8 @@ import { NavbarPastcasting } from "../../components/NavbarPastcasting";
 import { Prisma } from "../../lib/prisma";
 import { UserWithPastcastsWithQuestionWithCalibrationAnswers } from "../../types/additional";
 
-export const getServerSideProps = async (ctx: any) => {
-  const session = await getSession(ctx);
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await auth(ctx.req, ctx.res);
   if (!session) {
     return { props: {} };
   }

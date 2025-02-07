@@ -1,4 +1,4 @@
-import { getSession } from "next-auth/react";
+import { auth } from "../../../lib/auth"
 
 import { Prisma } from "../../../lib/prisma";
 import { MAX_SEARCH_RESULTS } from "../../../lib/services/magicNumbers";
@@ -91,9 +91,9 @@ const processSearch = async (
   });
 };
 
-export default async function handle(req: Request, res: NextApiResponse) {
+export default async function handler(req: Request, res: NextApiResponse) {
+  const session = await auth(req, res)
   const { query, searchId, maxMonth, maxDay, maxYear } = req.body;
-  const session = await getSession({ req });
   if (session === null) {
     res.status(401).json({ message: "Not logged in" });
     return;
