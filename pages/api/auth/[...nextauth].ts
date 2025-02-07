@@ -9,24 +9,7 @@ import { subscribeToMailingList } from "../email/subscribe"
 const prisma = new PrismaClient()
 
 export const authOptions: NextAuthOptions = {
-  adapter: {
-    ...PrismaAdapter(prisma),
-    createUser: async (user: any) => {
-      const createdUser = await PrismaAdapter(prisma).createUser(user)
-
-      if (createdUser.email) {
-        void subscribeToMailingList([
-          {
-            email: createdUser.email,
-            tags: ["qi-user"],
-            products: ["Quantified Intuitions"],
-          },
-        ])
-      }
-
-      return createdUser
-    },
-  },
+  adapter: PrismaAdapter(prisma),
   providers: [
     GoogleProvider({
       clientId: process.env.GOOGLE_CLIENT_ID || "",
@@ -46,19 +29,17 @@ export const authOptions: NextAuthOptions = {
     secret: process.env.SECRET,
   },
   callbacks: {
-    session: async (params: { session: Session; token: JWT }) => {
-      const { session, token } = params
-      if (token.id) {
-        session.user.id = token.id as string
+    session: async ({ session, token }) => {
+      if (token.sub) {
+        session.user.id = token.sub
       }
-      return Promise.resolve(session)
+      return session
     },
-    jwt: async (params: { token: JWT; user?: User | undefined }) => {
-      const { token, user } = params
+    jwt: async ({ token, user }) => {
       if (user) {
-        token.id = user.id
+        token.sub = user.id
       }
-      return Promise.resolve(token)
+      return token
     },
   },
 }

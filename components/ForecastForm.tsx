@@ -105,47 +105,56 @@ export const ForecastForm = ({
     nextQuestion();
   };
   const onSubmit = async (data: any) => {
-    if (session === null) {
-      signIn();
-      return;
+    if (!session) {
+      signIn('google')
+      return
     }
-    setIsLoading(true);
-    setErrors([]);
-    if (
-      data.binaryProbability === undefined ||
-      !isValidBinaryForecast(data.binaryProbability)
-    ) {
-      setErrors(["Please enter a probability between 0.1% and 99.9%"]);
-      setIsLoading(false);
-      return;
-    }
-    data.questionId = questionId;
-    data.binaryProbability = Number(data.binaryProbability) / 100.0;
-    data.timeSpent = Date.now() - timeStarted;
-    if (data.comment === undefined || data.comment.length === 0) {
-      delete data.comment;
-    }
-    if (data.skipped === undefined) {
-      data.skipped = false;
-    }
-    await fetch("/api/v0/createBinaryPastcast", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(data),
-    }).then(async (res) => {
-      if (res.status === 201) {
-        const json = await res.json();
-        setFormState(data.skipped ? "submittedPrior" : "submittedForecast");
-        setPointsEarned(json.pastcast.score);
-        setPriorAnswer(undefined);
-        const roomId = router.asPath.split("/")[2];
-        mutate(`/api/v0/getQuestion?roomId=${roomId}`);
+    
+    setIsLoading(true)
+    setErrors([])
+    
+    try {
+      if (
+        data.binaryProbability === undefined ||
+        !isValidBinaryForecast(data.binaryProbability)
+      ) {
+        setErrors(["Please enter a probability between 0.1% and 99.9%"])
+        return
       }
-    });
-    setIsLoading(false);
-  };
+
+      const response = await fetch("/api/v0/createBinaryPastcast", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          ...data,
+          questionId,
+          binaryProbability: Number(data.binaryProbability) / 100.0,
+          timeSpent: Date.now() - timeStarted,
+          skipped: data.skipped ?? false,
+          comment: data.comment?.length > 0 ? data.comment : undefined
+        }),
+      })
+
+      if (!response.ok) {
+        const error = await response.json()
+        throw new Error(error.message || 'Failed to submit forecast')
+      }
+
+      const json = await response.json()
+      setFormState(data.skipped ? "submittedPrior" : "submittedForecast")
+      setPointsEarned(json.pastcast.score)
+      setPriorAnswer(undefined)
+      
+      const roomId = router.asPath.split("/")[2]
+      mutate(`/api/v0/getQuestion?roomId=${roomId}`)
+    } catch (error) {
+      setErrors([error instanceof Error ? error.message : 'An error occurred'])
+    } finally {
+      setIsLoading(false)
+    }
+  }
   const onSkip = async (answer: boolean) => {
     setPriorAnswer(answer);
     await onSubmit({
