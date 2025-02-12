@@ -336,6 +336,9 @@ export const getStaticProps: GetStaticProps = async () => {
           return acc
         }, []).length,
         ...firstAndLastNUsers(answersByUser, 20),
+        "Users with >40 answers": Object.values(answersByUser).filter(
+          (answers) => answers.length > 40
+        ).length,
       },
       chartData: [
         {
@@ -428,6 +431,9 @@ export const getStaticProps: GetStaticProps = async () => {
           return acc
         }, []).length,
         ...firstAndLastNUsers(pastcastsByUser, 20),
+        "Users with >40 pastcasts": Object.values(pastcastsByUser).filter(
+          (answers) => answers.length > 40
+        ).length,
       },
       chartData: [
         {
@@ -529,6 +535,9 @@ export const getStaticProps: GetStaticProps = async () => {
           2
         ),
         ...firstAndLastNUsers(teamFermiAnswersByUser, 20),
+        "Users with >40 answers": Object.values(teamFermiAnswersByUser).filter(
+          (answers) => answers.length > 40
+        ).length,
       },
       chartData: [
         {
