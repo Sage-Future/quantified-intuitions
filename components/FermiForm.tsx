@@ -1,16 +1,20 @@
-import clsx from "clsx";
-import { useEffect, useState } from "react";
-import { useForm } from "react-hook-form";
-import ReactMarkdown from "react-markdown";
-import remarkGfm from "remark-gfm";
+import clsx from "clsx"
+import { useEffect, useState } from "react"
+import { useForm } from "react-hook-form"
+import ReactMarkdown from "react-markdown"
+import remarkGfm from "remark-gfm"
 
-import { CalibrationQuestion } from "@prisma/client";
+import { CalibrationQuestion } from "@prisma/client"
 
-import { Errors } from "../components/Errors";
-import { SubmitForm } from "../components/SubmitForm";
-import { convertNumber, formatInput, formatResult } from "../lib/services/format";
-import { LoadingButton } from "./LoadingButton";
-import { Result } from "./Result";
+import { Errors } from "../components/Errors"
+import { SubmitForm } from "../components/SubmitForm"
+import {
+  convertNumber,
+  formatInput,
+  formatResult,
+} from "../lib/services/format"
+import { LoadingButton } from "./LoadingButton"
+import { Result } from "./Result"
 
 export const FermiForm = ({
   calibrationQuestion,
@@ -21,54 +25,54 @@ export const FermiForm = ({
   setQuestionComplete,
   showScoringHint,
 }: {
-  calibrationQuestion: CalibrationQuestion;
-  reduceCountdown: () => void;
-  nextQuestion: () => void;
-  addToScore: (score: number) => void;
-  teamId: string;
-  setQuestionComplete: (isComplete: boolean) => void;
-  showScoringHint: boolean;
+  calibrationQuestion: CalibrationQuestion
+  reduceCountdown: () => void
+  nextQuestion: () => void
+  addToScore: (score: number) => void
+  teamId: string
+  setQuestionComplete: (isComplete: boolean) => void
+  showScoringHint: boolean
 }) => {
-  const { register, watch, handleSubmit, setFocus } = useForm();
-  const [pointsEarned, setPointsEarned] = useState<number | null>(null);
-  const [correct, setCorrect] = useState<boolean | null>(null);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [errors, setErrors] = useState<string[]>([]);
-  const watchAllFields = watch();
+  const { register, watch, handleSubmit, setFocus } = useForm()
+  const [pointsEarned, setPointsEarned] = useState<number | null>(null)
+  const [correct, setCorrect] = useState<boolean | null>(null)
+  const [isLoading, setIsLoading] = useState<boolean>(false)
+  const [errors, setErrors] = useState<string[]>([])
+  const watchAllFields = watch()
 
   const onSubmit = async (data: any) => {
-    setIsLoading(true);
-    const { lowerBound, upperBound } = data;
-    setErrors([]);
+    setIsLoading(true)
+    const { lowerBound, upperBound } = data
+    setErrors([])
     if (lowerBound === "" || upperBound === "") {
-      setErrors(["Please fill in both fields"]);
-      setIsLoading(false);
-      return;
+      setErrors(["Please fill in both fields"])
+      setIsLoading(false)
+      return
     }
-    let lowerBoundNumber = Number(lowerBound);
-    let upperBoundNumber = Number(upperBound);
+    let lowerBoundNumber = Number(lowerBound)
+    let upperBoundNumber = Number(upperBound)
     if (isNaN(lowerBoundNumber) || isNaN(upperBoundNumber)) {
-      setErrors(["Please enter a number"]);
-      setIsLoading(false);
-      return;
+      setErrors(["Please enter a number"])
+      setIsLoading(false)
+      return
     }
     lowerBoundNumber = convertNumber(
       lowerBoundNumber,
       calibrationQuestion.prefix.includes("10^")
-    );
+    )
     upperBoundNumber = convertNumber(
       upperBoundNumber,
       calibrationQuestion.prefix.includes("10^")
-    );
+    )
     if (lowerBoundNumber > upperBoundNumber) {
-      setErrors(["Lower bound must be less than upper bound"]);
-      setIsLoading(false);
-      return;
+      setErrors(["Lower bound must be less than upper bound"])
+      setIsLoading(false)
+      return
     }
-    if (lowerBoundNumber <= 0) {
-      setErrors(["Lower bound must be greater than 0"]);
-      setIsLoading(false);
-      return;
+    if (calibrationQuestion.useLogScoring && lowerBoundNumber <= 0) {
+      setErrors(["Lower bound must be greater than 0"])
+      setIsLoading(false)
+      return
     }
 
     await fetch("/api/v0/createTeamAnswer", {
@@ -84,37 +88,37 @@ export const FermiForm = ({
       }),
     }).then(async (res) => {
       if (res.status === 201) {
-        const json = await res.json();
-        setQuestionComplete(true);
-        setPointsEarned(json.score);
-        addToScore(json.score);
-        setCorrect(json.correct);
+        const json = await res.json()
+        setQuestionComplete(true)
+        setPointsEarned(json.score)
+        addToScore(json.score)
+        setCorrect(json.correct)
       }
-    });
-    setIsLoading(false);
-  };
+    })
+    setIsLoading(false)
+  }
   //call reduceCountdown every second
   useEffect(() => {
     const interval = setInterval(() => {
       if (!isLoading && !pointsEarned) {
-        reduceCountdown();
+        reduceCountdown()
       }
-    }, 1000);
-    return () => clearInterval(interval);
-  }, [reduceCountdown]);
+    }, 1000)
+    return () => clearInterval(interval)
+  }, [reduceCountdown])
 
   useEffect(() => {
-    setFocus("lowerBound");
-    setQuestionComplete(false);
-  }, []);
+    setFocus("lowerBound")
+    setQuestionComplete(false)
+  }, [])
   useEffect(() => {
-    let links = document.links;
+    let links = document.links
     for (let i = 0; i < links.length; i++) {
       if (!links[i].href.startsWith(`${window.location.origin}`)) {
-        links[i].target = "_blank";
+        links[i].target = "_blank"
       }
     }
-  }, [calibrationQuestion, pointsEarned]);
+  }, [calibrationQuestion, pointsEarned])
 
   return (
     <>
@@ -282,5 +286,5 @@ export const FermiForm = ({
         </div>
       </form>
     </>
-  );
-};
+  )
+}
