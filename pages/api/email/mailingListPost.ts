@@ -8,6 +8,39 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "time-horizons",
+    status: "sent",
+    list: "ai-digest",
+    subject: "A new Moore's Law for AI agents",
+    preheader:
+      "The length of tasks that agents can do is growing exponentially",
+    htmlContent: `
+      <h1>A new Moore's Law for AI agents</h1>
+      <p>When ChatGPT came out in 2022, it could do 30 second coding tasks.</p>
+      <p>Today, AI agents can autonomously do coding tasks that take humans an hour.</p>
+      <a href="https://theaidigest.org/time-horizons?utm_source=newsletter" style="max-width: 400px; display: block; margin: 20px auto;"><img style="max-width: 400px;" src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1743180950/7faad81c-1412-4930-b0e6-fa1c9965b7d9.png"/></a>
+      <p>The length of coding tasks agents can do is growing exponentially – doubling every 7 months. And the growth rate might be speeding up.</p>
+      <p>In <a href="https://theaidigest.org/time-horizons?utm_source=newsletter">this new explainer</a>, we visualize the rate of change, what happens when you extrapolate it out, and why it might turn out to be part of the most important trend in human history.</p>
+      ${getButtonHtml({
+        link: "https://theaidigest.org/time-horizons?utm_source=newsletter",
+        text: "Read the visual explainer",
+      })}
+    `,
+    textContent: `
+      A new Moore's Law for AI agents
+
+      When ChatGPT came out in 2022, it could do 30 second coding tasks.
+
+      Today, AI agents can autonomously do coding tasks that take humans an hour.
+
+      The length of coding tasks agents can do is growing exponentially. And the growth rate might be speeding up.
+
+      In this explainer, we visualize the rate of change, what happens when you extrapolate it out, and why it might turn out to be part of the most important trend in human history.
+
+      Read the visual explainer: https://theaidigest.org/time-horizons?utm_source=newsletter
+    `,
+  },
+  {
     id: "predict-your-year-2025",
     status: "sent",
     list: "forecasting",
@@ -233,6 +266,17 @@ export default async function handler(
 
   const list = MAILING_LISTS[post.list]
 
+  const product = {
+    "ai-digest": {
+      productUrl: "https://theaidigest.org?utm_source=newsletter",
+      productName: "AI Digest",
+    },
+    forecasting: {
+      productUrl: "https://fatebook.io?utm_source=newsletter",
+      productName: "Fatebook",
+    },
+  }[post.list]
+
   try {
     const response = await sendBroadcastEmail({
       templateAlias: "blank-transactional",
@@ -241,6 +285,8 @@ export default async function handler(
         html_body: post.htmlContent,
         text_body: post.textContent,
         preheader: post.preheader,
+        ...(product?.productUrl ? { product_url: product.productUrl } : {}),
+        ...(product?.productName ? { product_name: product.productName } : {}),
       },
       from: list.from,
       messageStream: list.streamId,
