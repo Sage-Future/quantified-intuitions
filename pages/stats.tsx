@@ -53,6 +53,14 @@ const AI_DIGEST_EVENTS: TimelineEvent[] = [
     date: "2024-12-20",
     label: "AIs are becoming more self-aware",
   },
+  {
+    date: "2025-03-28",
+    label: "A new Moore's Law for AI agents",
+  },
+  {
+    date: "2025-04-01",
+    label: "Agent village",
+  },
 ]
 
 interface TimelineEvent {
