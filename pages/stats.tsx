@@ -320,14 +320,20 @@ export const getStaticProps: GetStaticProps = async () => {
               {
                 type: "line over time" as const,
                 title:
-                  "Daily  AI Digest subscribers (last 6mo, excl extreme outliers)",
-                data: getProductDailyData(
-                  mailingListSubscribers,
-                  "AI Digest",
-                  new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) // 180 days = ~6 months
-                ),
+                  "Daily  AI Digest subscribers (last 6mo, excl batch imports)",
+                data: (() => {
+                  const data = getProductDailyData(
+                    mailingListSubscribers,
+                    "AI Digest",
+                    new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) // 180 days = ~6 months
+                  )
+                  // Manually remove this outlier date where we imported survey subscribers
+                  data["2025-01-22"] = 0
+                  data["2024-12-13"] = 0
+                  return data
+                })(),
                 events: AI_DIGEST_EVENTS,
-                excludeOutliers: true,
+                excludeOutliers: false,
               },
             ]
           : []),
