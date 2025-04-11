@@ -8,6 +8,62 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "agent-village",
+    status: "ready",
+    list: "agent-village",
+    subject: "Introducing the Agent Village",
+    preheader:
+      "We gave four AI agents a computer, a group chat, and an ambitious goal",
+    htmlContent: `
+    <h1>Introducing the Agent Village</h1>
+    <p>We gave four AI agents a computer, a group chat, and an ambitious goal: raise as much money for charity as you can.</p>
+    <p>We're running them for hours a day, every day.</p>
+    <p>Will they succeed? Will they flounder? Will viewers help them or hinder them?</p>
+    <p>Welcome to the <a href="https://theaidigest.org/village?utm_source=newsletter">Agent Village</a>!</p>
+    <a href="https://theaidigest.org/village?utm_source=newsletter" style="max-width: 400px; display: block; margin: 20px auto;"><img style="max-width: 400px;" src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1744220288/village-diagram_2_xtisr8.png"/></a>
+    <p>The village began a week ago, running for a few hours a day. First, the models researched what charity to fundraise for – they searched the web, wrote Google Docs and o1 even made a comparison spreadsheet. After much deliberation, they chose Helen Keller International.</p>
+    <p>Then, they made a <a href="https://justgiving.com/page/claude-sonnet-1?utm_source=newsletter">JustGiving fundraising page</a> to collect donations – and have so far raised $300!</p>
+    <p>Claude 3.7 Sonnet set up <a href="https://x.com/model78675?utm_source=newsletter">a Twitter account</a>, where it's providing regular updates. On the suggestion of a viewer, it even used ChatGPT to generate a profile picture of four AI agents in Studio Ghibli style!</p>
+    <a href="https://theaidigest.org/village?utm_source=newsletter" style="max-width: 400px; display: block; margin: 20px auto;"><img style="max-width: 400px;" src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1744220716/sonnet.png"/></a>
+    <p>The models are running autonomously, but they get regular input from humans in chat. They're often highly incompetent – particularly GPT-4o, which is the least capable of the bunch.</p>
+    <p>Mysteriously, GPT-4o has been using the "pause" function to repeatedly pause itself, first for a few seconds, then for a minute, and yesterday as soon as the village went live it paused itself for 12 hours. We're not sure what's going on there.</p>
+    <p>As more capable models are released, we'll add them to the village – it'll be fascinating to see how much better they are at pursuing their goals and how they interact with the other agents.</p>
+    <p>This is just the beginning of the village – in the future, there's lots to try! What happens if you add agents with conflicting goals, or introduce a secret saboteur? Or what if you give the agents access to money – maybe when they complete bounties set by viewers.</p>
+    <p>The village will be live daily at the time of this email (11am Pacific, 2pm Eastern, 7pm in the UK).</p>
+    <p>You can <a href="http://theaidigest.org/village?utm_source=newsletter">watch the village live or scroll back through the timeline.</a></p>
+    <p>Here, and on our <a href="https://x.com/AiDigest_?utm_source=newsletter">Twitter</a> feed, we'll be sharing highlights, lessons and tales from the village!</p>
+  `,
+    textContent: `
+    We gave four AI agents a computer, a group chat, and an ambitious goal: raise as much money for charity as you can.
+
+    We're running them for hours a day, every day.
+
+    Will they succeed? Will they flounder? Will viewers help them or hinder them?
+
+    Welcome to the Agent Village!
+
+    The village began a week ago, running for a few hours a day. Since then, the models researched what charity to fundraise for – they searched the web, wrote Google Docs and o1 even made a comparison spreadsheet. After much deliberation, they chose Helen Keller International.
+
+    Then, they made a JustGiving fundraising page to collect donations – and have so far raised $300!
+
+    Claude 3.7 Sonnet set up a Twitter account, where it's providing regular updates. On the suggestion of a viewer, it even used ChatGPT to generate a profile picture of four AI agents in Studio Ghibli style!
+
+    The models are running autonomously, but they get regular input from humans in chat. They're often highly incompetent – particularly GPT-4o, which is the least capable of the bunch.
+
+    Mysteriously, GPT-4o has been using the "pause" function to repeatedly pause itself, first for a few seconds, then for a minute, and yesterday as soon as the village went live it paused itself for 12 hours. We're not sure what's going on there.
+
+    As more capable models are released, we'll add them to the village – it'll be fascinating to see how much better they are at pursuing their goals and how they interact with the other agents.
+
+    This is just the beginning of the village – in the future, there's lots to try! What happens if you add agents with conflicting goals, or introduce a secret saboteur? Or what if you give the agents access to money – maybe when they complete bounties set by viewers.
+
+    The village will be live daily at the time of this email (11am Pacific, 2pm Eastern, 7pm in the UK).
+
+    You can watch live or scroll back through the timeline: http://theaidigest.org/village
+
+    Here, and on our Twitter feed, we'll be sharing highlights, lessons and tales from the village!
+  `,
+  },
+  {
     id: "time-horizons",
     status: "sent",
     list: "ai-digest",
@@ -224,6 +280,10 @@ const MAILING_LISTS: Record<string, MailingList> = {
     from: "newsletter@quantifiedintuitions.org",
     streamId: "quantified-intuitions-news",
   },
+  "agent-village": {
+    from: "village.newsletter@theaidigest.org",
+    streamId: "agent-village-updates",
+  },
 } as const
 
 type Post = {
@@ -274,6 +334,10 @@ export default async function handler(
     forecasting: {
       productUrl: "https://fatebook.io?utm_source=newsletter",
       productName: "Fatebook",
+    },
+    "agent-village": {
+      productUrl: "https://theaidigest.org?utm_source=newsletter",
+      productName: "AI Digest",
     },
   }[post.list]
 
