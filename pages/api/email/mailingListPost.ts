@@ -5,8 +5,80 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 // Important notes:
 // 1. Include ?utm_source=newsletter in all links
 // 2. Set draft status until ready to send
+// 3. Use Digest styles for buttons in all digest or village posts going forwards
 
-const POSTS: Post[] = [
+const POSTS: Post[] =G [
+  {
+    id: "ai2025-analysis-may",
+    status: "ready",
+    list: "ai-digest",
+    subject: "AI 2025 Forecasts - May Update",
+    preheader: "A review of how the predictions are holding up so far",
+    htmlContent: `
+      <h1>AI 2025 Forecasts - May Update</h1>
+      <p>At the end of 2024, there was a lot of discussion about whether AI scaling was hitting a wall and whether we would reach AGI soon.</p>
+      <p>We created <a href="https://ai2025.org?utm_source=newsletter">a survey</a> that would track key markers of AI progress in what might turn out to be a pivotal year. After filtering the data, we had 421 unique respondents. All questions were optional.</p>
+      <p>The survey was open from Nov 30th 2024 to Jan 20th 2025 – during which OpenAI o3 was announced, so we can compare forecasts before and after the announcement.</p>
+      <p>In this post, we summarise respondents' forecasts, and look at how they're holding up so far. At the end of the year, we'll resolve all the forecasts and write up the results.</p>
+      <p>The post covers:</p>
+      <ol>
+        <li>Forecasts on:
+          <ol>
+            <li>AI Research: RE-Bench</li>
+            <li>Software Engineering: SWE-bench</li>
+            <li>Cybersecurity: Cybench</li>
+            <li>Computer Use: OSWorld</li>
+            <li>Mathematics: FrontierMath</li>
+            <li>OpenAI's pre-mitigation preparedness scores</li>
+            <li>Sum of OpenAI, Anthropic, xAI revenues</li>
+            <li>Public attention on AI</li>
+          </ol>
+        </li>
+        <li>Background views of survey respondents
+          <ol>
+            <li>Timelines</li>
+            <li>Risk</li>
+            <li>AI years of experience</li>
+          </ol>
+        </li>
+        <li>Correlations between forecasts and background views</li>
+      </ol>
+      ${getButtonHtml({
+        link: "https://theaidigest.org/ai2025-analysis-may?utm_source=newsletter",
+        text: "Read the post",
+        useDigestStyles: true,
+      })}
+    `,
+    textContent: `
+      AI 2025 Forecasts - May Update
+
+      At the end of 2024, there was a lot of discussion about whether AI scaling was hitting a wall and whether we would reach AGI soon.
+
+      We created a survey (https://ai2025.org?utm_source=newsletter) that would track key markers of AI progress in what might turn out to be a pivotal year. After filtering the data, we had 421 unique respondents. All questions were optional.
+
+      The survey was open from Nov 30th 2024 to Jan 20th 2025 – during which OpenAI o3 was announced, so we can compare forecasts before and after the announcement.
+
+      In this post, we summarise respondents' forecasts, and look at how they're holding up so far. At the end of the year, we'll resolve all the forecasts and write up the results.
+
+      The post covers:
+      1. Forecasts on:
+         1. AI Research: RE-Bench
+         2. Software Engineering: SWE-bench
+         3. Cybersecurity: Cybench
+         4. Computer Use: OSWorld
+         5. Mathematics: FrontierMath
+         6. OpenAI's pre-mitigation preparedness scores
+         7. Sum of OpenAI, Anthropic, xAI revenues
+      2. Public attention
+      3. Survey Demographics
+         1. Timelines
+         2. Risk
+         3. AI years of experience
+      4. Correlations
+
+      Read the post: https://theaidigest.org/ai2025-analysis-may?utm_source=newsletter
+    `,
+  },
   {
     id: "agent-village",
     status: "ready",
@@ -259,10 +331,19 @@ const POSTS: Post[] = [
   },
 ]
 
-function getButtonHtml({ link, text }: { link: string; text: string }) {
+function getButtonHtml({
+  link,
+  text,
+  useDigestStyles = false,
+}: {
+  link: string
+  text: string
+  useDigestStyles?: boolean
+}) {
+  const buttonColor = useDigestStyles ? "#7CA74A" : "#4f46e5"
   return `
 <p style="text-align: center;">
-  <a href="${link}" class="button" style="margin: auto; display: inline-flex; align-items: center; padding: 0.5rem 1rem; border: 1px solid transparent; font-size: 0.875rem; font-weight: 500; border-radius: 0.375rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); color: #ffffff !important; background-color: #4f46e5; text-decoration: none;">${text}</a>
+  <a href="${link}" class="button" style="margin: auto; display: inline-flex; align-items: center; padding: 0.4rem 0.8rem; border: 1px solid transparent; font-size: 0.875rem; font-weight: 700; border-radius: 0.375rem; box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05); color: #ffffff !important; background-color: ${buttonColor}; text-decoration: none;">${text}</a>
 </p>`
 }
 
@@ -343,7 +424,10 @@ export default async function handler(
 
   try {
     const response = await sendBroadcastEmail({
-      templateAlias: "blank-transactional",
+      templateAlias:
+        post.list === "ai-digest" || post.list === "agent-village"
+          ? "blank-transactional-1" // AI Digest template (green)
+          : "blank-transactional", // Sage template (indigo)
       templateParams: {
         subject: post.subject,
         html_body: post.htmlContent,

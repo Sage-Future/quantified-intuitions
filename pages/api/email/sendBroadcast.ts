@@ -78,12 +78,12 @@ export async function sendBroadcastEmail({
     `\n to ${recipients.length} recipients`
   )
 
-  if (process.env.NODE_ENV === "development" && recipients.length > 1) {
-    console.log(
-      "NOT sending email in development mode (unless single recipient)"
-    )
-    return
-  }
+  // if (process.env.NODE_ENV === "development" && recipients.length > 1) {
+  //   console.log(
+  //     "NOT sending email in development mode (unless single recipient)"
+  //   )
+  //   return
+  // }
 
   // Postmark has a limit of 500 recipients per batch
   const batchSize = 500
