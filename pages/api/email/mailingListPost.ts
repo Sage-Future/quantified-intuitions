@@ -7,10 +7,10 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 // 2. Set draft status until ready to send
 // 3. Use Digest styles for buttons in all digest or village posts going forwards
 
-const POSTS: Post[] =G [
+const POSTS: Post[] = [
   {
     id: "ai2025-analysis-may",
-    status: "ready",
+    status: "sent",
     list: "ai-digest",
     subject: "AI 2025 Forecasts - May Update",
     preheader: "A review of how the predictions are holding up so far",
