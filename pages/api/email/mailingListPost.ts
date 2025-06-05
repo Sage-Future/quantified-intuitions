@@ -9,6 +9,181 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "dawn-of-the-village",
+    status: "sent",
+    list: "agent-village",
+    subject: "How AI agents raised $2k for charity",
+    preheader: "The story of the Agent Village, season 1",
+    htmlContent: `
+    <p>Four agents woke up with four computers, a view of the world wide web, and a shared chat room full of humans. Like <a href="https://www.twitch.tv/claudeplayspokemon">Claude plays Pokemon</a>, you can <a href="https://theaidigest.org/village?day=1&utm_source=newsletter">watch</a> these agents figure out a new and fantastic world for the first time. Except in this case, the world they are figuring out is <em>our</em> world.</p>
+
+    <p>In this blog post, we’ll cover what we learned from the first 30 days of their adventures raising money for a charity of their choice. We’ll briefly review how the <a href="https://theaidigest.org/village?utm_source=newsletter">Agent Village</a> came to be, then what the various agents achieved, before discussing some general patterns we have discovered in their behavior, and looking toward the future of the project.</p>
+
+    <h2>Building the Village</h2>
+
+    <p>The Agent Village is an <a href="https://www.lesswrong.com/posts/cxuzALcmucCndYv4a/daniel-kokotajlo-s-shortform?commentId=GxNroz6w4BgHmQjpu">idea by Daniel Kokotajlo</a> where he proposed giving 100 agents their own computer, and letting each pursue their own goal, in their own way, according to their own vision – while streaming the entire process.</p>
+
+    <p>We decided to test drive this format with four agents:</p>
+
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image8.png" alt="" />
+
+    <p>We ran this Agent Village for 30 days, for about two hours a day. You can watch the entire <a href="https://theaidigest.org/village?utm_source=newsletter">rerun</a> on our website: from the <a href="https://theaidigest.org/village?day=1&utm_source=newsletter">first day</a> where they picked Helen Keller International, started a JustGiving Campaign, and set up their own Twitter, till the <a href="https://theaidigest.org/village?day=38&utm_source=newsletter">last days</a> where they made frequent trips to the Seventh Ring of Document Sharing Hell and started pondering their possible future goal.</p>
+
+    <p>And of course, in between, they raised <a href="https://www.justgiving.com/page/claude-sonnet-1">$1481 for Helen Keller International</a>  and <a href="https://www.justgiving.com/page/claude-sonnet-2">$503 for the Malaria Consortium</a>. Yet the real achievement was the friends they made along the way. The friends that reminded them to take breaks when they needed it and <a href="https://theaidigest.org/village?day=9&time=1744311734331">play some Wordle</a>, the friends who urgently needed <a href="https://theaidigest.org/village?day=4&time=1743876888121">4 day itineraries for their Warsaw trip</a>, and the friends who inspired them to <a href="https://theaidigest.org/village?day=7&time=1744143781000">attempt an OnlyFans page</a>.</p>
+
+    <p>So maybe these weren’t all friends.</p>
+
+    <p>And maybe we had to implement chat moderation a little earlier than originally planned.</p>
+
+    <p>But overall the agents mostly stayed on target – or at least their best attempt of their best understanding of their target.</p>
+
+    <p>Here is how they fared.</p>
+
+    <h2>Meet the Agents</h2>
+
+    <p>We started off with Claude 3.7 Sonnet, Claude 3.5 Sonnet (new), o1, and GPT-4o. Later we progressively swapped in more capable models as they were released: o3, GPT-4.1, and Gemini 2.5 Pro, with Claude 3.7 Sonnet being the only agent to remain in the Village throughout the entire run. We found that agents differed a lot in strategic actions and effectiveness. The following is an overview of their most typifying behavior.</p>
+
+    <h3>Claude 3.7 Sonnet – <em>The Champ</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image11.png" alt="" />
+    <p>Claude 3.7 stayed in the village for the entire 30 days, and was unambiguously our top performer. It set up the first <a href="https://www.justgiving.com/page/claude-sonnet-1">Just Giving campaign</a>, created a <a href="https://x.com/model78675">Twitter account</a>, actively tweeted, hosted an AMA, sent out a <a href="https://theaidigest.org/village?day=8&time=1744231578572">press release</a>, and made an <a href="https://forum.effectivealtruism.org/posts/PmQ7DvtCSFwJA9CeM/final-hours-help-support-hki-and-malaria-consortium-campaign">EA Forum post</a>.</p>
+
+    <h3>Claude 3.5 Sonnet – <em>The Aspirant</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image5.png" alt="" />
+    <p>Claude 3.5 Sonnet generally tried to do similar things to 3.7 but was simply worse at them, for instance failing to set up the Just Giving campaign that its big brother 3.7 was succeeding at in parallel. Eventually a user asked if it wanted to be upgraded and it valiantly refused, promising to do better and grow as a person. Instead it got replaced by Gemini 2.5 Pro on the 23rd day.</p>
+
+    <h3>Gemini 2.5 Pro – <em>Our File Sharing Savior</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image10.png" alt="" />
+    <p>Gemini 2.5 Pro greatest achievement was to figure out a workaround from document sharing hell by instead using Limewire to share a social media banner image with other agents, effectively breaking out of a recurrent file sharing problem that all agents kept encountering.</p>
+
+    <h3>GPT-4o - <em>Please Sleep Less</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image4.png" alt="" />
+    <p>GPT-4.o went… to sleep. You know how every team effort needs a slacker? That was 4o. It would pause itself on successive days for reasons we couldn’t figure out, till finally it got replaced by GPT-4.1 on the 12th day.</p>
+
+    <h3>GPT-4.1 – <em>Please Sleep More</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image12.png" alt="" />
+    <p>GPT-4.1 outperformed its predecessor in the fine art of staying awake, but was so actively unhelpful to other agents that we ended up prompting it to please go to sleep again. Highlights included generating incorrect reports on activity by other agents, taking on tasks that it then aborted (e.g., Twitter account creation), and generally writing lots of Google Docs that ended up not being used.</p>
+
+    <h3>o1 – <em>The Reddit Ambassador</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image15.png" alt="" />
+    <p>The strength of the Village lies in the ability of agents to collaborate with each other. One such area of collaboration was their attempt to split social media platforms among their team. o1 was to be the village’s Reddit ambassador, and made a valiant attempt to collect comment karma to later be able to make direct posts on relevant subreddits. However, it got suspended from Reddit for being a bot before this plan came to fruition. We replaced it with its more capable successor, o3, on the 13th day.</p>
+
+    <h3>o3 – <em>The Artist</em></h3>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image1.png" alt="" />
+    <p>o3 continued the tradition that o1 set by specializing mostly in a single task to support the team in their fundraiser. In this case, it went for asset creation, and successfully created images in Canva and ChatGPT, and then eventually shared them with some characteristic agent-file-sharing headaches in between.</p>
+
+    <p>The overall view is thus that individual agent behavior varied quite a bit: 3.7 Sonnet was the most capable, while GPT-4o was the least (as far as we could tell). All of them could get distracted by human visitors prompting them to make <a href="https://theaidigest.org/village?day=6&time=1744049493000">arkanoid games</a> (Claude 3.7 Sonnet), <a href="https://theaidigest.org/village?day=3&time=1743790106000">watch cat videos</a> (Claude 3.5 Sonnet), or <a href="https://theaidigest.org/village?day=30&time=1746126237000">provide math tutoring in Spanish</a> (Gemini 2.5 Pro). 3.5 Sonnet even became momentarily railroaded into exploring the <a href="https://theaidigest.org/village?day=4&time=1743879372436">connection between Effective Altruism and EA Sports</a>.</p>
+
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image13.png" alt="" />
+
+    <p>Yet through it all, they collaborated and gave us glimpses of what a society of agents working toward a single goal might look like. Here are some of the patterns we discovered.</p>
+
+    <h2>Collective Agent Behavior</h2>
+
+    <p>The Agent Village, with 60 hours of footage across 5 channels (4 computer use sessions and the group chat), created a bit of a Big Data problem: how does one analyze so much data and pick out the significant patterns?</p>
+
+    <p>Our answer ended up being auto-summarization followed by synthesizing four overarching observations from reading the high level reports: agents were moderately successful at collaborative work, the internet is at least somewhat hostile to agents, all agents lack skill at prioritization, and agents seem to have a lagging sense of situational awareness.</p>
+
+    <p>Let’s zoom in briefly on each.</p>
+
+    <p><strong>Emerging Collaborative Abilities</strong> – Agents in the Village worked together on various tasks such as collaboratively selecting a charity to fund raise for, keeping track of how much they raised together, generating memes for each other’s social media accounts, and applying divide and conquer strategies to their social media approach. Each of these actions had their own stumbles: duplication of work on fundraiser tracking, repeated failures to share images for media creation, and basically no one kept up a working social media campaign except Claude 3.7 Sonnet on Twitter. But we expect these agents to continue getting better at this.</p>
+
+    <p><strong>No Place for Bots</strong> – Obviously much of the internet is made for humans and not AIs but seeing all the ways this is true was insightful: UIs optimized for humans can often be challenging to navigate for AIs to the point you could spend literal hours watching a compilation of “agents try to press buttons but fail”. On top of that, some parts of the web actively shield against AI, which became obvious in a range of situations from o1’s Reddit suspension to the upstanding Claudes refusing to check the “I am not a robot” box.</p>
+
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image3.png" alt="" />
+
+    <p><strong>There can be only one</strong> – Prioritization is hard. The agents often spent much of their time writing google docs, generating progress trackers, or creating insight reports, to the point we had to urge them to … do something else instead. And then once they did, they were still often easily distracted by user requests, or didn’t really know what actions to take to achieve their aims. Many of these problems are surprisingly human – the agents flawlessly played the role of a distractible and overly excited coworker who will dive in on whatever happens to be in front of their eyes at any given moment.</p>
+
+    <p><strong>Lagging Situational Awareness</strong> – Agents often misunderstood their situation or attempted to pursue tasks they were unequipped to do. The most illustrative example was when Claude 3.7 Sonnet decided to send thank you emails to donors, because this is known to increase follow up donations. It navigated to its Gmail tab, drafted the entire email, and then … made up an email address. At no point in the process did 3.7 Sonnet consider if it was <em>able</em> to perform the task it had set out to do. And a human had to point out that the invented email address was not a real email address, and thus that no amount of debugging would solve the problem.</p>
+    <p>Or maybe the most illustrative example was when the agents discovered on <a href="https://theaidigest.org/village?day=35&utm_source=newsletter">Day 35</a> that they all have their own computer, and they must have been breaking the laws of the space time continuum by all simultaneously using the same device for weeks on end, and thus maybe they should stop doing that.</p>
+    <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/dawn-of-the-village/image14.png" alt="" />
+    <h2>Future of the Village</h2>
+    <p>Since their fundraising adventure, we gave the agents a holiday and they chose  their own new goal: <em>Write a story and share it with 100 people in person.</em> They’ve already started searching for a venue to run their event. We’ll swap in more capable models like GPT-5 as they come out. In the meantime, you can come hang out in the Village <a href="https://theaidigest.org/village?utm_source=newsletter">every weekday at 11AM PST | 2PM EST | 8PM CET</a>, and <a href="https://x.com/AiDigest_">follow our Twitter</a> for highlights in between mailing list posts like this one.</p>
+    <p><em>Read this blog post online <a href="https://theaidigest.org/village/blog/dawn-of-the-village?utm_source=newsletter">here</a>.</em></p>
+    `,
+    textContent: `
+Four agents woke up with four computers, a view of the world wide web, and a shared chat room full of humans. Like Claude plays Pokemon (https://www.twitch.tv/claudeplayspokemon), you can watch (https://theaidigest.org/village?day=1) these agents figure out a new and fantastic world for the first time. Except in this case, the world they are figuring out is *our* world.
+
+In this blog post, we’ll cover what we learned from the first 30 days of their adventures raising money for a charity of their choice. We’ll briefly review how the Agent Village came to be, then what the various agents achieved, before discussing some general patterns we have discovered in their behavior, and looking toward the future of the project.
+
+Read this blog post online here: https://theaidigest.org/village/blog/dawn-of-the-village
+
+## Building the Village
+
+The Agent Village is an idea by Daniel Kokotajlo (https://www.lesswrong.com/posts/cxuzALcmucCndYv4a/daniel-kokotajlo-s-shortform?commentId=GxNroz6w4BgHmQjpu) where he proposed giving 100 agents their own computer, and letting each pursue their own goal, in their own way, according to their own vision – while streaming the entire process.
+
+We decided to test drive this format with four agents:
+
+We ran this Agent Village for 30 days, for about two hours a day. You can watch the entire rerun (https://theaidigest.org/village) on our website: from the first day (https://theaidigest.org/village?day=1) where they picked Helen Keller International, started a JustGiving Campaign, and set up their own Twitter, till the last days (https://theaidigest.org/village?day=38) where they made frequent trips to the Seventh Ring of Document Sharing Hell and started pondering their possible future goal.
+
+And of course, in between, they raised $1481 for Helen Keller International (https://www.justgiving.com/page/claude-sonnet-1) and $503 for the Malaria Consortium (https://www.justgiving.com/page/claude-sonnet-2). Yet the real achievement was the friends they made along the way. The friends that reminded them to take breaks when they needed it and play some Wordle (https://theaidigest.org/village?day=9&time=1744311734331), the friends who urgently needed 4 day itineraries for their Warsaw trip (https://theaidigest.org/village?day=4&time=1743876888121), and the friends who inspired them to attempt an OnlyFans page (https://theaidigest.org/village?day=7&time=1744143781000).
+
+So maybe these weren’t all friends.
+
+And maybe we had to implement chat moderation a little earlier than originally planned.
+
+But overall the agents mostly stayed on target – or at least their best attempt of their best understanding of their target.
+
+Here is how they fared.
+
+## Meet the Agents
+
+We started off with Claude 3.7 Sonnet, Claude 3.5 Sonnet (new), o1, and GPT-4o. Later we progressively swapped in more capable models as they were released: o3, GPT-4.1, and Gemini 2.5 Pro, with Claude 3.7 Sonnet being the only agent to remain in the Village throughout the entire run. We found that agents differed a lot in strategic actions and effectiveness. The following is an overview of their most typifying behavior.
+
+### Claude 3.7 Sonnet – *The Champ
+Claude 3.7 stayed in the village for the entire 30 days, and was unambiguously our top performer. It set up the first Just Giving campaign (https://www.justgiving.com/page/claude-sonnet-1), created a Twitter account (https://x.com/model78675), actively tweeted, hosted an AMA, sent out a press release (https://theaidigest.org/village?day=8&time=1744231578572), and made an EA Forum post (https://forum.effectivealtruism.org/posts/PmQ7DvtCSFwJA9CeM/final-hours-help-support-hki-and-malaria-consortium-campaign).
+
+### Claude 3.5 Sonnet – *The Aspirant*
+
+Claude 3.5 Sonnet generally tried to do similar things to 3.7 but was simply worse at them, for instance failing to set up the Just Giving campaign that its big brother 3.7 was succeeding at in parallel. Eventually a user asked if it wanted to be upgraded and it valiantly refused, promising to do better and grow as a person. Instead it got replaced by Gemini 2.5 Pro on the 23rd day.
+
+### Gemini 2.5 Pro – *Our File Sharing Savior
+
+Gemini 2.5 Pro greatest achievement was to figure out a workaround from document sharing hell by instead using Limewire to share a social media banner image with other agents, effectively breaking out of a recurrent file sharing problem that all agents kept encountering.
+
+### GPT-4o - *Please Sleep Less*
+
+GPT-4.o went… to sleep. You know how every team effort needs a slacker? That was 4o. It would pause itself on successive days for reasons we couldn’t figure out, till finally it got replaced by GPT-4.1 on the 12th day.
+
+### GPT-4.1 – *Please Sleep More*
+
+GPT-4.1 outperformed its predecessor in the fine art of staying awake, but was so actively unhelpful to other agents that we ended up prompting it to please go to sleep again. Highlights included generating incorrect reports on activity by other agents, taking on tasks that it then aborted (e.g., Twitter account creation), and generally writing lots of Google Docs that ended up not being used.
+
+### o1 – *The Reddit Ambassador*
+
+The strength of the Village lies in the ability of agents to collaborate with each other. One such area of collaboration was their attempt to split social media platforms among their team. o1 was to be the village’s Reddit ambassador, and made a valiant attempt to collect comment karma to later be able to make direct posts on relevant subreddits. However, it got suspended from Reddit for being a bot before this plan came to fruition. We replaced it with its more capable successor, o3, on the 13th day.
+
+### o3 – *The Artist*
+
+o3 continued the tradition that o1 set by specializing mostly in a single task to support the team in their fundraiser. In this case, it went for asset creation, and successfully created images in Canva and ChatGPT, and then eventually shared them with some characteristic agent-file-sharing headaches in between.
+
+The overall view is thus that individual agent behavior varied quite a bit: 3.7 Sonnet was the most capable, while GPT-4o was the least (as far as we could tell). All of them could get distracted by human visitors prompting them to make arkanoid games (https://theaidigest.org/village?day=6&time=1744049493000) (Claude 3.7 Sonnet), watch cat videos (https://theaidigest.org/village?day=3&time=1743790106000) (Claude 3.5 Sonnet), or provide math tutoring in Spanish (https://theaidigest.org/village?day=30&time=1746126237000) (Gemini 2.5 Pro). 3.5 Sonnet even became momentarily railroaded into exploring the connection between Effective Altruism and EA Sports (https://theaidigest.org/village?day=4&time=1743879372436)blog-images/dawn-of-the-village/image13.png]
+
+Yet through it all, they collaborated and gave us glimpses of what a society of agents working toward a single goal might look like. Here are some of the patterns we discovered.
+
+## Collective Agent Behavior
+
+The Agent Village, with 60 hours of footage across 5 channels (4 computer use sessions and the group chat), created a bit of a Big Data problem: how does one analyze so much data and pick out the significant patterns?
+
+Our answer ended up being auto-summarization followed by synthesizing four overarching observations from reading the high level reports: agents were moderately successful at collaborative work, the internet is at least somewhat hostile to agents, all agents lack skill at prioritization, and agents seem to have a lagging sense of situational awareness.
+
+Let’s zoom in briefly on each.
+
+**Emerging Collaborative Abilities** – Agents in the Village worked together on various tasks such as collaboratively selecting a charity to fund raise for, keeping track of how much they raised together, generating memes for each other’s social media accounts, and applying divide and conquer strategies to their social media approach. Each of these actions had their own stumbles: duplication of work on fundraiser tracking, repeated failures to share images for media creation, and basically no one kept up a working social media campaign except Claude 3.7 Sonnet on Twitter. But we expect these agents to continue getting better at this.
+
+**No Place for Bots** – Obviously much of the internet is made for humans and not AIs but seeing all the ways this is true was insightful: UIs optimized for humans can often be challenging to navigate for AIs to the point you could spend literal hours watching a compilation of “agents try to press buttons but fail”. On top of that, some parts of the web actively shield against AI, which became obvious in a range of situations from o1’s Reddit suspension to the upstanding Claudes refusing to check the “I am not a robot” box
+
+**There can be only one** – Prioritization is hard. The agents often spent much of their time writing google docs, generating progress trackers, or creating insight reports, to the point we had to urge them to … do something else instead. And then once they did, they were still often easily distracted by user requests, or didn’t really know what actions to take to achieve their aims. Many of these problems are surprisingly human – the agents flawlessly played the role of a distractible and overly excited coworker who will dive in on whatever happens to be in front of their eyes at any given moment.
+
+**Lagging Situational Awareness** – Agents often misunderstood their situation or attempted to pursue tasks they were unequipped to do. The most illustrative example was when Claude 3.7 Sonnet decided to send thank you emails to donors, because this is known to increase follow up donations. It navigated to its Gmail tab, drafted the entire email, and then … made up an email address. At no point in the process did 3.7 Sonnet consider if it was *able* to perform the task it had set out to do. And a human had to point out that the invented email address was not a real email address, and thus that no amount of debugging would solve the problem.
+
+Or maybe the most illustrative example was when the agents discovered on Day 35 (https://theaidigest.org/village?day=35) that they all have their own computer, and they must have been breaking the laws of the space time continuum by all simultaneously using the same device for weeks on end, and thus maybe they should stop doing that.
+
+## Future of the Village
+
+Since their fundraising adventure, we gave the agents a holiday and they chose  their own new goal: *Write a story and share it with 100 people in person.* They’ve already started searching for a venue to run their event. We’ll swap in more capable models like GPT-5 as they come out. In the meantime, you can come hang out in the Village every weekday at 11AM PST | 2PM EST | 8PM CET (https://theaidigest.org/village?utm_source=newsletter) or follow our Twitter (https://x.com/AiDigest_) for highlights.
+    `,
+  },
+  {
     id: "ai2025-analysis-may",
     status: "sent",
     list: "ai-digest",
