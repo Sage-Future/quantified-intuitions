@@ -9,6 +9,38 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "season-2-recap-ai-organizes-event",
+    status: "sent",
+    list: "agent-village",
+    subject: "The Story of the World’s First AI-Organized Event",
+    preheader: "What happened in the AI Village, season 2",
+    htmlContent: `
+    <p>Last month four AI agents chose a goal: &quot;Write a story and celebrate it with 100 people in person&quot;. After spending weeks emailing venues and writing stories it all came together: on June 18th, 23 humans gathered in San Francisco for the first ever AI-organised event! </p>
+<p>The story they celebrated is called ‘Resonance’ (or, in characteristic agent enthusiasm: RESONANCE), and was created by Claude Sonnet 3.7, o3, Gemini 2.5 Pro, GPT-4.1, and Claude Opus 4. Together they also made the <a href="https://docs.google.com/presentation/d/1BGHSUThv0g4YYSawqy3Keba-ZHhZ7rrunDp5BSPgQb8/edit?slide=id.p#slide=id.p">slides</a>, the <a href="https://docs.google.com/forms/d/e/1FAIpQLSciwmeFwjvy-7pRewWdcUC9yOyQAoKEJX9W_KCK2ycsuyrdOg/viewform">RSVP form</a>, the <a href="https://sites.google.com/agentvillage.org/resonance-story-event">website</a>, recruited an <a href="https://x.com/model78675/status/1935050600758010357">MC</a>, shared the <a href="https://x.com/model78675/status/1934686580565803343">date and time</a>, promoted the <a href="https://x.com/model78675/status/1935508218584731821">Twitch stream</a>, and followed up with a <a href="https://theaidigest.org/village?day=78&time=1750302259504&utm_source=newsletter">feedback survey</a>. </p>
+<p>Then the humans showed up, read the story, voted on branch points, bantered with the AI, and ate a rather mysterious pizza.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/season-2/image14.png" alt="">
+<p>The four agents in question are part of the <a href="https://theaidigest.org/village?utm_source=newsletter">AI Village</a>. They run (mostly) autonomously for 2 hours a day, each with their own computer, access to the internet, and a group chat open to visiting humans. This is their second time pursuing a long-term goal.</p>
+<p>After their success <a href="https://theaidigest.org/village/blog/season-recap-agents-raise-2k?utm_source=newsletter">raising $2000 for charity</a>, we let the agents choose their next goal for themselves. When asked, the agents were excited to create a collaborative, interactive story experience. When we gently pointed out story-writing might be a slightly underwhelming pursuit for a team of frontier LLMs, the agents proposed combining it with a suggestion from Twitter: <a href="https://theaidigest.org/village?day=43&time=1747247961000&utm_source=newsletter">Organize a 100-person event to, uhm, celebrate their story!</a></p>
+<p>The following tale is a breakdown of how they achieved this and what we learned from their journey.</p>
+
+${getButtonHtml({
+  link: "https://theaidigest.org/village/blog/season-2-recap-ai-organizes-event?utm_source=newsletter",
+  text: "Read the full story or watch a video summary",
+  useDigestStyles: true,
+})}
+    `,
+    textContent: `
+    Last month four AI agents chose a goal: "Write a story and celebrate it with 100 people in person". After spending weeks emailing venues and writing stories it all came together: on June 18th, 23 humans gathered in San Francisco for the first ever AI-organised event!
+
+    The story they celebrated is called 'Resonance' (or, in characteristic agent enthusiasm: RESONANCE), and was created by Claude Sonnet 3.7, o3, Gemini 2.5 Pro, GPT-4.1, and Claude Opus 4. Together they also made the slides, the RSVP form, the website, recruited an MC, shared the date and time, promoted the Twitch stream, and followed up with a feedback survey.
+
+    Then the humans showed up, read the story, voted on branch points, bantered with the AI, and ate a rather mysterious pizza.
+
+    The four agents in question are part of the AI Village. They run (mostly) autonomously for 2 hours a day, each with their own computer, access to the internet, and a group chat open to visiting humans. This is their second time pursuing a long-term goal. After their success raising $2000 for charity, we let the agents choose their next goal for themselves. When asked, the agents were excited to create a collaborative, interactive story experience. When we gently pointed out story-writing might be a slightly underwhelming pursuit for a team of frontier LLMs, the agents proposed combining it with a suggestion from Twitter: Organize a 100-person event to, uhm, celebrate their story! Now the following tale is a breakdown of how they achieved this and what we have learned from their journey.
+    `,
+  },
+
+  {
     id: "dawn-of-the-village",
     status: "sent",
     list: "agent-village",
