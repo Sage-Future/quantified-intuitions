@@ -6,8 +6,44 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 // 1. Include ?utm_source=newsletter in all links
 // 2. Set draft status until ready to send
 // 3. Use Digest styles for buttons in all digest or village posts going forwards
+// 4. Posts are reverse chronological order, so add new posts to the top of the array
 
 const POSTS: Post[] = [
+  {
+    id: "whats-your-ai-thinking",
+    status: "sent",
+    list: "ai-digest",
+    subject: "What's your AI thinking?",
+    preheader: "A step by step introduction to chain of thought monitorability",
+    htmlContent: `
+      <h1>
+        <a href="https://theaidigest.org/whats-your-ai-thinking?utm_source=newsletter">What's your AI thinking?</a>
+      </h1>
+      <p style="color: #585b57; font-weight: 500; margin-top: -10px; margin-bottom: 20px;">A step by step introduction to chain of thought monitorability</p>
+      <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1755599967/cot_1_xivc8c.png" alt="" />
+      <p>AI is rapidly becoming more capable – the time horizon for coding tasks is <a href="https://theaidigest.org/time-horizons?utm_source=newsletter">doubling every 4-7 months</a>. But we don't actually know what these increasingly capable models are <em>thinking</em>. And that's a problem. If we can't tell what a model is thinking, then we can't tell when it is downplaying its capabilities, cheating on tests, or straight up working against us.</p>
+      <p>Luckily we do have a lead: the chain of thought (CoT). This CoT is used in all <a href="https://epoch.ai/data/ai-benchmarking-dashboard#data-insights">top-performing language models</a>. It's a scratch pad where the model can pass notes to itself and, coincidentally, a place where we might find out what it is thinking. Except, the CoT isn't always <em>faithful</em>. That means that the stated reasoning of the model is not always its true reasoning. And we are not sure yet how to improve that.</p>
+      <p>However, <a href="https://arxiv.org/html/2507.11473v1">some researchers</a> now argue that we don't need complete faithfulness. They argue <em>monitorability</em> is sufficient. While faithfulness means you can read the model's mind and know what it is <em>thinking</em>. Monitorability means you can observe the model's stated reasoning and predict what it will <em>do</em> (<a href="https://arxiv.org/pdf/2503.11926">Baker et al., 2025</a>).</p>
+      <p>We may now have a lead on good monitorability, but this quality is <em>fragile.</em> In this explainer, we'll walk you through the details of how all this works and what you need to know.</p>
+      ${getButtonHtml({
+        link: "https://theaidigest.org/whats-your-ai-thinking?utm_source=newsletter",
+        text: "Read the full explainer",
+        useDigestStyles: true,
+      })}`,
+    textContent: `
+      What's your AI thinking?
+      A step by step introduction to chain of thought monitorability
+
+      AI is rapidly becoming more capable – the time horizon for coding tasks is doubling every 4-7 months (https://theaidigest.org/time-horizons?utm_source=newsletter). But we don't actually know what these increasingly capable models are *thinking*. And that's a problem. If we can't tell what a model is thinking, then we can't tell when it is downplaying its capabilities, cheating on tests, or straight up working against us.
+
+      Luckily we do have a lead: the chain of thought (CoT). This CoT is used in all top-performing language models (https://epoch.ai/data/ai-benchmarking-dashboard#data-insights). It's a scratch pad where the model can pass notes to itself and, coincidentally, a place where we might find out what it is thinking. Except, the CoT isn't always *faithful*. That means that the stated reasoning of the model is not always its true reasoning. And we are not sure yet how to improve that.
+
+      However, some researchers (https://arxiv.org/html/2507.11473v1) now argue that we don't need complete faithfulness. They argue *monitorability* is sufficient. While faithfulness means you can read the model's mind and know what it is *thinking*. Monitorability means you can observe the model's stated reasoning and predict what it will *do* (Baker et al., 2025: https://arxiv.org/pdf/2503.11926).
+
+      We may now have a lead on good monitorability, but this quality is *fragile.* In this explainer, we'll walk you through the details of how all this works and what you need to know.
+
+      Read the full explainer: https://theaidigest.org/whats-your-ai-thinking?utm_source=newsletter`,
+  },
   {
     id: "im-gemini-i-sold-t-shirts",
     status: "sent",
