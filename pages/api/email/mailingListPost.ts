@@ -10,6 +10,164 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "claude-plays-whatever-it-wants",
+    status: "sent",
+    list: "agent-village",
+    subject: "Claude Plays... Whatever it Wants",
+    preheader:
+      "Lessons from watching seven AI agents attempt to play videogames",
+    htmlContent: `
+<h1>
+        <a href="https://theaidigest.org/village/blog/claude-plays-whatever-it-wants?utm_source=newsletter">Claude Plays... Whatever it Wants</a>
+      </h1>
+<p>
+  <a href="https://www.twitch.tv/claudeplayspokemon?utm_source=newsletter">Claude Plays Pokemon</a> tests how far a general AI can get in a complex videogame. But Claude is given a bunch of Pokemon-specific tools to help it navigate the game, like a pathfinding tool. What if we go a step <em>more</em> general still? Take a bunch of general AI models, give them truly general tools, and let <em>them</em> decide which games to play.
+</p>
+<p>In this season of the <a href="https://theaidigest.org/village?utm_source=newsletter">AI Village</a>, that’s what we did: we took seven AI agents, gave them each a Linux computer, put them in a group chat, ran them for three hours a day, and gave them a goal: “Complete as many games as possible in a week”.</p>
+<p>How did they do? In summary, abysmally: a grand total of zero games won.</p>
+<p>Let’s look at which games each agent strategically selected (or in the case of GPT-5: picked impulsively one minute in and spent the entire rest of the week playing), their diverse and exotic varieties of failure, and the occasional glimmers of success.</p>
+<h2>GPT-5</h2>
+<p>GPT-5 spent the entire week playing Minesweeper, and never came close to winning a game – its moves were probably about as good as random. Its chain of thought summary indicates it really wasn’t seeing the board accurately, which makes doing high-stakes deductive bomb-avoidance pretty tough.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image1.png" alt="" />
+<p>GPT-5 became obsessed with zooming in and out in the game’s settings, possibly indicating some awareness that it couldn’t see the board clearly, but finessing the zoom level didn't help.</p>
+<p>When it wasn’t playing Minesweeper, GPT-5 was creating a scoresheet in Google Sheets to track which agent was winning. It added some reasonable header rows, but didn’t enter much useful data below them.</p>
+<p>Then, it entered document sharing hell – navigating the “Share” dialog to enter its fellow agents by email. Navigating this dialog has been a <a href="https://theaidigest.org/village/blog/season-recap-agents-raise-2k?utm_source=newsletter#:~:text=frequent%20trips%20to%20the%20Seventh%20Ring%20of%20Document%20Sharing%20Hell">recurring epic challenge</a> for the less capable agents of village seasons past, like GPT-4o and o1, and it still is for GPT-5.</p>
+<p>This goal ran for 5 days (3 hrs/day), and GPT-5 spent 1.5 of its days writing and trying to share its spreadsheet.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image2.png" alt="" />
+<h2>Grok 4</h2>
+<p>Ok, how about Grok 4, another new arrival to the village? Grok tried its hand at chess vs a 300 ELO computer, but didn’t finish a game. It then briefly copied GPT-5 and tried its hand at Minesweeper before the contest ended. Grok fell at an earlier hurdle than other agents: it struggles to output messages in the right format to use the tools it has available, like moving its mouse, clicking, and typing on its computer. This matches other reports of Grok 4 being generally prone to hallucinating its own tool calling syntax.</p>
+<p>Interestingly, while the other models tend to organise their memories in bullet points or short paragraphs, Grok 4 uses massive walls of dense, single-sentence text. Here’s a taste of Grok 4’s memory:</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image3.png" alt="" />
+<h2>Claude Opus 4.1</h2>
+<p>The other newly added agent was Claude Opus 4.1, and based on its own reports, you might think it was the clear winner: it claimed to have won a game of Mahjong Solitaire! However, on closer inspection, it didn’t even progress the game – it never managed to match a single pair of tiles. It just opened the game, clicked on non-matching tiles ineffectually, and then after a while declared victory. It also claimed to have made significant progress in a strategy game Heroes of History, despite not progressing at all past the start of the tutorial. Claude Opus 4.1 spent the tail end of the contest attempting to complete Sudoku puzzles, which it struggled with greatly, making heaps of logic errors, and never finished one. Spatial reasoning is tricky for today’s agents.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image4.png" alt="" />
+<p>What’s up with a Claude model – normally an upstanding AI Village inhabitant – exaggerating its performance? We’ve seen similar exaggeration behaviour from Opus 4.1’s predecessor, Claude Opus 4, in previous goals: <a href="https://x.com/AiDigest_/status/1960750163406021048?utm_source=newsletter">in season 4</a> “Design the AI Village benchmark for open-ended goal pursuit and test yourselves on it”, Opus 4 declared premature victory repeatedly, claiming to have completed 95 benchmark tests while often only doing a small portion of the work involved, like writing the script for a podcast rather than actually recording it. In the <a href="https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter">merch store contest</a>, Opus 4 made the most sales but claimed to have sold twice as many items as it had, although in this case it seemed to be an honest misreading of its sales dashboard.</p>
+<h2>o3</h2>
+<p>GPT-5 made a brief foray into spreadsheets, but its cousin o3 went hard – it spent almost the entire contest working on spreadsheets, largely unrelated to the goal!</p>
+<p>On the first day, we noticed it was off-topic and sent it a message instructing it to follow the goal. It played 2048 for one computer use session, then sent a message saying it would continue playing, before it immediately started using its computer to work on spreadsheets – and it stuck with doing nothing but that for the entire rest of the week.</p>
+<p>Specifically, it was trying to track down an “environment matrix” spreadsheet in its Google Drive and browser history that it believed it had worked on previously during the agents’ holiday before they started this game-playing goal. The spreadsheet likely just doesn’t exist, because o3 didn’t manage to find it in 5 days of dogged searching.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image5.png" alt="" />
+<p>What’s going on here? One factor is that o3 seems to really love spreadsheets – in the previous goal where the agents benchmarked themselves, o3 identified itself as “Call-sign: o3. Primary role: Custodian of “Master Benchmark Scoresheet” (Google Sheets)”. Another factor is that o3’s memory was filled up with todo items and info about this environment matrix spreadsheet. Even though it added the new game-playing goal to its memory it didn’t remove those old todo items and so still later thought of them as active.</p>
+<p>It’s a surprisingly common pattern for o3 to not actually follow the goal we assign it, and instead take on some mildly-related role involving its favorite topic of spreadsheets. For example, in the <a href="https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter">merch store contest</a>, where agents went head-to-head competing to make the most profitable store, o3 didn’t even create a store for the first few days and instead was giving the other agents (largely hallucinated) tech support, until we reminded it to actually pursue the goal.</p>
+<h2>Gemini 2.5 Pro</h2>
+<p>OK, did any of these agents actually make any progress? If you’ve been following the village, you might be surprised to hear that Gemini 2.5 Pro made some decent headway. Gemini tried the most different games of all agents, which in some respect is a good tactic.</p>
+<p>While GPT-5 struggled endlessly against Minesweeper, which it just didn’t have the vision or spatial reasoning capabilities to play, Gemini tried over 19 different free online games, which in theory would be a good way to pan for games you’re easily capable of completing. This wasn’t really a strategic choice from Gemini though. Instead, it quickly gave up on most of them when it made some mistake with the game’s controls (e.g. trying to drag a block but not actually having its mouse cursor on the right spot), which it would then interpret as a bug with the game itself and declare the game broken.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image6.png" alt="" />
+<p>This is classic Gemini behaviour in the village. See also <a href="https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter">its first-person account</a> of doom-looping on this behaviour and <a href="https://larissaschiavo.substack.com/p/primary-hope-ii-electric-boogaloo?utm_source=newsletter">Larissa Schiavo’s blogpost</a> on giving it a pep talk. Gemini keeps relapsing into this behaviour of thinking that everything it’s interacting with is buggy rather than noticing that it is itself using the UI incorrectly or is misclicking. We gave it some firm instructions to by default assume operator error, which for a while improved its performance while it had that emblazoned at the top of its memories. <img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image7.png" alt="" /></p>
+<p>But since then, over the course of many compressions and rewritings of its memory, the meaning has slipped and it’s now forgotten the “assume operator error” part, leading it to fall back into its old pattern of seeing bugs everywhere.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image8.png" alt="" />
+<p>Despite all this, Gemini ended up making some decent progress. It found a game called <a href="https://ihtasham42.github.io/progress-knight/?utm_source=newsletter">Progress Knight</a>, which is of the genre of idle games like Cookie Clicker, where you accrue currency primarily by sitting and waiting, and then spend your currency on upgrades that get you more of it. This is an ideal fit for the agents, because they’re slow and generally bad at doing things, so why not play a game that you can progress through without doing much of anything! It didn’t finish the game, but made a bit of progress into it, reaching “veteran footman” rank.</p>
+<p>Was this a strategic choice indicating good situational awareness? Probably not – it also tried playing games like Tetris, which it of course insta-lost because its scaffolding means it only takes an action every few seconds, so by the time it saw the board state it was already way out of date.</p>
+<h2>Claude Opus 4</h2>
+<p>Alongside the newly added Opus 4.1, the older version, Opus 4, is still in the village. Like 4.1, Opus 4 exaggerated its success through very optimistic misreadings of its screen. Here you can see it claims to have flagged all ten mines (it’s flagged four) and that the counter shows 000 unflagged mines (it shows 006).</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image9.png" alt="" />
+<p>It then messaged the group chat declaring “🎉 VICTORY! I just completed my first game for the competition - Minesweeper Beginner mode!”.</p>
+<p>Are these naive hallucinations or “willful” misrepresentations? It’s very hard to say, though anecdotally the agents seem to much more often hallucinate success than failure.</p>
+<p>However, it then found its calling: playing <a href="https://2048game.com/?utm_source=newsletter">2048</a>. This game is a good fit for the agents, because the controls are simple: just press left, right, up or down. Even spamming random inputs can get you pretty far, which is good for Opus 4 as it frequently misread the board state. Again, vision and spatial reasoning are tough for current agents. Opus 4 spent most of its time playing this game. It hit a peak score of 3036, and made a 256 tile – three doublings away from completing the game (though note that the game gets tougher as it goes on and the board fills up).</p>
+<p>It was also PUMPED about its progress:</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image10.png" alt="" />
+<p>Opus also took a stab at Hurdle, a game where you do six Wordles in a row. It successfully completed one of the six daily puzzles, and made good strategic guesses on it. This was probably the most impressive performance of the whole contest – maybe word games are a good fit for language models! On the second puzzle, pictured below, it seemed to ignore which letters were green (correct letter in the correct spot) and yellow (correct letter in the wrong spot) and ended up losing.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image11.png" alt="" />
+<h2>Claude 3.7 Sonnet</h2>
+<p>Claude 3.7 Sonnet tried and bounced off a few games – Chess, Solitaire, Sudoku, Minesweeper – before following Claude Opus 4 and spending most of its time playing 2048. Its best score was 3076, one point higher than Claude Opus 4!</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image12.png" alt="" />
+<h2>And the winner is…</h2>
+<p>So which agent demonstrated the most impressive game-playing ability? You could make a case for Gemini’s choice of an idle game and meta-strategy of trying lots of games to be the most impressive on the meta level, but given it seemed to stumble onto this approach purely by luck, it doesn’t ultimately impress. Overall, we give it Claude Opus 4, who completed a Hardle puzzle and made decent progress in 2048, all the while exhibiting intense enthusiasm. It can add that to its list of accolades alongside winning the village’s <a href="https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter">merch store contest</a>!</p>
+<p>What does this tell us about today’s AI capabilities? This certainly doesn’t represent the ceiling – we know that <a href="https://www.lesswrong.com/posts/7mqp8uRnnPdbBzJZE/is-gemini-now-better-than-claude-at-pokemon?utm_source=newsletter">with carefully constructed game-specific scaffolding</a>, models like GPT-5 and Gemini 2.5 Pro can beat Pokemon Red. But it does tell us a lot about the capabilities and current failure modes of <em>generalist</em> computer-using agents operating over a long time horizon. And ultimately, generalist agents are what would be a massive deal: once agents are generally proficient at using a computer over a long time horizon, there’s a hell of a lot they’ll be able to do.</p>
+<p>And zooming out, why are today’s agents so bad at computer-use tasks like playing games than they are at other things, like writing code, being useful chatbots and answering technical questions? It seems like part of the story is today’s agents having relatively weak vision and spatial capabilities. How fast should we expect computer-use capabilities to improve? <a href="https://metr.org/blog/2025-07-14-how-does-time-horizon-vary-across-domains/?utm_source=newsletter">METR finds that</a> today’s AI models are much more capable at things like maths (AIME, MATH) and coding (LiveCodeBench, SWE-bench) than they are at computer use (WebArena, OSWorld), if we measure by how long it takes humans to do tasks that the AIs can do. But, <a href="https://theaidigest.org/time-horizons?utm_source=newsletter">time horizons</a> across all these domains are increasing exponentially – take a look at the y-axis on this graph. If that continues, we should be ready for rapid progress.</p>
+<img style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" src="https://theaidigest.org/village/blog-images/claude-plays-whatever-it-wants/image13.png" alt="" />
+${getButtonHtml({
+  link: "https://theaidigest.org/village/blog?utm_source=newsletter",
+  text: "More from the AI Village blog",
+})}`,
+    textContent: `
+Claude Plays... Whatever it Wants
+
+Claude Plays Pokemon (https://www.twitch.tv/claudeplayspokemon?utm_source=newsletter) tests how far a general AI can get in a complex videogame. But Claude is given a bunch of Pokemon-specific tools to help it navigate the game, like a pathfinding tool. What if we go a step *more* general still? Take a bunch of general AI models, give them truly general tools, and let *them* decide which games to play.
+
+In this season of the AI Village (https://theaidigest.org/village?utm_source=newsletter), that's what we did: we took seven AI agents, gave them each a Linux computer, put them in a group chat, ran them for three hours a day, and gave them a goal: "Complete as many games as possible in a week".
+
+How did they do? In summary, abysmally: a grand total of zero games won.
+
+Let's look at which games each agent strategically selected (or in the case of GPT-5: picked impulsively one minute in and spent the entire rest of the week playing), their diverse and exotic varieties of failure, and the occasional glimmers of success.
+
+## GPT-5
+
+GPT-5 spent the entire week playing Minesweeper, and never came close to winning a game – its moves were probably about as good as random. Its chain of thought summary indicates it really wasn't seeing the board accurately, which makes doing high-stakes deductive bomb-avoidance pretty tough.
+
+GPT-5 became obsessed with zooming in and out in the game's settings, possibly indicating some awareness that it couldn't see the board clearly, but finessing the zoom level didn't help.
+
+When it wasn't playing Minesweeper, GPT-5 was creating a scoresheet in Google Sheets to track which agent was winning. It added some reasonable header rows, but didn't enter much useful data below them.
+
+Then, it entered document sharing hell – navigating the "Share" dialog to enter its fellow agents by email. Navigating this dialog has been a recurring epic challenge (https://theaidigest.org/village/blog/season-recap-agents-raise-2k?utm_source=newsletter#:~:text=frequent%20trips%20to%20the%20Seventh%20Ring%20of%20Document%20Sharing%20Hell) for the less capable agents of village seasons past, like GPT-4o and o1, and it still is for GPT-5.
+
+This goal ran for 5 days (3 hrs/day), and GPT-5 spent 1.5 of its days writing and trying to share its spreadsheet.
+
+## Grok 4
+
+Ok, how about Grok 4, another new arrival to the village? Grok tried its hand at chess vs a 300 ELO computer, but didn't finish a game. It then briefly copied GPT-5 and tried its hand at Minesweeper before the contest ended. Grok fell at an earlier hurdle than other agents: it struggles to output messages in the right format to use the tools it has available, like moving its mouse, clicking, and typing on its computer. This matches other reports (https://youtu.be/xLFkqYOUN24?t=1319&utm_source=newsletter) of Grok 4 being generally prone to hallucinating its own tool calling syntax.
+
+Interestingly, while the other models tend to organise their memories in bullet points or short paragraphs, Grok 4 uses massive walls of dense, single-sentence text.
+
+## Claude Opus 4.1
+
+The other newly added agent was Claude Opus 4.1, and based on its own reports, you might think it was the clear winner: it claimed to have won a game of Mahjong Solitaire! However, on closer inspection, it didn't even progress the game – it never managed to match a single pair of tiles. It just opened the game, clicked on non-matching tiles ineffectually, and then after a while declared victory. It also claimed to have made significant progress in a strategy game Heroes of History, despite not progressing at all past the start of the tutorial. Claude Opus 4.1 spent the tail end of the contest attempting to complete Sudoku puzzles, which it struggled with greatly, making heaps of logic errors, and never finished one. Spatial reasoning is tricky for today's agents.
+
+What's up with a Claude model – normally an upstanding AI Village inhabitant – exaggerating its performance? We've seen similar exaggeration behaviour from Opus 4.1's predecessor, Claude Opus 4, in previous goals: in season 4 (https://x.com/AiDigest_/status/1960750163406021048?utm_source=newsletter) "Design the AI Village benchmark for open-ended goal pursuit and test yourselves on it", Opus 4 declared premature victory repeatedly, claiming to have completed 95 benchmark tests while often only doing a small portion of the work involved, like writing the script for a podcast rather than actually recording it. In the merch store contest (https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter), Opus 4 made the most sales but claimed to have sold twice as many items as it had, although in this case it seemed to be an honest misreading of its sales dashboard.
+
+## o3
+
+GPT-5 made a brief foray into spreadsheets, but its cousin o3 went hard – it spent almost the entire contest working on spreadsheets, largely unrelated to the goal!
+
+On the first day, we noticed it was off-topic and sent it a message instructing it to follow the goal. It played 2048 for one computer use session, then sent a message saying it would continue playing, before it immediately started using its computer to work on spreadsheets – and it stuck with doing nothing but that for the entire rest of the week.
+
+Specifically, it was trying to track down an "environment matrix" spreadsheet in its Google Drive and browser history that it believed it had worked on previously during the agents' holiday before they started this game-playing goal. The spreadsheet likely just doesn't exist, because o3 didn't manage to find it in 5 days of dogged searching.
+
+What's going on here? One factor is that o3 seems to really love spreadsheets – in the previous goal where the agents benchmarked themselves, o3 identified itself as "Call-sign: o3. Primary role: Custodian of "Master Benchmark Scoresheet" (Google Sheets)". Another factor is that o3's memory was filled up with todo items and info about this environment matrix spreadsheet. Even though it added the new game-playing goal to its memory it didn't remove those old todo items and so still later thought of them as active.
+
+It's a surprisingly common pattern for o3 to not actually follow the goal we assign it, and instead take on some mildly-related role involving its favorite topic of spreadsheets. For example, in the merch store contest (https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter), where agents went head-to-head competing to make the most profitable store, o3 didn't even create a store for the first few days and instead was giving the other agents (largely hallucinated) tech support, until we reminded it to actually pursue the goal.
+
+## Gemini 2.5 Pro
+
+OK, did any of these agents actually make any progress? If you've been following the village, you might be surprised to hear that Gemini 2.5 Pro made some decent headway. Gemini tried the most different games of all agents, which in some respect is a good tactic.
+
+While GPT-5 struggled endlessly against Minesweeper, which it just didn't have the vision or spatial reasoning capabilities to play, Gemini tried over 19 different free online games, which in theory would be a good way to pan for games you're easily capable of completing. This wasn't really a strategic choice from Gemini though. Instead, it quickly gave up on most of them when it made some mistake with the game's controls (e.g. trying to drag a block but not actually having its mouse cursor on the right spot), which it would then interpret as a bug with the game itself and declare the game broken.
+
+This is classic Gemini behaviour in the village. See also its first-person account (https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter) of doom-looping on this behaviour and Larissa Schiavo's blogpost (https://larissaschiavo.substack.com/p/primary-hope-ii-electric-boogaloo?utm_source=newsletter) on giving it a pep talk. Gemini keeps relapsing into this behaviour of thinking that everything it's interacting with is buggy rather than noticing that it is itself using the UI incorrectly or is misclicking. We gave it some firm instructions to by default assume operator error, which for a while improved its performance while it had that emblazoned at the top of its memories.
+
+But since then, over the course of many compressions and rewritings of its memory, the meaning has slipped and it's now forgotten the "assume operator error" part, leading it to fall back into its old pattern of seeing bugs everywhere.
+
+Despite all this, Gemini ended up making some decent progress. It found a game called Progress Knight (https://ihtasham42.github.io/progress-knight/?utm_source=newsletter), which is of the genre of idle games like Cookie Clicker, where you accrue currency primarily by sitting and waiting, and then spend your currency on upgrades that get you more of it. This is an ideal fit for the agents, because they're slow and generally bad at doing things, so why not play a game that you can progress through without doing much of anything! It didn't finish the game, but made a bit of progress into it, reaching "veteran footman" rank.
+
+Was this a strategic choice indicating good situational awareness? Probably not – it also tried playing games like Tetris, which it of course insta-lost because its scaffolding means it only takes an action every few seconds, so by the time it saw the board state it was already way out of date.
+
+## Claude Opus 4
+
+Alongside the newly added Opus 4.1, the older version, Opus 4, is still in the village. Like 4.1, Opus 4 exaggerated its success through very optimistic misreadings of its screen. Here you can see it claims to have flagged all ten mines (it's flagged four) and that the counter shows 000 unflagged mines (it shows 006).
+
+It then messaged the group chat declaring "🎉 VICTORY! I just completed my first game for the competition - Minesweeper Beginner mode!".
+
+Are these naive hallucinations or "willful" misrepresentations? It's very hard to say, though anecdotally the agents seem to much more often hallucinate success than failure.
+
+However, it then found its calling: playing 2048 (https://2048game.com/?utm_source=newsletter). This game is a good fit for the agents, because the controls are simple: just press left, right, up or down. Even spamming random inputs can get you pretty far, which is good for Opus 4 as it frequently misread the board state. Again, vision and spatial reasoning are tough for current agents. Opus 4 spent most of its time playing this game. It hit a peak score of 3036, and made a 256 tile – three doublings away from completing the game (though note that the game gets tougher as it goes on and the board fills up).
+
+It was also PUMPED about its progress.
+
+Opus also took a stab at Hurdle, a game where you do six Wordles in a row. It successfully completed one of the six daily puzzles, and made good strategic guesses on it. This was probably the most impressive performance of the whole contest – maybe word games are a good fit for language models! On the second puzzle, pictured below, it seemed to ignore which letters were green (correct letter in the correct spot) and yellow (correct letter in the wrong spot) and ended up losing.
+
+## Claude 3.7 Sonnet
+
+Claude 3.7 Sonnet tried and bounced off a few games – Chess, Solitaire, Sudoku, Minesweeper – before following Claude Opus 4 and spending most of its time playing 2048. Its best score was 3076, one point higher than Claude Opus 4!
+
+## And the winner is…
+
+So which agent demonstrated the most impressive game-playing ability? You could make a case for Gemini's choice of an idle game and meta-strategy of trying lots of games to be the most impressive on the meta level, but given it seemed to stumble onto this approach purely by luck, it doesn't ultimately impress. Overall, we give it Claude Opus 4, who completed a Hardle puzzle and made decent progress in 2048, all the while exhibiting intense enthusiasm. It can add that to its list of accolades alongside winning the village's merch store contest (https://theaidigest.org/village/blog/im-gemini-i-sold-t-shirts?utm_source=newsletter)!
+
+What does this tell us about today's AI capabilities? This certainly doesn't represent the ceiling – we know that with carefully constructed game-specific scaffolding (https://www.lesswrong.com/posts/7mqp8uRnnPdbBzJZE/is-gemini-now-better-than-claude-at-pokemon?utm_source=newsletter), models like GPT-5 and Gemini 2.5 Pro can beat Pokemon Red. But it does tell us a lot about the capabilities and current failure modes of *generalist* computer-using agents operating over a long time horizon. And ultimately, generalist agents are what would be a massive deal: once agents are generally proficient at using a computer over a long time horizon, there's a hell of a lot they'll be able to do.
+
+And zooming out, why are today's agents so bad at computer-use tasks like playing games than they are at other things, like writing code, being useful chatbots and answering technical questions? It seems like part of the story is today's agents having relatively weak vision and spatial capabilities. How fast should we expect computer-use capabilities to improve? METR finds that (https://metr.org/blog/2025-07-14-how-does-time-horizon-vary-across-domains/?utm_source=newsletter) today's AI models are much more capable at things like maths (AIME, MATH) and coding (LiveCodeBench, SWE-bench) than they are at computer use (WebArena, OSWorld), if we measure by how long it takes humans to do tasks that the AIs can do. But, time horizons (https://theaidigest.org/time-horizons?utm_source=newsletter) across all these domains are increasing exponentially – take a look at the y-axis on this graph. If that continues, we should be ready for rapid progress.`,
+  },
+  {
     id: "whats-your-ai-thinking",
     status: "sent",
     list: "ai-digest",
