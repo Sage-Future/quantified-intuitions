@@ -10,6 +10,53 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "predict-your-year-2026",
+    status: "sent",
+    list: "forecasting",
+    subject: "Predict your life in 2026",
+    preheader: "Write down your predictions now to reflect at the end of the year!",
+    htmlContent: `
+      <h1>Predict your life in 2026</h1>
+      <p>It's the end of 2025. Did your life this year match your expectations? What came out of nowhere and threw off your predictions? Did your actions align with your intentions? What new goals are you planning?</p>
+      <p>We've built <a href="https://fatebook.io/predict-your-year?utm_source=newsletter"><strong>predict your year in 2026</strong></a>, a space for you to write down your predictions for the year. At the end of your year, you can return, resolve your predictions as YES, NO or AMBIGUOUS, and reflect.</p>
+      <p>We've written some starter questions to make it super easy to get started predicting your year. You can tweak these and write your own - those will likely be the most important questions for you.</p>
+      <p>You can use this tool to <strong>predict your personal life</strong> in 2026 - your goals, relationships, work, health, and adventures. If you like, you can share your predictions with friends - for fun, for better predictions, and for motivation to achieve your goals this year!</p>
+      <p>You can also use this tool to <strong>predict questions relevant to your team or organisation</strong> in the coming year - your team strategy, performance, big questions, and potentially disruptive black swans. You can share your predictions with your team and let everyone contribute.</p>
+      <p>If you use Slack, you can also share your page of predictions in a Slack channel (e.g. #2026-predictions or #strategy), so everyone can easily discuss in threads and return to it throughout the year.</p>
+      <p>I hope you have a good time thinking about your coming year, and that it sparks some great conversations with friends and teammates.</p>
+      ${getButtonHtml({
+        link: "https://fatebook.io/predict-your-year?utm_source=newsletter",
+        text: "Predict your year in 2026",
+      })}
+      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1734716498/541e065e-c514-4ef2-8859-5bcfa287babf.png" style="max-width: 300px; display: block; margin: 20px auto;"/>
+      <p>If you made predictions at the start of 2025, now's the time to <a href="https://fatebook.io/predict-your-year?utm_source=newsletter">return to your predictions</a> and resolve them as YES, NO or AMBIGUOUS!</p>
+      <p>If you have feedback or suggestions for our work in the coming year, we'd love to hear from you. We can chat in our <a href="https://discord.gg/mt9YVB8VDE">Discord</a>, or you can reply to this email.</p>
+      <p>Happy holidays,<br/>Adam</p>
+    `,
+    textContent: `
+      What will the new year hold for you?
+
+      It's the end of 2025. Did your life this year align with your expectations? What came out of nowhere and threw off your predictions? Did your actions align with your intentions? What new goals are you planning?
+
+      We've built predict your year in 2026 (https://fatebook.io/predict-your-year?utm_source=newsletter), a space for you to write down your predictions for the year. At the end of your year, you can return, resolve your predictions as YES, NO or AMBIGUOUS, and reflect.
+
+      We've written some starter questions to make it super easy to get started predicting your year. You can tweak these and write your own - those will likely be the most important questions for you.
+
+      You can use this tool to predict your personal life in 2026 - your goals, relationships, work, health, and adventures. If you like, you can share your predictions with friends - for fun, for better predictions, and for motivation to achieve your goals this year!
+
+      You can also use this tool to predict questions relevant to your team or organisation in the coming year - your team strategy, performance, big financial questions, and potentially disruptive black swans. You can share your predictions with your team and let everyone contribute, to build common knowledge about expectations and pool your insights.
+
+      If you use Slack, you can also share your page of predictions in a Slack channel (e.g. #2026-predictions or #strategy), so everyone can easily discuss in threads and return to it throughout the year.
+
+      I hope you have a good time thinking about your coming year, and that it sparks some great conversations with friends and teammates.
+
+      If you have feedback or suggestions for our work in the coming year, we'd love to hear from you. We can chat in our Discord, or you can reply to this email.
+
+      Happy holidays,
+      Adam
+    `,
+  },
+  {
     id: "what-do-we-tell-the-humans",
     status: "sent",
     list: "agent-village",
