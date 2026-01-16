@@ -10,6 +10,46 @@ import { sendBroadcastEmail } from "./sendBroadcast"
 
 const POSTS: Post[] = [
   {
+    id: "2025-forecast-results",
+    status: "sent",
+    list: "ai-digest",
+    subject: "The results of the 2025 AI Forecasting Survey are in!",
+    preheader: "Plus, register your 2026 predictions",
+    htmlContent: `
+      <h1>How well did forecasters predict 2025 AI progress?</h1>
+      <p>At the end of 2024, amid discourse about whether AI scaling was hitting a wall and whether we will reach AGI soon, we created a survey to track key markers of AI progress in what some expected to be a pivotal year.</p>
+      <p>413 people registered forecasts, and the results are now in!</p>
+      <img src="https://res.cloudinary.com/dv4xf4hts/image/upload/v1768593201/forecastresults_jua6fq.png" style="width: 100%; max-width: 600px; display: block; margin: 20px auto;" alt="" />
+      <p>You can <a href="https://theaidigest.org/2025-forecast-results?utm_source=newsletter">read an analysis of the results</a> by Epoch AI researcher Anson Ho.</p>
+      <p>You can <a href="https://ai2025.org?utm_source=newsletter">explore the results, and see the leaderboard</a> of which forecasters did best. There, you can also see your own personal results page if you participated.</p>
+      <p>And, <b>the 2026 AI Forecasting Survey is now open</b> - <a href="https://forecast2026.ai?utm_source=newsletter">register your forecasts</a>! The survey closes a week on Sunday.</p>
+      <p>With some predicting that the arrival of broadly superhuman AIs by 2027 is <a href="https://www.anthropic.com/news/anthropic-s-recommendations-ostp-u-s-ai-action-plan">likely</a> or <a href="https://www.aifuturesmodel.com/forecast/daniel-12-31-25">plausible (~15%)</a> and others predicting an <a href="https://garymarcus.substack.com/p/the-ai-bubble-is-all-over-now-baby">AI bubble burst</a>, it seems a good time to take stock and write down your predictions. By pre-registering your expectations for AI in 2026, we can collectively make better sense of the progress that ends up materializing.</p>
+      <p>Thanks to all who participated last year, and to all who will participate this year!</p>
+      ${getButtonHtml({
+        link: "https://forecast2026.ai?utm_source=newsletter",
+        text: "Take the 2026 AI Forecasting Survey",
+      })}`,
+    textContent: `
+      How well did forecasters predict 2025 AI progress?
+
+      At the end of 2024, amid discourse about whether AI scaling was hitting a wall and whether we will reach AGI soon, we created a survey to track key markers of AI progress in what some expected to be a pivotal year.
+
+      413 people registered forecasts, and the results are now in!
+
+      You can read an analysis of the results (https://theaidigest.org/2025-forecast-results?utm_source=newsletter) by Epoch AI researcher Anson Ho.
+
+      You can explore the results, and see the leaderboard (https://ai2025.org?utm_source=newsletter) of which forecasters did best. There, you can also see your own personal results page if you participated.
+
+      And - the 2026 AI Forecasting Survey is now open - register your forecasts (https://forecast2026.ai?utm_source=newsletter)! The survey closes a week on Sunday.
+
+      With some predicting that the arrival of broadly superhuman AIs by 2027 is likely (https://www.anthropic.com/news/anthropic-s-recommendations-ostp-u-s-ai-action-plan) or plausible (~15%) (https://www.aifuturesmodel.com/forecast/daniel-12-31-25) and others predicting an AI bubble burst (https://garymarcus.substack.com/p/the-ai-bubble-is-all-over-now-baby), it seems a good time to take stock and write down your predictions. By pre-registering your expectations for AI in 2026, we can collectively make better sense of the progress that ends up materializing.
+
+      Thanks to all who participated last year, and to all who will participate this year!
+
+      Take the 2026 AI Forecasting Survey: https://forecast2026.ai?utm_source=newsletter
+    `
+  },
+  {
     id: "predict-your-year-2026",
     status: "sent",
     list: "forecasting",
