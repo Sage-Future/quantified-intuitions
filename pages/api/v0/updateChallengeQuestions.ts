@@ -25,12 +25,23 @@ interface AboveBelowQuestionUpdate {
   source: string
 }
 
+interface ChallengeUpdate {
+  id: string
+  name: string
+  subtitle: string | null
+  startDate: string
+  endDate: string
+  unlisted: boolean
+}
+
 interface RequestBody {
   challengeId: string
+  challenge?: ChallengeUpdate
   fermiQuestions: FermiQuestionUpdate[]
   aboveBelowQuestions: AboveBelowQuestionUpdate[]
   deletedFermiQuestionIds?: string[]
   deletedAboveBelowQuestionIds?: string[]
+  isNewChallenge?: boolean
 }
 
 const updateChallengeQuestions = async (
@@ -52,10 +63,12 @@ const updateChallengeQuestions = async (
 
   const {
     challengeId,
+    challenge: challengeUpdate,
     fermiQuestions,
     aboveBelowQuestions,
     deletedFermiQuestionIds,
     deletedAboveBelowQuestionIds,
+    isNewChallenge,
   } = req.body as RequestBody
 
   if (!challengeId) {
@@ -63,7 +76,31 @@ const updateChallengeQuestions = async (
     return
   }
 
-  // Verify the challenge exists
+  // Handle creating a new challenge
+  if (isNewChallenge && challengeUpdate) {
+    // Check if challenge ID already exists
+    const existingChallenge = await Prisma.challenge.findUnique({
+      where: { id: challengeId },
+    })
+    if (existingChallenge) {
+      res.status(400).json({ error: "Challenge with this ID already exists" })
+      return
+    }
+
+    // Create new challenge
+    await Prisma.challenge.create({
+      data: {
+        id: challengeId,
+        name: challengeUpdate.name,
+        subtitle: challengeUpdate.subtitle,
+        startDate: new Date(challengeUpdate.startDate),
+        endDate: new Date(challengeUpdate.endDate),
+        unlisted: challengeUpdate.unlisted,
+      },
+    })
+  }
+
+  // Verify the challenge exists (for both new and existing)
   const challenge = await Prisma.challenge.findUnique({
     where: { id: challengeId },
     include: {
@@ -75,6 +112,20 @@ const updateChallengeQuestions = async (
   if (!challenge) {
     res.status(404).json({ error: "Challenge not found" })
     return
+  }
+
+  // Update challenge metadata if provided (for existing challenges)
+  if (challengeUpdate && !isNewChallenge) {
+    await Prisma.challenge.update({
+      where: { id: challengeId },
+      data: {
+        name: challengeUpdate.name,
+        subtitle: challengeUpdate.subtitle,
+        startDate: new Date(challengeUpdate.startDate),
+        endDate: new Date(challengeUpdate.endDate),
+        unlisted: challengeUpdate.unlisted,
+      },
+    })
   }
 
   // Delete fermi questions
