@@ -225,7 +225,7 @@ model Team {
   name                 String
   challengeId          String
   numPlayers           Int                    @default(1)
-  challenge            Challenge              @relation(fields: [challengeId], references: [id], onDelete: Cascade)
+  challenge            Challenge              @relation(fields: [challengeId], references: [id], onDelete: Cascade, onUpdate: Cascade)
   users                User[]
   fermiAnswers         TeamFermiAnswer[]
   TeamAboveBelowAnswer TeamAboveBelowAnswer[]

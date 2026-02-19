@@ -2,6 +2,7 @@ import {
   AboveBelowQuestion,
   CalibrationQuestion,
   Challenge,
+  Team,
   TeamAboveBelowAnswer,
   TeamFermiAnswer,
 } from "@prisma/client"
@@ -23,9 +24,16 @@ type AboveBelowQuestionWithAnswers = AboveBelowQuestion & {
   teamAnswers: TeamAboveBelowAnswer[]
 }
 
+type TeamWithDetails = Team & {
+  users: { name: string | null; email: string | null }[]
+  fermiAnswers: { id: string }[]
+  TeamAboveBelowAnswer: { id: string }[]
+}
+
 type ChallengeWithQuestions = Challenge & {
   fermiQuestions: FermiQuestionWithAnswers[]
   aboveBelowQuestions: AboveBelowQuestionWithAnswers[]
+  teams: TeamWithDetails[]
 }
 
 type ChallengeListItem = {
@@ -141,6 +149,15 @@ const EditPage = ({
   const [isNewChallenge, setIsNewChallenge] = useState(false)
   const [challengeListState, setChallengeListState] =
     useState<ChallengeListItem[]>(challengeList)
+  const [editingId, setEditingId] = useState<string | null>(null)
+  const [savingId, setSavingId] = useState(false)
+  const [idMessage, setIdMessage] = useState<{
+    type: "success" | "error"
+    text: string
+  } | null>(null)
+  const [deletingTeamId, setDeletingTeamId] = useState<string | null>(null)
+  const [deletingChallenge, setDeletingChallenge] = useState(false)
+  const [deletingChallengeLoading, setDeletingChallengeLoading] = useState(false)
 
   // Fetch challenge details when selection changes
   const handleChallengeSelect = useCallback(
@@ -150,6 +167,9 @@ const EditPage = ({
       setDeletedFermiQuestionIds([])
       setDeletedAboveBelowQuestionIds([])
       setIsNewChallenge(false)
+      setEditingId(null)
+      setIdMessage(null)
+      setDeletingTeamId(null)
 
       if (!challengeId) {
         setSelectedChallenge(null)
@@ -235,6 +255,110 @@ const EditPage = ({
     setDeletedFermiQuestionIds([])
     setDeletedAboveBelowQuestionIds([])
     setSaveMessage(null)
+  }
+
+  // Save a new challenge ID (slug)
+  const handleSaveId = async () => {
+    if (!editingId || !editedChallenge || editingId === editedChallenge.id) return
+
+    setSavingId(true)
+    setIdMessage(null)
+
+    try {
+      const response = await fetch("/api/v0/updateChallengeId", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ oldId: editedChallenge.id, newId: editingId }),
+      })
+
+      if (response.ok) {
+        const oldId = editedChallenge.id
+        // Update all local state to reflect the new ID
+        setSelectedChallengeId(editingId)
+        setEditedChallenge((prev) => (prev ? { ...prev, id: editingId } : prev))
+        setChallengeListState((prev) =>
+          prev.map((c) => (c.id === oldId ? { ...c, id: editingId } : c))
+        )
+        setEditingId(null)
+        setIdMessage({ type: "success", text: "ID updated successfully!" })
+        // Refresh the challenge data with the new ID
+        handleChallengeSelect(editingId)
+      } else {
+        const error = await response.json()
+        setIdMessage({
+          type: "error",
+          text: error.error || "Failed to update ID",
+        })
+      }
+    } catch {
+      setIdMessage({ type: "error", text: "Failed to update ID" })
+    } finally {
+      setSavingId(false)
+    }
+  }
+
+  // Delete a team from the challenge
+  const handleDeleteTeam = async (teamId: string) => {
+    try {
+      const response = await fetch("/api/v0/deleteTeamFromChallenge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ teamId }),
+      })
+
+      if (response.ok) {
+        // Refresh the challenge data
+        handleChallengeSelect(selectedChallengeId)
+      } else {
+        const error = await response.json()
+        setSaveMessage({
+          type: "error",
+          text: `Error deleting team: ${error.error || "Unknown error"}`,
+        })
+      }
+    } catch {
+      setSaveMessage({ type: "error", text: "Error deleting team" })
+    } finally {
+      setDeletingTeamId(null)
+    }
+  }
+
+  // Delete the entire challenge (soft delete)
+  const handleDeleteChallenge = async () => {
+    if (!selectedChallengeId) return
+
+    setDeletingChallengeLoading(true)
+    try {
+      const response = await fetch("/api/v0/deleteChallenge", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ challengeId: selectedChallengeId }),
+      })
+
+      if (response.ok) {
+        // Remove from the list and reset selection
+        setChallengeListState((prev) =>
+          prev.filter((c) => c.id !== selectedChallengeId)
+        )
+        setSelectedChallengeId("")
+        setSelectedChallenge(null)
+        setEditedChallenge(null)
+        setEditedFermiQuestions([])
+        setEditedAboveBelowQuestions([])
+        setDeletingChallenge(false)
+      } else {
+        const error = await response.json()
+        setSaveMessage({
+          type: "error",
+          text: `Error deleting challenge: ${error.error || "Unknown error"}`,
+        })
+      }
+    } catch {
+      setSaveMessage({ type: "error", text: "Error deleting challenge" })
+    } finally {
+      setDeletingChallengeLoading(false)
+      setDeletingChallenge(false)
+    }
   }
 
   // Update challenge field
@@ -691,7 +815,7 @@ const EditPage = ({
                           updateChallengeField("name", e.target.value)
                         }
                         className={inputClass(isChallengeFieldEdited("name"))}
-                        placeholder="e.g., The February 2026 Estimation Game"
+                        placeholder="e.g., 🚀 Space"
                       />
                     </div>
 
@@ -707,7 +831,7 @@ const EditPage = ({
                           updateChallengeField("subtitle", e.target.value)
                         }
                         className={inputClass(isChallengeFieldEdited("subtitle"))}
-                        placeholder="Optional, e.g. '🌋Volcanoes'"
+                        placeholder="e.g., The February 2026 Estimation Game"
                       />
                     </div>
 
@@ -774,38 +898,69 @@ const EditPage = ({
                       <div className="flex gap-2 mt-1">
                         <input
                           type="text"
-                          value={editedChallenge.id}
+                          value={isNewChallenge ? editedChallenge.id : (editingId ?? editedChallenge.id)}
                           onChange={(e) => {
+                            const newId = e.target.value
+                              .toLowerCase()
+                              .replace(/[^a-z0-9-]/g, "-")
                             if (isNewChallenge) {
-                              const newId = e.target.value
-                                .toLowerCase()
-                                .replace(/[^a-z0-9-]/g, "-")
                               setEditedChallenge((prev) =>
                                 prev ? { ...prev, id: newId } : prev
                               )
                               setSelectedChallengeId(newId)
+                            } else if (editingId !== null) {
+                              setEditingId(newId)
                             }
                           }}
-                          disabled={!isNewChallenge}
+                          disabled={!isNewChallenge && editingId === null}
                           placeholder="e.g., october-2025"
                           className={`block w-full border rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm ${
-                            isNewChallenge
+                            isNewChallenge || editingId !== null
                               ? "border-gray-300"
                               : "border-gray-200 bg-gray-50 text-gray-500"
                           }`}
                         />
-                        {!isNewChallenge && (
-                          <button
-                            onClick={() =>
-                              window.open(
-                                `/estimation-game/${editedChallenge.id}`,
-                                "_blank"
-                              )
-                            }
-                            className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap"
-                          >
-                            View Challenge ↗
-                          </button>
+                        {!isNewChallenge && editingId === null && (
+                          <>
+                            <button
+                              onClick={() => setEditingId(editedChallenge.id)}
+                              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap"
+                            >
+                              Edit ID
+                            </button>
+                            <button
+                              onClick={() =>
+                                window.open(
+                                  `/estimation-game/${editedChallenge.id}`,
+                                  "_blank"
+                                )
+                              }
+                              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap"
+                            >
+                              View Challenge ↗
+                            </button>
+                          </>
+                        )}
+                        {!isNewChallenge && editingId !== null && (
+                          <>
+                            <button
+                              onClick={handleSaveId}
+                              disabled={savingId || !editingId || editingId === editedChallenge.id}
+                              className="inline-flex items-center px-3 py-2 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              {savingId ? "Saving..." : "Save ID"}
+                            </button>
+                            <button
+                              onClick={() => {
+                                setEditingId(null)
+                                setIdMessage(null)
+                              }}
+                              disabled={savingId}
+                              className="inline-flex items-center px-3 py-2 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 whitespace-nowrap"
+                            >
+                              Cancel
+                            </button>
+                          </>
                         )}
                       </div>
                       {isNewChallenge && (
@@ -813,9 +968,115 @@ const EditPage = ({
                           URL will be: /estimation-game/{editedChallenge.id || "..."}
                         </p>
                       )}
+                      {!isNewChallenge && editingId !== null && (
+                        <p className="mt-1 text-sm text-gray-500">
+                          URL will be: /estimation-game/{editingId || "..."}
+                        </p>
+                      )}
+                      {idMessage && (
+                        <p className={`mt-1 text-sm ${idMessage.type === "success" ? "text-green-600" : "text-red-600"}`}>
+                          {idMessage.text}
+                        </p>
+                      )}
                     </div>
+
+                    {/* Delete Challenge */}
+                    {!isNewChallenge && (
+                      <div className="md:col-span-2 border-t border-gray-200 pt-4 mt-2">
+                        {deletingChallenge ? (
+                          <div className="flex items-center gap-2">
+                            <span className="text-sm text-red-600 font-medium">
+                              Are you sure you want to delete this challenge?
+                            </span>
+                            <button
+                              onClick={handleDeleteChallenge}
+                              disabled={deletingChallengeLoading}
+                              className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-white bg-red-600 hover:bg-red-700 disabled:opacity-50"
+                            >
+                              {deletingChallengeLoading ? "Deleting..." : "Yes, delete"}
+                            </button>
+                            <button
+                              onClick={() => setDeletingChallenge(false)}
+                              disabled={deletingChallengeLoading}
+                              className="inline-flex items-center px-3 py-1.5 text-sm font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200"
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          <button
+                            onClick={() => setDeletingChallenge(true)}
+                            className="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50"
+                          >
+                            Delete Challenge
+                          </button>
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
+
+                {/* Teams */}
+                {!isNewChallenge && selectedChallenge?.teams && selectedChallenge.teams.length > 0 && (
+                  <div className="mb-6 border border-gray-200 rounded-lg p-4">
+                    <h2 className="text-xl font-semibold mb-4">
+                      Teams ({selectedChallenge.teams.length})
+                    </h2>
+                    <div className="space-y-2">
+                      {selectedChallenge.teams.map((team) => {
+                        const totalAnswers =
+                          team.fermiAnswers.length + team.TeamAboveBelowAnswer.length
+                        return (
+                          <div
+                            key={team.id}
+                            className="flex items-center justify-between border border-gray-100 rounded px-3 py-2"
+                          >
+                            <div>
+                              <span className="font-medium">{team.name}</span>
+                              <span className="text-gray-500 text-sm ml-2">
+                                ({team.numPlayers} player{team.numPlayers !== 1 && "s"})
+                              </span>
+                              <span className="text-gray-400 text-sm ml-2">
+                                {totalAnswers} answer{totalAnswers !== 1 && "s"}
+                              </span>
+                              {team.users.length > 0 && (
+                                <span className="text-gray-400 text-sm ml-2">
+                                  — {team.users.map((u) => u.name || u.email).join(", ")}
+                                </span>
+                              )}
+                            </div>
+                            <div>
+                              {deletingTeamId === team.id ? (
+                                <span className="flex items-center gap-2">
+                                  <span className="text-sm text-red-600">Are you sure?</span>
+                                  <button
+                                    onClick={() => handleDeleteTeam(team.id)}
+                                    className="text-sm font-medium px-2 py-1 rounded text-white bg-red-600 hover:bg-red-700"
+                                  >
+                                    Yes, delete
+                                  </button>
+                                  <button
+                                    onClick={() => setDeletingTeamId(null)}
+                                    className="text-sm font-medium px-2 py-1 rounded text-gray-700 bg-gray-100 hover:bg-gray-200"
+                                  >
+                                    Cancel
+                                  </button>
+                                </span>
+                              ) : (
+                                <button
+                                  onClick={() => setDeletingTeamId(team.id)}
+                                  className="text-red-600 hover:text-red-800 text-sm font-medium px-2 py-1 rounded hover:bg-red-50"
+                                >
+                                  Delete
+                                </button>
+                              )}
+                            </div>
+                          </div>
+                        )
+                      })}
+                    </div>
+                  </div>
+                )}
 
                 {/* Edit indicator legend */}
                 <div className="mb-4 text-sm text-gray-600 flex items-center gap-4">
