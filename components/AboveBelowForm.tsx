@@ -32,6 +32,7 @@ export const AboveBelowForm = ({
   const [errors, setErrors] = useState<string[]>([])
   const [confidenceLevel, setConfidenceLevel] = useState<string | null>(null)
   const [aboveBelow, setAboveBelow] = useState<string | null>(null)
+  const [quantityRevealed, setQuantityRevealed] = useState<boolean>(false)
 
   const onSubmit = async () => {
     setIsLoading(true)
@@ -99,28 +100,39 @@ export const AboveBelowForm = ({
         </ReactMarkdown>
       </div>
       <div className="pt-10">
-        <div>
-          <ButtonArray
-            selected={aboveBelow}
-            setSelected={setAboveBelow}
-            options={[
-              `Above ${aboveBelowQuestion.quantity}`,
-              `Below  ${aboveBelowQuestion.quantity}`,
-            ]}
-            label={`Is the answer...`}
-            size="xl"
-            key={aboveBelowQuestion.id}
-          />
-        </div>
-        <div className="py-6">
-          <ButtonArray
-            selected={confidenceLevel}
-            setSelected={setConfidenceLevel}
-            options={["55%", "65%", "75%", "85%"]}
-            label={"How confident are you?"}
-            key={`${aboveBelowQuestion.id} confidence`}
-          />
-        </div>
+        {!quantityRevealed ? (
+          <button
+            onClick={() => setQuantityRevealed(true)}
+            className="text-sm text-gray-500 underline hover:text-gray-700"
+          >
+            Show options
+          </button>
+        ) : (
+          <>
+            <ButtonArray
+              selected={aboveBelow}
+              setSelected={setAboveBelow}
+              options={[
+                `Above ${aboveBelowQuestion.quantity}`,
+                `Below ${aboveBelowQuestion.quantity}`,
+              ]}
+              label={`Is the answer...`}
+              size="xl"
+              key={aboveBelowQuestion.id}
+            />
+            {aboveBelow && (
+              <div className="py-6">
+                <ButtonArray
+                  selected={confidenceLevel}
+                  setSelected={setConfidenceLevel}
+                  options={["55%", "65%", "75%", "85%"]}
+                  label={"How confident are you?"}
+                  key={`${aboveBelowQuestion.id} confidence`}
+                />
+              </div>
+            )}
+          </>
+        )}
         {errors.length > 0 && (
           <div className="sm:col-span-6">
             <Errors errors={errors} />
@@ -129,12 +141,14 @@ export const AboveBelowForm = ({
       </div>
       <div className="pt-6">
         {pointsEarned === null || correct === null ? (
-          <LoadingButton
-            onClick={onSubmit}
-            buttonText={"Submit"}
-            loadingText={"Loading..."}
-            isLoading={isLoading}
-          />
+          confidenceLevel && (
+            <LoadingButton
+              onClick={onSubmit}
+              buttonText={"Submit"}
+              loadingText={"Loading..."}
+              isLoading={isLoading}
+            />
+          )
         ) : (
           <div className="grid gap-y-6">
             <Result
