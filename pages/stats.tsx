@@ -1,6 +1,7 @@
 import { NextSeo } from "next-seo"
 
 import { GetStaticProps } from "next"
+import { ServerClient } from "postmark"
 import {
   Area,
   AreaChart,
@@ -20,6 +21,8 @@ import { NavbarGeneric } from "../components/NavbarGeneric"
 import { Prisma } from "../lib/prisma"
 import { getYYYYMMDD, mean, round, sum } from "../lib/utils"
 
+const AI_VILLAGE_LAUNCH_DATE = "2025-04-01"
+
 const AI_DIGEST_EVENTS: TimelineEvent[] = [
   {
     date: "2023-10-26",
@@ -28,44 +31,53 @@ const AI_DIGEST_EVENTS: TimelineEvent[] = [
   {
     date: "2023-12-14",
     label: "Compare Claude 3, GPT-4, and Gemini Ultra",
+    hideLabel: true,
   },
   {
     date: "2024-03-18",
     label: "How Can AI Disrupt Elections?",
+    hideLabel: true,
   },
   {
     date: "2024-04-05",
     label: "Timeline of AI Forecasts",
+    hideLabel: true,
   },
   {
     date: "2024-08-27",
     label: "AI Can or Can't",
+    hideLabel: true,
   },
   {
     date: "2024-10-24",
     label: "Beyond Chat: AI Agent Demo",
+    hideLabel: true,
   },
   {
     date: "2024-12-06",
     label: "AI 2025 Forecasting Survey",
+    hideLabel: true,
   },
   {
     date: "2024-12-20",
     label: "AIs are becoming more self-aware",
+    hideLabel: true,
   },
   {
     date: "2025-03-28",
     label: "A new Moore's Law for AI agents",
+    hideLabel: true,
   },
   {
-    date: "2025-04-01",
-    label: "Agent village",
+    date: AI_VILLAGE_LAUNCH_DATE,
+    label: "AI Village",
   },
 ]
 
 interface TimelineEvent {
   date: string // YYYY-MM-DD
   label: string
+  hideLabel?: boolean // still shows the dot and tooltip, but no text on the chart
 }
 
 export const getStaticProps: GetStaticProps = async () => {
@@ -219,16 +231,18 @@ export const getStaticProps: GetStaticProps = async () => {
       },
     },
     where: {
+      // match the public games listing — game IDs appear in chart labels
       unlisted: false,
+      isDeleted: false,
     },
     orderBy: {
       startDate: "asc",
     },
   })
 
+  // NB: this page is public — don't select emails or other PII here
   const mailingListSubscribers = await Prisma.mailingListSubscriber.findMany({
     select: {
-      email: true,
       products: true,
       createdAt: true,
     },
@@ -236,6 +250,15 @@ export const getStaticProps: GetStaticProps = async () => {
       createdAt: "asc",
     },
   })
+
+  const agentVillageUnsubscribesByDate =
+    await getAgentVillageUnsubscribesByDate()
+
+  const netAgentVillageSubscribers = getNetSubscriberData(
+    mailingListSubscribers,
+    agentVillageUnsubscribesByDate,
+    AI_VILLAGE_LAUNCH_DATE
+  )
 
   const stats: StatsPageProps["stats"] = [
     {
@@ -327,9 +350,14 @@ export const getStaticProps: GetStaticProps = async () => {
                     "AI Digest",
                     new Date(Date.now() - 180 * 24 * 60 * 60 * 1000) // 180 days = ~6 months
                   )
-                  // Manually remove this outlier date where we imported survey subscribers
-                  data["2025-01-22"] = 0
-                  data["2024-12-13"] = 0
+                  // Manually remove these outlier dates where we imported survey subscribers.
+                  // Only zero them if they fall within the chart window — adding
+                  // keys before the window start would stretch the x-axis back
+                  for (const outlierDate of ["2025-01-22", "2024-12-13"]) {
+                    if (outlierDate in data) {
+                      data[outlierDate] = 0
+                    }
+                  }
                   return data
                 })(),
                 events: AI_DIGEST_EVENTS,
@@ -337,6 +365,17 @@ export const getStaticProps: GetStaticProps = async () => {
               },
             ]
           : []),
+        {
+          type: "line over time" as const,
+          title: "AI Village unsubscribes by date",
+          data: agentVillageUnsubscribesByDate,
+        },
+        {
+          type: "line over time" as const,
+          title:
+            "Cumulative net AI Village subscribers (all subscribers minus unsubscribes on this list)",
+          data: netAgentVillageSubscribers,
+        },
       ],
     },
     {
@@ -757,6 +796,9 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                           )
                           if (dataPoint) {
                             dataPoint.event = event.label
+                            if (!event.hideLabel) {
+                              dataPoint.eventLabel = event.label
+                            }
                           }
                         })
                       }
@@ -776,11 +818,9 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                 <XAxis
                                   dataKey="date"
                                   tick={{ fontSize: 12 }}
-                                  interval={
-                                    chart.title.startsWith("Cumulative")
-                                      ? 150
-                                      : 30
-                                  }
+                                  // let recharts drop ticks so labels never overlap
+                                  interval="preserveStartEnd"
+                                  minTickGap={30}
                                 />
                                 <YAxis />
                                 <Tooltip
@@ -836,7 +876,7 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                                   label={false}
                                 >
                                   <LabelList
-                                    dataKey="event"
+                                    dataKey="eventLabel"
                                     position="insideLeft"
                                     offset={-15}
                                     content={(props: any) => {
@@ -1002,7 +1042,9 @@ const StatsPage: React.FC<StatsPageProps> = ({ stats }) => {
                               <XAxis
                                 dataKey="date"
                                 tick={{ fontSize: 12 }}
-                                interval={150}
+                                // let recharts drop ticks so labels never overlap
+                                interval="preserveStartEnd"
+                                minTickGap={30}
                                 tickFormatter={(date) =>
                                   getYYYYMMDD(new Date(date))
                                 }
@@ -1069,6 +1111,7 @@ function getDateData(data: Record<string, number>, excludeOutliers = false) {
     value: number
     "Rolling average": number
     event?: string
+    eventLabel?: string
   }[] = []
 
   let rolling = []
@@ -1237,6 +1280,77 @@ function getProductCumulativeData(
     result[formattedDate] = lastValue
   }
 
+  return result
+}
+
+// Unsubscribes aren't tracked in our database — Postmark suppressions are the
+// source of truth
+async function getAgentVillageUnsubscribesByDate(): Promise<
+  Record<string, number>
+> {
+  if (!process.env.POSTMARK_API_KEY) {
+    console.warn(
+      "POSTMARK_API_KEY is not set, skipping AI Village unsubscribe stats"
+    )
+    return {}
+  }
+
+  try {
+    const postmarkClient = new ServerClient(process.env.POSTMARK_API_KEY)
+    const { Suppressions } = await postmarkClient.getSuppressions(
+      "agent-village-updates"
+    )
+
+    // ManualSuppression = the recipient clicked unsubscribe (vs bounces/spam complaints)
+    return Suppressions.filter(
+      (s) => s.SuppressionReason === "ManualSuppression"
+    ).reduce((acc: Record<string, number>, curr) => {
+      const date = curr.CreatedAt.split("T")[0]
+      acc[date] = (acc[date] || 0) + 1
+      return acc
+    }, {} as Record<string, number>)
+  } catch (error) {
+    console.error("Error fetching AI Village unsubscribes:", error)
+    return {}
+  }
+}
+
+// Agent Village posts are sent to every mailing list subscriber (see
+// mailingListPost.ts — sends don't filter by product), so net subscribers =
+// all subscribers minus unsubscribes from the agent-village-updates stream.
+function getNetSubscriberData(
+  subscribers: { createdAt: Date }[],
+  unsubscribesByDate: Record<string, number>,
+  // accumulate from the start of the list, but only chart from this date on
+  chartStartDate: string // YYYY-MM-DD
+): Record<string, number> {
+  if (subscribers.length === 0) return {}
+
+  const subscribesByDate: Record<string, number> = {}
+  subscribers.forEach((sub) => {
+    const date = sub.createdAt.toISOString().split("T")[0]
+    subscribesByDate[date] = (subscribesByDate[date] || 0) + 1
+  })
+
+  const allDates = [
+    ...Object.keys(subscribesByDate),
+    ...Object.keys(unsubscribesByDate),
+  ].sort()
+  const endDate = new Date(allDates[allDates.length - 1])
+
+  const result: Record<string, number> = {}
+  let net = 0
+  for (
+    let dt = new Date(allDates[0]);
+    dt <= endDate;
+    dt.setDate(dt.getDate() + 1)
+  ) {
+    const date = dt.toISOString().split("T")[0]
+    net += (subscribesByDate[date] || 0) - (unsubscribesByDate[date] || 0)
+    if (date >= chartStartDate) {
+      result[date] = net
+    }
+  }
   return result
 }
 
